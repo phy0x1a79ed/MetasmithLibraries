@@ -8,11 +8,97 @@ types:
     properties:
       ext: log
       atomic_description: pulled OCI container
+
+  fastp.oci:
+    extends: container
+    properties:
+      provides: 
+      - fastp
+  fastqc.oci:
+    extends: container
+    properties:
+      provides: 
+      - fastqc
+  nanoplot.oci:
+    extends: container
+    properties:
+      provides: 
+      - nanoplot
+  filtlong.oci:
+    extends: container
+    properties:
+      provides: 
+      - filtlong
+  bbtools.oci:
+    extends: container
+    properties:
+      provides: 
+      - bbtools/reformat.sh
+      - bbtools/bbduk.sh
+      - bbtools/filterbyname.sh
+  seqkit.oci:
+    extends: container
+    properties:
+      provides: 
+      - seqkit
+      - seqkit/stat
+
+  minimap2.oci:
+    extends: container
+    properties:
+      provides: 
+      - minimap2
+  bedtools.oci:
+    extends: container
+    properties:
+      provides: 
+      - bedtools
+      - bedtools/genomecov
+  samtools.oci:
+    extends: container
+    properties:
+      provides: 
+      - samtools
+
+  flye.oci:
+    extends: container
+    properties:
+      provides: 
+      - flye
+  megahit.oci:
+    extends: container
+    properties:
+      provides: 
+      - megahit
+  miniasm.oci:
+    extends: container
+    properties:
+      provides: 
+      - miniasm
+  hifiasm-meta.oci:
+    extends: container
+    properties:
+      provides: 
+      - hifiasm-meta
+  hifiasm.oci:
+    extends: container
+    properties:
+      provides: 
+      - hifiasm
+
   ncbi-datasets.oci:
     extends: container
     properties:
       provides: 
       - ncbi-datasets
+  sra-tools.oci:
+    extends: container
+    properties:
+      provides: 
+      - fasterq-dump
+      - sratk/prefetch
+      - sratk/vdb-validate
+
   ppanggolin.oci:
     extends: container
     properties:
@@ -23,15 +109,15 @@ types:
     properties:
       provides: 
       - python=3.12
-      - numpy
-      - scipy
-      - pandas
-      - numba
-      - yaml
-      - requests
-      - xmltodict
-      - plotly
-      - matplotlib
-      - biopython
-      - jupyter
-      - notebook
+      - py/numpy
+      - py/scipy
+      - py/pandas
+      - py/numba
+      - py/yaml
+      - py/requests
+      - py/xmltodict
+      - py/plotly
+      - py/matplotlib
+      - py/biopython
+      - py/jupyter
+      - py/notebook

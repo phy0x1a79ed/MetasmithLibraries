@@ -1,2 +1,4 @@
-manifest: {}
-schema: 0.11.4
+manifest:
+  pprodigal.py:
+    type: transforms::transform
+schema: v1

@@ -11,3 +11,4 @@ types:
     properties:
       src: pangenome_heatmap
       usage: command line
+ 

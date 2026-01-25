@@ -6,11 +6,17 @@ types:
       ext: csv
   accession:
     properties:
-      database: NCBI
+      Data: NCBI accession
       arity: 1
       ext: txt
-  genome_accession:
+  assembly_accession:
     extends: accession
     properties:
-      complexity: genome
-      ext: txt
+      database: assemblies
+  sra_accession:
+    extends: accession
+    properties:
+      database: SRA
+  sra_cache:
+    properties:
+      _: sra prefetch cache

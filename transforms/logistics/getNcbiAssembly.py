@@ -6,9 +6,9 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-dep     = model.AddRequirement(lib.GetType("ncbi::accession"))
+dep     = model.AddRequirement(lib.GetType("ncbi::assembly_accession"))
 image   = model.AddRequirement(lib.GetType("containers::ncbi-datasets.oci"))
-fna     = model.AddProduct(lib.GetType("sequences::genome-like"))
+fna     = model.AddProduct(lib.GetType("sequences::assembly"))
 faa     = model.AddProduct(lib.GetType("sequences::orfs"))
 gff     = model.AddProduct(lib.GetType("sequences::gff"))
 gbk     = model.AddProduct(lib.GetType("sequences::gbk"))
@@ -60,6 +60,5 @@ TransformInstance(
     resources=Resources(
         cpus=1,
         memory=Size.GB(1),
-        duration=Duration(hours=1),
     )
 )

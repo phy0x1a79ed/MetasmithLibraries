@@ -5,4 +5,4 @@ manifest:
     type: lib::local
   pangenome_heatmap.py:
     type: lib::pangenome_heatmap.py
-schema: 0.12.6
+schema: v1

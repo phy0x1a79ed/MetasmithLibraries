@@ -3,8 +3,61 @@ ontology:
   name: EDAM
   strict: false
   version: '1.25'
-schema: 0.12.6
+schema: v1
 types:
+  bbtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bbtools/bbduk.sh
+      - bbtools/filterbyname.sh
+      - bbtools/reformat.sh
+  bedtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bedtools
+      - bedtools/genomecov
+  fastp.oci:
+    properties:
+      Format: OCI
+      provides: fastp
+  fastqc.oci:
+    properties:
+      Format: OCI
+      provides: fastqc
+  filtlong.oci:
+    properties:
+      Format: OCI
+      provides: filtlong
+  flye.oci:
+    properties:
+      Format: OCI
+      provides: flye
+  hifiasm-meta.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm-meta
+  hifiasm.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm
+  megahit.oci:
+    properties:
+      Format: OCI
+      provides: megahit
+  miniasm.oci:
+    properties:
+      Format: OCI
+      provides: miniasm
+  minimap2.oci:
+    properties:
+      Format: OCI
+      provides: minimap2
+  nanoplot.oci:
+    properties:
+      Format: OCI
+      provides: nanoplot
   ncbi-datasets.oci:
     properties:
       Format: OCI
@@ -17,16 +70,33 @@ types:
     properties:
       Format: OCI
       provides:
-      - biopython
-      - jupyter
-      - matplotlib
-      - notebook
-      - numba
-      - numpy
-      - pandas
-      - plotly
+      - py/biopython
+      - py/jupyter
+      - py/matplotlib
+      - py/notebook
+      - py/numba
+      - py/numpy
+      - py/pandas
+      - py/plotly
+      - py/requests
+      - py/scipy
+      - py/xmltodict
+      - py/yaml
       - python=3.12
-      - requests
-      - scipy
-      - xmltodict
-      - yaml
+  samtools.oci:
+    properties:
+      Format: OCI
+      provides: samtools
+  seqkit.oci:
+    properties:
+      Format: OCI
+      provides:
+      - seqkit
+      - seqkit/stat
+  sra-tools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - fasterq-dump
+      - sratk/prefetch
+      - sratk/vdb-validate

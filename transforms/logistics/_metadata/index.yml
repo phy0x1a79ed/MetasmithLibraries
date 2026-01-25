@@ -1,5 +1,13 @@
 manifest:
+  dumpNcbiSra.py:
+    type: transforms::transform
   getNcbiAssembly.py:
+    type: transforms::transform
+  getNcbiSra.py:
+    type: transforms::transform
+  interleave_short_reads.py:
+    type: transforms::transform
+  interleave_zipped_short_reads.py:
     type: transforms::transform
   pullContainer.py:
     type: transforms::transform

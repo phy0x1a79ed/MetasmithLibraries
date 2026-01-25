@@ -4,6 +4,8 @@ from metasmith.python_api import Agent, Source, SshSource, DataInstanceLibrary, 
 from metasmith.python_api import Resources, Size, Duration
 from metasmith.python_api import ContainerRuntime
 
+MLIB = Path("/home/tony/workspace/tools/MetasmithLibraries")
+
 base_dir = Path("./cache")
 
 # agent_home = Source.FromLocal((base_dir/"local_home").resolve())
@@ -33,7 +35,7 @@ smith = Agent(
 #     ]
 # )
 
-smith.Deploy()
+# smith.Deploy(assertive=True)
 # sys.exit(0)
 
 notebook_name = Path(__file__).stem
@@ -47,23 +49,30 @@ task = smith.GenerateWorkflow(
     resources=[],
     transforms=[logistics],
     # targets=[inputs.GetType("sequences::gbk")]
-    targets=[logistics.GetType("containers::pulled_container")]
+    targets=["containers::pulled_container"]
 )
-task.plan.RenderDAG("pull_dag.svg", blacklist_namespaces=set())
+# task.plan.RenderDAG("pull_dag.svg", blacklist_namespaces=set())
 print(task.ok, len(task.plan.steps))
 
-smith.StageWorkflow(task, on_exist="clear")
-# smith.StageWorkflow(task, on_exist="update_all")
+# smith.StageWorkflow(task, on_exist="clear")
+smith.StageWorkflow(task, on_exist="update_all")
 # smith.StageWorkflow(task, on_exist="update_workflow")
 
+params = dict(
+    executor=dict(
+        cpus=15,
+        memory='20 GB',
+        queueSize=5,
+    ),
+)
 smith.RunWorkflow(
     task,
     config_file=smith.GetNxfConfigPresets()["local"],
-    resource_overrides={
-        "all": Resources(
-            memory=Size.GB(2),
-        )
-    }
+    params=params,
+    # resource_overrides={
+    #     "all": Resources(
+    #         memory=Size.GB(2),
+    #         cpus=Size.GB(2),
+    #     )   
+    # }
 )
-
-smith.CheckWorkflow(task)

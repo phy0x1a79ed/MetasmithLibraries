@@ -10,8 +10,12 @@ def protocol(context: ExecutionContext):
     ilog=context.Output(log)
     container = context.GetContainerModel(image)
     success = Path("pull_success")
-    context.external_shell.Exec(f'bash -c "{container.MakePullCommand()} 2>&1 && touch {success}" | tee {ilog.local}')
-
+    context.external_shell.Exec(f"[[ -e {container.GetLocalPath()} ]] && touch {success}")
+    if success.exists():
+        with open(ilog.local, "w") as f:
+            f.write(f"local image already exists at [{container.GetLocalPath()}]")
+    else:
+        context.external_shell.Exec(f'bash -c "{container.MakePullCommand()} 2>&1 && touch {success}" | tee {ilog.external}')
     return ExecutionResult(
         manifest=[{log: ilog.local}],
         success=success.exists()

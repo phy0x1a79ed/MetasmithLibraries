@@ -3,18 +3,30 @@ ontology:
   name: EDAM
   strict: false
   version: '1.25'
-schema: 0.11.4
+schema: v1
 types:
   accession:
     properties:
-      Format: TXT
+      Data: NCBI accession
       arity: 1
-      database: NCBI
+      ext: txt
   accession_list:
     properties:
-      Format: CSV
       arity: N
       database: NCBI
-  genome_accession:
+      ext: csv
+  assembly_accession:
     properties:
-      complexity: genome
+      Data: NCBI accession
+      arity: 1
+      database: assemblies
+      ext: txt
+  sra_accession:
+    properties:
+      Data: NCBI accession
+      arity: 1
+      database: SRA
+      ext: txt
+  sra_cache:
+    properties:
+    - sra prefetch cache

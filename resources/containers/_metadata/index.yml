@@ -1,8 +1,38 @@
 manifest:
+  bbtools.oci:
+    type: containers::bbtools.oci
+  bedtools.oci:
+    type: containers::bedtools.oci
+  fastp.oci:
+    type: containers::fastp.oci
+  fastqc.oci:
+    type: containers::fastqc.oci
+  filtlong.oci:
+    type: containers::filtlong.oci
+  flye.oci:
+    type: containers::flye.oci
+  hifiasm-meta.oci:
+    type: containers::hifiasm-meta.oci
+  hifiasm.oci:
+    type: containers::hifiasm.oci
+  megahit.oci:
+    type: containers::megahit.oci
+  miniasm.oci:
+    type: containers::miniasm.oci
+  minimap2.oci:
+    type: containers::minimap2.oci
+  nanoplot.oci:
+    type: containers::nanoplot.oci
   ncbi-datasets.oci:
     type: containers::ncbi-datasets.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
-schema: 0.12.6
+  samtools.oci:
+    type: containers::samtools.oci
+  seqkit.oci:
+    type: containers::seqkit.oci
+  sra-tools.oci:
+    type: containers::sra-tools.oci
+schema: v1

@@ -6,7 +6,8 @@ from metasmith.python_api import ContainerRuntime
 
 base_dir = Path("./cache")
 
-agent_home = Source.FromLocal((base_dir/"local_home").resolve())
+# agent_home = Source.FromLocal((base_dir/"local_home").resolve())
+agent_home = Source.FromLocal("/home/tony/workspace/tools/Metasmith/main/local_mock/cache/local_home")
 smith = Agent(
     home = agent_home,
     # runtime=ContainerRuntime.APPTAINER,
@@ -47,7 +48,7 @@ smith = Agent(
 #     ]
 # )
 
-smith.Deploy()
+# smith.Deploy()
 
 # import ipynbname
 # notebook_name = ipynbname.name()
@@ -61,8 +62,8 @@ inputs.AddTypeLibrary("sequences", DataTypeLibrary.Load("../data_types/sequences
 inputs.AddTypeLibrary("pangenome", DataTypeLibrary.Load("../data_types/pangenome.yml"))
 
 group = inputs.AddValue("pangenome", "e coli", "pangenome::pangenome")
-inputs.AddValue("DH10b", "GCF_000019425.1", "ncbi::accession", parents={group})
-inputs.AddValue("K12", "GCF_000005845.2", "ncbi::accession", parents={group})
+inputs.AddValue("DH10b", "GCF_000019425.1", "ncbi::assembly_accession", parents={group})
+inputs.AddValue("K12", "GCF_000005845.2", "ncbi::assembly_accession", parents={group})
 inputs.AddItem((base_dir/f"{notebook_name}/epi300.gbk").resolve(), "sequences::gbk", parents={group})
 inputs.LocalizeContents()
 inputs.Save()
@@ -84,29 +85,38 @@ task = smith.GenerateWorkflow(
     resources=resources,
     transforms=transforms,
     # targets=[inputs.GetType("sequences::gbk")]
-    targets=[inputs.GetType("pangenome::heatmap")]
+    targets=["pangenome::heatmap"]
 )
 task.plan.RenderDAG(base_dir/f"{notebook_name}/dag")
 print(task.ok, len(task.plan.steps))
 
 smith.StageWorkflow(task, on_exist="clear")
-
+params = dict(
+    executor=dict(
+        cpus=14,
+    ),
+    process=dict(
+        tries=1,
+    ),
+)
 smith.RunWorkflow(
-    task,
+    task=task,
     config_file=smith.GetNxfConfigPresets()["local"],
+    params=params,
     resource_overrides={
-        "all": Resources(
-            memory=Size.GB(2),
+        "*": Resources(
+            memory=Size.GB(1),
+            cpus=14,
         )
     }
 )
 
-# with open("../secrets/slurm_account_fir") as f:
-#     SLURM_ACCOUNT = f.readline()
-# smith.RunWorkflow(
-#     task,
-#     config_file=smith.GetNxfConfigPresets()["slurm"],
-#     params=dict(
-#         slurmAccount=SLURM_ACCOUNT,
-#     )
-# )
+# # with open("../secrets/slurm_account_fir") as f:
+# #     SLURM_ACCOUNT = f.readline()
+# # smith.RunWorkflow(
+# #     task,
+# #     config_file=smith.GetNxfConfigPresets()["slurm"],
+# #     params=dict(
+# #         slurmAccount=SLURM_ACCOUNT,
+# #     )
+# # )

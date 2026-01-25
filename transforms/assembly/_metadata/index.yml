@@ -1,2 +1,22 @@
-manifest: {}
-schema: 0.11.4
+manifest:
+  assembly_stats.py:
+    type: transforms::transform
+  bbduk.py:
+    type: transforms::transform
+  filtlong.py:
+    type: transforms::transform
+  flye.py:
+    type: transforms::transform
+  flye_raw.py:
+    type: transforms::transform
+  isolate/filtlong_targeted.py:
+    type: transforms::transform
+  isolate/hifiasm.py:
+    type: transforms::transform
+  isolate/miniasm.py:
+    type: transforms::transform
+  megahit.py:
+    type: transforms::transform
+  seqkit_reads.py:
+    type: transforms::transform
+schema: v1

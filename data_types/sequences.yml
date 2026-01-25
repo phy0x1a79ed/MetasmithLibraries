@@ -1,5 +1,5 @@
 types:
-  genome-like:
+  assembly:
     properties:
       Format: FASTA
       Data: DNA sequence
@@ -17,3 +17,196 @@ types:
       Format: FASTA
       Data: AA sequence
       ext: faa
+  reads:
+    properties:
+      qc: none
+      Format: FASTQ
+      Data: DNA read
+      compression: gzip
+      ext: fq.gz
+  clean_reads:
+    extends:
+    - reads
+    properties:
+      qc: filtered
+  discarded_reads:
+    extends:
+    - reads
+    properties:
+      qc: discarded
+# -----------------------------------------
+# short reads
+  short_reads:
+    extends:
+    - reads
+    properties:
+      read_length: short
+  short_reads_pe:
+    extends:
+    - short_reads
+    properties:
+      parity: interleaved
+  short_reads_se:
+    extends:
+    - short_reads
+    properties:
+      parity: single
+  read_pair:
+    properties:
+      atomic: a pair of read files
+  forward_short_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: forward
+      read_length: short
+      ext: fq
+      compression: none
+  zipped_forward_short_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: forward
+      read_length: short
+  reverse_short_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: reverse
+      qc: none
+      read_length: short
+      ext: fq
+      compression: none
+  zipped_reverse_short_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: reverse
+      read_length: short
+  clean_short_reads:
+    extends:
+    - clean_reads
+    properties:
+      read_length: short
+  discarded_short_reads:
+    extends:
+    - discarded_reads
+    properties:
+      read_length: short
+  clean_short_reads_pe:
+    extends:
+    - clean_short_reads
+    properties:
+      parity: interleaved
+  clean_short_reads_se:
+    extends:
+    - clean_short_reads
+    properties:
+      parity: single
+# -----------------------------------------
+# long reads
+  long_reads:
+    extends:
+    - reads
+    properties:
+      parity: single
+      read_length: long
+  clean_long_reads:
+    extends:
+    - clean_reads
+    properties:
+      parity: single
+      read_length: long
+  100x_long_reads:
+    extends:
+    - clean_long_reads
+    properties:
+      coverage: 100x
+  discarded_long_reads:
+    extends:
+    - discarded_reads
+    properties:
+      parity: single
+      read_length: long
+# -----------------------------------------
+# reports
+  read_metadata:
+    properties:
+      _: read metadata
+      fields:
+      - parity        # one of: single, paired
+      - length_class  # one of: short, long
+      ext: json
+
+  read_qc_stats:
+    properties:
+      _: read QC stats
+      fields:
+      - reads
+      - bases
+      - mean_quality
+      - phred_encoding
+      - N50
+      - GC
+      ext: json
+  fastqc_html_report:
+    properties:
+      _: fastqc html report
+      ext: html
+  fastqc_raw_report:
+    properties:
+      _: fastqc raw report
+      ext: zip
+  nanoplot_html_report:
+    properties:
+      _: nanoplot html report
+      ext: html
+  nanoplot_raw_report:
+    properties:
+      _: nanoplot raw report
+      ext: gz
+
+  assembly_stats:
+    properties:
+      _: assembly stats
+      fields:
+      - fraction_reads_mapped
+      - length
+      - N50
+      - GC
+      - number_of_contigs
+      ext: json
+  assembly_per_contig_coverage:
+    properties:
+      _: assembly per contig coverage
+      ext: csv
+  assembly_per_bp_coverage:
+    properties:
+      _: assembly per bp coverage
+      ext: gz
+# -----------------------------------------
+# assembly
+  miniasm_gfa:
+    properties:
+      _: miniasm rough assembly
+      Format: graphical fragment assembly
+      ext: gfa
+  isolate_assembly:
+    extends:
+    - assembly
+    properties:
+      subject: isolate
+  flye_assembly:
+    extends:
+    - assembly
+    properties:
+      method: flye
+  flye_raw_assembly:
+    extends:
+    - assembly
+    properties:
+      method: flye using raw reads
