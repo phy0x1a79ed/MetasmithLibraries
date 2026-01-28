@@ -1,9 +1,10 @@
 from metasmith.python_api import *
-import json
+from pathlib import Path
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::hifiasm.oci"))
+img_hfa = model.AddRequirement(lib.GetType("containers::hifiasm.oci"))
+img_gft = model.AddRequirement(lib.GetType("containers::gfatools.oci"))
 reads   = model.AddRequirement(lib.GetType("sequences::100x_long_reads"))
 out     = model.AddProduct(lib.GetType("sequences::isolate_assembly"))
 
@@ -12,12 +13,22 @@ def protocol(context: ExecutionContext):
     iout = context.Output(out)
 
     threads = context.params.get('cpus')
-    threads = "" if threads is None else f"-t{threads}"
+    threads = "" if threads is None else f"-t {threads}"
     # Assemble inbred/homozygous genomes (-l0 disables duplication purging)
+    assembly_prefix = "the_assembly"
     context.ExecWithContainer(
-        image = image,
+        image = img_hfa,
         cmd = f"""
-        hifiasm -o {iout.container} {threads} -l0 {ireads.container}
+        hifiasm -o {assembly_prefix} {threads} -l0 {ireads.container}
+        """
+    )
+
+    primary_gfa = f"{assembly_prefix}.bp.p_ctg.gfa"
+    assert Path(primary_gfa).exists(), "failed to find the primary gfa"
+    context.ExecWithContainer(
+        image = img_gft,
+        cmd = f"""
+        /gfatools-final-gt/gfatools gfa2fa {primary_gfa} >{iout.container}
         """
     )
     
@@ -37,6 +48,6 @@ TransformInstance(
     resources=Resources(
         cpus=8,
         memory=Size.GB(32),
-        duration=Duration(hours=18),
+        duration=Duration(hours=3),
     )
 )

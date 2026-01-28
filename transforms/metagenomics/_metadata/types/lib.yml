@@ -3,15 +3,15 @@ ontology:
   name: EDAM
   strict: false
   version: '1.25'
-schema: 0.11.4
+schema: v1
 types:
-  figures:
-    properties:
-      src: figures
-      usage: library
   hierarchical_clustering.py:
     properties:
       src: hierarchical_clustering
+      usage: library
+  local:
+    properties:
+      src: local
       usage: library
   pangenome_heatmap.py:
     properties:

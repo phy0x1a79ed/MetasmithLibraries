@@ -183,7 +183,7 @@ types:
   assembly_per_contig_coverage:
     properties:
       _: assembly per contig coverage
-      ext: csv
+      ext: tsv
   assembly_per_bp_coverage:
     properties:
       _: assembly per bp coverage
@@ -200,6 +200,11 @@ types:
     - assembly
     properties:
       subject: isolate
+  hifiasm_meta_assembly:
+    extends:
+    - assembly
+    properties:
+      method: hifiasm-meta
   flye_assembly:
     extends:
     - assembly

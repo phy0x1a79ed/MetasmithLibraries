@@ -3,19 +3,275 @@ ontology:
   name: EDAM
   strict: false
   version: '1.25'
-schema: 0.11.4
+schema: v1
 types:
-  gbk:
+  100x_long_reads:
     properties:
-      Format: genbank file
-  genome-like:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      coverage: 100x
+      ext: fq.gz
+      parity: single
+      qc: filtered
+      read_length: long
+  assembly:
     properties:
       Data: DNA sequence
       Format: FASTA
+      ext: fna
+  assembly_per_bp_coverage:
+    properties:
+      _:
+      - assembly per bp coverage
+      ext: gz
+  assembly_per_contig_coverage:
+    properties:
+      _:
+      - assembly per contig coverage
+      ext: tsv
+  assembly_stats:
+    properties:
+      _:
+      - assembly stats
+      ext: json
+      fields:
+      - GC
+      - N50
+      - fraction_reads_mapped
+      - length
+      - number_of_contigs
+  clean_long_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: single
+      qc: filtered
+      read_length: long
+  clean_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: filtered
+  clean_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: filtered
+      read_length: short
+  clean_short_reads_pe:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: interleaved
+      qc: filtered
+      read_length: short
+  clean_short_reads_se:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: single
+      qc: filtered
+      read_length: short
+  discarded_long_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: single
+      qc: discarded
+      read_length: long
+  discarded_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: discarded
+  discarded_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: discarded
+      read_length: short
+  fastqc_html_report:
+    properties:
+      _:
+      - fastqc html report
+      ext: html
+  fastqc_raw_report:
+    properties:
+      _:
+      - fastqc raw report
+      ext: zip
+  flye_assembly:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      ext: fna
+      method: flye
+  flye_raw_assembly:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      ext: fna
+      method: flye using raw reads
+  forward_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: none
+      direction: forward
+      ext: fq
+      parity: paired end
+      qc: none
+      read_length: short
+  gbk:
+    properties:
+      Format: genbank file
+      ext: gbk
   gff:
     properties:
       Format: gene feature format
+      ext: gff
+  hifiasm_meta_assembly:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      ext: fna
+      method: hifiasm-meta
+  isolate_assembly:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      ext: fna
+      subject: isolate
+  long_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: single
+      qc: none
+      read_length: long
+  miniasm_gfa:
+    properties:
+      Format: graphical fragment assembly
+      _:
+      - miniasm rough assembly
+      ext: gfa
+  nanoplot_html_report:
+    properties:
+      _:
+      - nanoplot html report
+      ext: html
+  nanoplot_raw_report:
+    properties:
+      _:
+      - nanoplot raw report
+      ext: gz
   orfs:
     properties:
       Data: AA sequence
       Format: FASTA
+      ext: faa
+  read_metadata:
+    properties:
+      _:
+      - read metadata
+      ext: json
+      fields:
+      - length_class
+      - parity
+  read_pair:
+    properties:
+      atomic: a pair of read files
+  read_qc_stats:
+    properties:
+      _:
+      - read QC stats
+      ext: json
+      fields:
+      - GC
+      - N50
+      - bases
+      - mean_quality
+      - phred_encoding
+      - reads
+  reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: none
+  reverse_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: none
+      direction: reverse
+      ext: fq
+      parity: paired end
+      qc: none
+      read_length: short
+  short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      qc: none
+      read_length: short
+  short_reads_pe:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: interleaved
+      qc: none
+      read_length: short
+  short_reads_se:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      ext: fq.gz
+      parity: single
+      qc: none
+      read_length: short
+  zipped_forward_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      direction: forward
+      ext: fq.gz
+      parity: paired end
+      qc: none
+      read_length: short
+  zipped_reverse_short_reads:
+    properties:
+      Data: DNA read
+      Format: FASTQ
+      compression: gzip
+      direction: reverse
+      ext: fq.gz
+      parity: paired end
+      qc: none
+      read_length: short

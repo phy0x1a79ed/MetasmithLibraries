@@ -1,6 +1,6 @@
 import os, sys
 from pathlib import Path
-from metasmith.python_api import Agent, Source, SshSource, DataInstanceLibrary, TransformInstanceLibrary, DataTypeLibrary
+from metasmith.python_api import Agent, TargetBuilder, Source, SshSource, DataInstanceLibrary, TransformInstanceLibrary, DataTypeLibrary
 from metasmith.python_api import Resources, Size, Duration
 from metasmith.python_api import ContainerRuntime
 
@@ -44,12 +44,19 @@ in_dir = base_dir/f"{notebook_name}/inputs.xgdb"
 containers = DataInstanceLibrary.Load(MLIB/"resources/containers")
 logistics = TransformInstanceLibrary.Load(MLIB/f"transforms/logistics")
 
+targets = TargetBuilder()
+targets.Add("containers::pulled_container")
+
+WL = {Path(f"{n}.oci") for n in [
+    "gtdbtk"
+]}
+samples = [x for x in containers.AsSamples() if len(x._mask.intersection(WL))>0]
 task = smith.GenerateWorkflow(
-    samples=containers.AsSamples(),
+    samples=samples,
     resources=[],
     transforms=[logistics],
     # targets=[inputs.GetType("sequences::gbk")]
-    targets=["containers::pulled_container"]
+    targets=targets,
 )
 # task.plan.RenderDAG("pull_dag.svg", blacklist_namespaces=set())
 print(task.ok, len(task.plan.steps))

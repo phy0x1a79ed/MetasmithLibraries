@@ -5,7 +5,13 @@ ontology:
   version: '1.25'
 schema: v1
 types:
-  transform:
+  bam:
     properties:
-    - metasmith
-    - transform
+      _:
+      - binary alignment map
+      ext: bam
+  csi:
+    properties:
+      _:
+      - coordinate sorted index
+      ext: csi

@@ -1,0 +1,44 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  checkm_raw:
+    properties:
+    - checkm workspace
+  checkm_stats:
+    properties:
+      _:
+      - checkm quality stats
+      ext: csv
+  gtdb:
+    properties:
+    - genome taxonomy database
+  gtdbtk:
+    properties:
+      _:
+      - gtdbtk per contig classifications
+      ext: tsv
+  gtdbtk_raw:
+    properties:
+    - gtdbtk raw workspace
+  metabuli:
+    properties:
+      _:
+      - metabuli per contig classifications
+      ext: tsv
+  metabuli_krona:
+    properties:
+      _:
+      - metabuli krona report
+      ext: html
+  metabuli_ref:
+    properties:
+    - metabuli reference database
+  metabuli_report:
+    properties:
+      _:
+      - metabuli report
+      ext: tsv

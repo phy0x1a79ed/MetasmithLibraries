@@ -1,2 +1,8 @@
-manifest: {}
-schema: 0.11.4
+manifest:
+  binning/checkm.py:
+    type: transforms::transform
+  taxonomy/gtdbtk.py:
+    type: transforms::transform
+  taxonomy/metabuli.py:
+    type: transforms::transform
+schema: v1

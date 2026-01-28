@@ -18,6 +18,10 @@ types:
       provides:
       - bedtools
       - bedtools/genomecov
+  checkm.oci:
+    properties:
+      Format: OCI
+      provides: checkm
   container:
     properties:
       Format: OCI
@@ -37,6 +41,14 @@ types:
     properties:
       Format: OCI
       provides: flye
+  gfatools.oci:
+    properties:
+      Format: OCI
+      provides: gfatools
+  gtdbtk.oci:
+    properties:
+      Format: OCI
+      provides: gtdbtk
   hifiasm-meta.oci:
     properties:
       Format: OCI
@@ -49,6 +61,10 @@ types:
     properties:
       Format: OCI
       provides: megahit
+  metabuli.oci:
+    properties:
+      Format: OCI
+      provides: metabuli
   miniasm.oci:
     properties:
       Format: OCI

@@ -85,6 +85,11 @@ types:
     properties:
       provides: 
       - hifiasm
+  gfatools.oci:
+    extends: container
+    properties:
+      provides: 
+      - gfatools
 
   ncbi-datasets.oci:
     extends: container
@@ -98,6 +103,22 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+
+  checkm.oci:
+    extends: container
+    properties:
+      provides: 
+      - checkm
+  metabuli.oci:
+    extends: container
+    properties:
+      provides: 
+      - metabuli
+  gtdbtk.oci:
+    extends: container
+    properties:
+      provides: 
+      - gtdbtk
 
   ppanggolin.oci:
     extends: container

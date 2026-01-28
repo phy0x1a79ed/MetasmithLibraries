@@ -1,9 +1,10 @@
-# import os, sys
+import os, sys
+from hashlib import md5
+from pathlib import Path
 
 # sys.path = ["/home/tony/workspace/tools/MetasmithLibraries/tests/cache/local_home/runs/r1PAGuVP/_metasmith/task/transforms/bTPFEBhcO5JE/isolate"]+sys.path
 # __import__("miniasm")
 
-from hashlib import md5
 
 # hex = md5("/msm_home/runs/jNnaM8ZN/_metasmith/task/data/A7ZRjTx9d2kZ/SRR21655586.json".encode()).hexdigest()
 # hex = hex[:15]
@@ -18,4 +19,6 @@ from hashlib import md5
 # # print(2**31-1)
 
 # print(bool("False"))
-print([1, 2][-3:])
+# print([1, 2][-3:])
+# print(Path("asdf.x").suffix)
+print(int(float("2.7")))

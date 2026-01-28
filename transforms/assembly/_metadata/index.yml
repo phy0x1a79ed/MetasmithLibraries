@@ -9,11 +9,13 @@ manifest:
     type: transforms::transform
   flye_raw.py:
     type: transforms::transform
-  isolate/filtlong_targeted.py:
+  hifi/filtlong_targeted.py:
     type: transforms::transform
-  isolate/hifiasm.py:
+  hifi/hifiasm.py:
     type: transforms::transform
-  isolate/miniasm.py:
+  hifi/hifiasm_meta.py:
+    type: transforms::transform
+  hifi/miniasm.py:
     type: transforms::transform
   megahit.py:
     type: transforms::transform

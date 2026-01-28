@@ -3,6 +3,8 @@ manifest:
     type: containers::bbtools.oci
   bedtools.oci:
     type: containers::bedtools.oci
+  checkm.oci:
+    type: containers::checkm.oci
   fastp.oci:
     type: containers::fastp.oci
   fastqc.oci:
@@ -11,12 +13,18 @@ manifest:
     type: containers::filtlong.oci
   flye.oci:
     type: containers::flye.oci
+  gfatools.oci:
+    type: containers::gfatools.oci
+  gtdbtk.oci:
+    type: containers::gtdbtk.oci
   hifiasm-meta.oci:
     type: containers::hifiasm-meta.oci
   hifiasm.oci:
     type: containers::hifiasm.oci
   megahit.oci:
     type: containers::megahit.oci
+  metabuli.oci:
+    type: containers::metabuli.oci
   miniasm.oci:
     type: containers::miniasm.oci
   minimap2.oci:

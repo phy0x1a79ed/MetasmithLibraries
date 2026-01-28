@@ -29,7 +29,7 @@ types:
     properties:
       _:
       - assembly per contig coverage
-      ext: csv
+      ext: tsv
   assembly_stats:
     properties:
       _:
@@ -147,6 +147,12 @@ types:
     properties:
       Format: gene feature format
       ext: gff
+  hifiasm_meta_assembly:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      ext: fna
+      method: hifiasm-meta
   isolate_assembly:
     properties:
       Data: DNA sequence
