@@ -48,9 +48,10 @@ targets = TargetBuilder()
 targets.Add("containers::pulled_container")
 
 WL = {Path(f"{n}.oci") for n in [
-    "gtdbtk"
+    # "gtdbtk",
+    "fastani",
 ]}
-samples = [x for x in containers.AsSamples() if len(x._mask.intersection(WL))>0]
+samples = [x for x in containers.AsSamples("containers::container") if len(x._mask.intersection(WL))>0]
 task = smith.GenerateWorkflow(
     samples=samples,
     resources=[],
@@ -58,11 +59,11 @@ task = smith.GenerateWorkflow(
     # targets=[inputs.GetType("sequences::gbk")]
     targets=targets,
 )
-# task.plan.RenderDAG("pull_dag.svg", blacklist_namespaces=set())
+task.plan.RenderDAG("./cache/pull_dag.svg", blacklist_namespaces=set())
 print(task.ok, len(task.plan.steps))
 
 # smith.StageWorkflow(task, on_exist="clear")
-smith.StageWorkflow(task, on_exist="update_all")
+smith.StageWorkflow(task, on_exist="update")
 # smith.StageWorkflow(task, on_exist="update_workflow")
 
 params = dict(

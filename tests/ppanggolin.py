@@ -1,13 +1,13 @@
 import os, sys
 from pathlib import Path
 from metasmith.python_api import Agent, Source, SshSource, DataInstanceLibrary, TransformInstanceLibrary, DataTypeLibrary
-from metasmith.python_api import Resources, Size, Duration
+from metasmith.python_api import Resources, Size, Duration, TargetBuilder
 from metasmith.python_api import ContainerRuntime
 
 base_dir = Path("./cache")
 
 # agent_home = Source.FromLocal((base_dir/"local_home").resolve())
-agent_home = Source.FromLocal("/home/tony/workspace/tools/Metasmith/main/local_mock/cache/local_home")
+agent_home = Source.FromLocal((base_dir/"local_home").absolute())
 smith = Agent(
     home = agent_home,
     # runtime=ContainerRuntime.APPTAINER,
@@ -48,25 +48,29 @@ smith = Agent(
 #     ]
 # )
 
-# smith.Deploy()
+smith.Deploy()
 
 # import ipynbname
 # notebook_name = ipynbname.name()
 notebook_name = Path(__file__).stem
 in_dir = base_dir/f"{notebook_name}/inputs.xgdb"
 
-inputs = DataInstanceLibrary(in_dir)
-inputs.Purge()
-inputs.AddTypeLibrary("ncbi", DataTypeLibrary.Load("../data_types/ncbi.yml"))
-inputs.AddTypeLibrary("sequences", DataTypeLibrary.Load("../data_types/sequences.yml"))
-inputs.AddTypeLibrary("pangenome", DataTypeLibrary.Load("../data_types/pangenome.yml"))
+try:
+    inputs = DataInstanceLibrary.Load(in_dir)
+except:
+    inputs = DataInstanceLibrary(in_dir)
+    inputs.Purge()
+    inputs.AddTypeLibrary(namespace="ncbi", lib=DataTypeLibrary.Load("../data_types/ncbi.yml"))
+    inputs.AddTypeLibrary(namespace="sequences", lib=DataTypeLibrary.Load("../data_types/sequences.yml"))
+    inputs.AddTypeLibrary(namespace="pangenome", lib=DataTypeLibrary.Load("../data_types/pangenome.yml"))
 
-group = inputs.AddValue("pangenome", "e coli", "pangenome::pangenome")
-inputs.AddValue("DH10b", "GCF_000019425.1", "ncbi::assembly_accession", parents={group})
-inputs.AddValue("K12", "GCF_000005845.2", "ncbi::assembly_accession", parents={group})
-inputs.AddItem((base_dir/f"{notebook_name}/epi300.gbk").resolve(), "sequences::gbk", parents={group})
-inputs.LocalizeContents()
-inputs.Save()
+    group = inputs.AddValue("pangenome", "e coli", "pangenome::pangenome")
+    inputs.AddValue("DH10b", "GCF_000019425.1", "ncbi::assembly_accession", parents={group})
+    inputs.AddValue("K12", "GCF_000005845.2", "ncbi::assembly_accession", parents={group})
+    inputs.AddValue("EPI300", "GCA_052692645.1", "ncbi::assembly_accession", parents={group})
+    # inputs.AddItem((base_dir/f"{notebook_name}/epi300.gbk").resolve(), "sequences::gbk", parents={group})
+    # inputs.LocalizeContents()
+    inputs.Save()
 
 # inputs = DataInstanceLibrary.Load(in_dir)
 
@@ -80,36 +84,41 @@ transforms = [
     for n in ["logistics", "pangenome"]
 ]
 
+targets = TargetBuilder()
+targets.Add("pangenome::heatmap")
+# targets.Add("sequences::orfs")
+
 task = smith.GenerateWorkflow(
-    samples=inputs.AsSamples(),
+    samples=inputs.AsSamples("ncbi::assembly_accession"),
     resources=resources,
     transforms=transforms,
-    # targets=[inputs.GetType("sequences::gbk")]
-    targets=["pangenome::heatmap"]
+    targets=targets,
 )
 task.plan.RenderDAG(base_dir/f"{notebook_name}/dag")
 print(task.ok, len(task.plan.steps))
 
-smith.StageWorkflow(task, on_exist="clear")
-params = dict(
-    executor=dict(
-        cpus=14,
-    ),
-    process=dict(
-        tries=1,
-    ),
-)
-smith.RunWorkflow(
-    task=task,
-    config_file=smith.GetNxfConfigPresets()["local"],
-    params=params,
-    resource_overrides={
-        "*": Resources(
-            memory=Size.GB(1),
-            cpus=14,
-        )
-    }
-)
+# # smith.StageWorkflow(task, on_exist="clear")
+# smith.StageWorkflow(task, on_exist="update_all")
+# params = dict(
+#     executor=dict(
+#         cpus=14,
+#         queueSize=3,
+#     ),
+#     process=dict(
+#         tries=1,
+#     ),
+# )
+# smith.RunWorkflow(
+#     task=task,
+#     config_file=smith.GetNxfConfigPresets()["local"],
+#     params=params,
+#     resource_overrides={
+#         "*": Resources(
+#             memory=Size.GB(1),
+#             cpus=14,
+#         )
+#     }
+# )
 
 # # with open("../secrets/slurm_account_fir") as f:
 # #     SLURM_ACCOUNT = f.readline()

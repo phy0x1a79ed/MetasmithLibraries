@@ -25,6 +25,10 @@ types:
   container:
     properties:
       Format: OCI
+  fastani.oci:
+    properties:
+      Format: OCI
+      provides: fastani
   fastp.oci:
     properties:
       Format: OCI

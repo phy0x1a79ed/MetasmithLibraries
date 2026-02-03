@@ -1,7 +1,7 @@
 import os, sys
 from pathlib import Path
 from metasmith.python_api import Agent, Source, SshSource, DataInstanceLibrary, TransformInstanceLibrary, DataTypeLibrary
-from metasmith.python_api import Resources, Size, Duration
+from metasmith.python_api import Resources, Size, Duration, TargetBuilder
 from metasmith.python_api import ContainerRuntime
 from metasmith.hashing import KeyGenerator
 
@@ -81,8 +81,8 @@ if in_dir.exists():
 else:
     inputs = DataInstanceLibrary(in_dir)
     inputs.Purge()
-    inputs.AddTypeLibrary("sequences", DataTypeLibrary.Load("../data_types/sequences.yml"))
-    inputs.AddTypeLibrary("ncbi", DataTypeLibrary.Load("../data_types/ncbi.yml"))
+    inputs.AddTypeLibrary(namespace="sequences", lib=DataTypeLibrary.Load("../data_types/sequences.yml"))
+    inputs.AddTypeLibrary(namespace="ncbi", lib=DataTypeLibrary.Load("../data_types/ncbi.yml"))
     for p, t, m in input_raw:
         if isinstance(p, Path):
             m["acc"] = p.name.split(".")[0].split("_")[0]

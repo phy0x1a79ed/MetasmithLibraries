@@ -119,6 +119,11 @@ types:
     properties:
       provides: 
       - gtdbtk
+  fastani.oci:
+    extends: container
+    properties:
+      provides: 
+      - fastani
 
   ppanggolin.oci:
     extends: container

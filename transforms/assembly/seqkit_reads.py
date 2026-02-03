@@ -92,8 +92,8 @@ TransformInstance(
     model=model,
     group_by=reads,
     resources=Resources(
-        cpus=1,
-        memory=Size.GB(16),
-        duration=Duration(hours=4),
+        cpus=4,
+        memory=Size.GB(8),
+        duration=Duration(hours=1),
     )
 )

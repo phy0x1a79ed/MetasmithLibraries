@@ -33,3 +33,8 @@ types:
   gtdbtk_raw:
     properties:
       _: gtdbtk raw workspace
+
+  ani_table:
+    properties:
+      _: fastani pairwise average nucleotide identity
+      ext: tsv
