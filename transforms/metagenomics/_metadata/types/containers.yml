@@ -25,6 +25,10 @@ types:
   container:
     properties:
       Format: OCI
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides: diamond
   fastani.oci:
     properties:
       Format: OCI
@@ -61,6 +65,10 @@ types:
     properties:
       Format: OCI
       provides: hifiasm
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: exec_annotation
   megahit.oci:
     properties:
       Format: OCI
@@ -89,6 +97,10 @@ types:
     properties:
       Format: OCI
       provides: ppanggolin
+  prodigal.oci:
+    properties:
+      Format: OCI
+      provides: prodigal
   pulled_container:
     properties:
       atomic_description: pulled OCI container

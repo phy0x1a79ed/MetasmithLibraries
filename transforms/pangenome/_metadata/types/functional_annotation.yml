@@ -1,0 +1,36 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  diamond_db:
+    properties:
+      _:
+      - DIAMOND formatted protein database
+      ext: dmnd
+  diamond_hits:
+    properties:
+      _:
+      - DIAMOND alignment results
+      ext: tsv
+  kegg_orthologs:
+    properties:
+      _:
+      - KEGG ortholog annotations
+      ext: tsv
+  kofam_db:
+    properties:
+    - KofamScan HMM profiles and ko_list directory
+  kofam_source:
+    properties:
+    - KofamScan database source URL
+  protein_ref_fasta:
+    properties:
+      _:
+      - protein reference sequences
+      ext: faa
+  protein_ref_url:
+    properties:
+    - protein reference FASTA download URL

@@ -130,10 +130,26 @@ types:
     properties:
       provides: 
       - ppanggolin
+  prodigal.oci:
+    extends: container
+    properties:
+      provides:
+      - prodigal
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+      - diamond
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - exec_annotation
+
   python_for_data_science.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - python=3.12
       - py/numpy
       - py/scipy

@@ -9,6 +9,18 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
+  prodigal.oci:
+    properties:
+      Format: OCI
+      provides: prodigal
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides: diamond
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: exec_annotation
   ppanggolin.oci:
     properties:
       Format: OCI

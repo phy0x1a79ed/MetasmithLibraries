@@ -1,0 +1,26 @@
+types:
+  kofam_source:
+    properties:
+      _: KofamScan database source URL
+  kofam_db:
+    properties:
+      _: KofamScan HMM profiles and ko_list directory
+  protein_ref_url:
+    properties:
+      _: protein reference FASTA download URL
+  protein_ref_fasta:
+    properties:
+      _: protein reference sequences
+      ext: faa
+  diamond_db:
+    properties:
+      _: DIAMOND formatted protein database
+      ext: dmnd
+  kegg_orthologs:
+    properties:
+      _: KEGG ortholog annotations
+      ext: tsv
+  diamond_hits:
+    properties:
+      _: DIAMOND alignment results
+      ext: tsv

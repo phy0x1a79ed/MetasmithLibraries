@@ -1,4 +1,10 @@
 manifest:
-  pprodigal.py:
+  diamond_blastp.py:
+    type: transforms::transform
+  diamond_makedb.py:
+    type: transforms::transform
+  kofamscan.py:
+    type: transforms::transform
+  prodigal.py:
     type: transforms::transform
 schema: v1

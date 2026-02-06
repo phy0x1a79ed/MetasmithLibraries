@@ -5,6 +5,8 @@ manifest:
     type: containers::bedtools.oci
   checkm.oci:
     type: containers::checkm.oci
+  diamond.oci:
+    type: containers::diamond.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
@@ -19,6 +21,8 @@ manifest:
     type: containers::gfatools.oci
   gtdbtk.oci:
     type: containers::gtdbtk.oci
+  kofamscan.oci:
+    type: containers::kofamscan.oci
   hifiasm-meta.oci:
     type: containers::hifiasm-meta.oci
   hifiasm.oci:
@@ -37,6 +41,8 @@ manifest:
     type: containers::ncbi-datasets.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
+  prodigal.oci:
+    type: containers::prodigal.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
   samtools.oci:
