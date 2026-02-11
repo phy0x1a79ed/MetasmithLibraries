@@ -8,7 +8,8 @@ types:
     properties:
       ext: log
       atomic_description: pulled OCI container
-
+  # -------------------------------------------------
+  # read qc
   fastp.oci:
     extends: container
     properties:
@@ -43,6 +44,8 @@ types:
       - seqkit
       - seqkit/stat
 
+  # -------------------------------------------------
+  # read mapping
   minimap2.oci:
     extends: container
     properties:
@@ -60,6 +63,8 @@ types:
       provides: 
       - samtools
 
+  # -------------------------------------------------
+  # assembly
   flye.oci:
     extends: container
     properties:
@@ -91,6 +96,8 @@ types:
       provides: 
       - gfatools
 
+  # -------------------------------------------------
+  # ncbi
   ncbi-datasets.oci:
     extends: container
     properties:
@@ -104,6 +111,8 @@ types:
       - sratk/prefetch
       - sratk/vdb-validate
 
+  # -------------------------------------------------
+  # taxonomy
   checkm.oci:
     extends: container
     properties:
@@ -125,6 +134,24 @@ types:
       provides: 
       - fastani
 
+  # -------------------------------------------------
+  # proteins
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides: 
+      - pprodigal
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+        - diamond
+        - diamond/makedb
+        - diamond/blastp
+        - diamond/linclust
+
+  # -------------------------------------------------
+  # pangenome
   ppanggolin.oci:
     extends: container
     properties:

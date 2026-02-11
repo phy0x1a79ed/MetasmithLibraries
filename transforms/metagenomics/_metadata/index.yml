@@ -1,6 +1,8 @@
 manifest:
   binning/checkm.py:
     type: transforms::transform
+  prodigal.py:
+    type: transforms::transform
   taxonomy/fastani.py:
     type: transforms::transform
   taxonomy/gtdbtk.py:

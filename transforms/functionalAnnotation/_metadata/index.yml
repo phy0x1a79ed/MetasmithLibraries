@@ -1,4 +1,8 @@
 manifest:
+  add_orfs_to_centroids.py:
+    type: transforms::transform
+  diamond_linclust.py:
+    type: transforms::transform
   pprodigal.py:
     type: transforms::transform
 schema: v1

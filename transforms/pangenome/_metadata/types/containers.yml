@@ -25,6 +25,14 @@ types:
   container:
     properties:
       Format: OCI
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides:
+      - diamond
+      - diamond/blastp
+      - diamond/linclust
+      - diamond/makedb
   fastani.oci:
     properties:
       Format: OCI
@@ -89,6 +97,10 @@ types:
     properties:
       Format: OCI
       provides: ppanggolin
+  pprodigal.oci:
+    properties:
+      Format: OCI
+      provides: pprodigal
   pulled_container:
     properties:
       atomic_description: pulled OCI container

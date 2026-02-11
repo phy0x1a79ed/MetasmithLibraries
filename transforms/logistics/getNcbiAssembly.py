@@ -9,7 +9,7 @@ model   = Transform()
 dep     = model.AddRequirement(lib.GetType("ncbi::assembly_accession"))
 image   = model.AddRequirement(lib.GetType("containers::ncbi-datasets.oci"))
 fna     = model.AddProduct(lib.GetType("sequences::assembly"))
-faa     = model.AddProduct(lib.GetType("sequences::orfs"))
+faa     = model.AddProduct(lib.GetType("sequences::open_reading_frames"))
 gff     = model.AddProduct(lib.GetType("sequences::gff"))
 gbk     = model.AddProduct(lib.GetType("sequences::gbk"))
 
