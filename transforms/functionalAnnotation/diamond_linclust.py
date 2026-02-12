@@ -21,7 +21,10 @@ def protocol(context: ExecutionContext):
     min_id = open(iidentity.local).readline().strip()
 
     threads = context.params.get('cpus')
-    threads = "" if threads is None else f"-p {threads}"
+    threads = "" if threads is None else f"--threads {threads}"
+
+    memory = context.params.get('memory')
+    memory = "" if memory is None else f"--memory-limit {int(float(memory))-8}G"
 
     # Build diamond database and run linclust inside container
     context.ExecWithContainer(
@@ -29,11 +32,11 @@ def protocol(context: ExecutionContext):
         cmd=f"""\
             diamond makedb --in {iorfs.container} -d orfs_db \
             && diamond linclust \
+                {threads} {memory} \
                 -d orfs_db \
                 -o {CLUSTERS_TSV} \
                 --approx-id {min_id} \
-                --member-cover 80 \
-                {threads}
+                --member-cover 80
         """,
     )
 
@@ -74,8 +77,8 @@ TransformInstance(
     model=model,
     group_by=identity,
     resources=Resources(
-        cpus=4,
-        memory=Size.GB(16),
-        duration=Duration(hours=3),
+        cpus=16,
+        memory=Size.GB(32),
+        duration=Duration(hours=12),
     )
 )

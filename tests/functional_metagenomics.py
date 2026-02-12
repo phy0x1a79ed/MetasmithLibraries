@@ -62,7 +62,8 @@ transforms = [
 ]
 
 targets = TargetBuilder()
-targets.Add("sequences::open_reading_frames")
+targets.Add("taxonomy::genomad_virus_summary")
+targets.Add("taxonomy::genomad_plasmid_summary")
 
 task = smith.GenerateWorkflow(
     samples=inputs.AsSamples("sequences::assembly"),
@@ -77,7 +78,7 @@ print(task.ok, len(task.plan.steps))
 print(p)
 print(f"task: {task.GetKey()}, input {in_dir}")
 
-# # smith.StageWorkflow(task, on_exist="update", verify_external_paths=True)
+# smith.StageWorkflow(task, on_exist="update", verify_external_paths=True)
 smith.StageWorkflow(task, on_exist="clear", verify_external_paths=False)
 
 # with open("../secrets/slurm_account_fir") as f:

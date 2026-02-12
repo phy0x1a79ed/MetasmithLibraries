@@ -133,6 +133,11 @@ types:
     properties:
       provides: 
       - fastani
+  genomad.oci:
+    extends: container
+    properties:
+      provides:
+        - genomad
 
   # -------------------------------------------------
   # proteins

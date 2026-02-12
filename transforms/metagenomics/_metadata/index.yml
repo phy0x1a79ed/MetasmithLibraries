@@ -5,6 +5,8 @@ manifest:
     type: transforms::transform
   taxonomy/fastani.py:
     type: transforms::transform
+  taxonomy/genomad.py:
+    type: transforms::transform
   taxonomy/gtdbtk.py:
     type: transforms::transform
   taxonomy/metabuli.py:

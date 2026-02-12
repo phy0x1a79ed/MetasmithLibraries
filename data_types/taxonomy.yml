@@ -15,6 +15,15 @@ types:
       _: metabuli krona report
       ext: html
 
+  genomad_virus_summary:
+    properties:
+      _: genomad virus summary
+      ext: tsv
+  genomad_plasmid_summary:
+    properties:
+      _: genomad plasmid summary
+      ext: tsv
+
   checkm_stats:
     properties:
       _: checkm quality stats

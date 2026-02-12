@@ -18,6 +18,16 @@ types:
       _:
       - checkm quality stats
       ext: csv
+  genomad_plasmid_summary:
+    properties:
+      _:
+      - genomad plasmid summary
+      ext: tsv
+  genomad_virus_summary:
+    properties:
+      _:
+      - genomad virus summary
+      ext: tsv
   gtdb:
     properties:
     - genome taxonomy database
