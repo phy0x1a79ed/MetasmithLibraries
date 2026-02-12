@@ -1,0 +1,6 @@
+manifest:
+  blast_map_asvs.py:
+    type: transforms::transform
+  qiime2_taxonomy.py:
+    type: transforms::transform
+schema: v1

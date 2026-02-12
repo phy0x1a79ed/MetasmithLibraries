@@ -122,8 +122,24 @@ types:
   fastani.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - fastani
+  blast.oci:
+    extends: container
+    properties:
+      provides:
+      - blastn
+      - makeblastdb
+  vsearch.oci:
+    extends: container
+    properties:
+      provides:
+      - vsearch
+  qiime2.oci:
+    extends: container
+    properties:
+      provides:
+      - qiime
 
   ppanggolin.oci:
     extends: container

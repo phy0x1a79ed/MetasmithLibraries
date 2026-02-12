@@ -3,6 +3,8 @@ manifest:
     type: containers::bbtools.oci
   bedtools.oci:
     type: containers::bedtools.oci
+  blast.oci:
+    type: containers::blast.oci
   checkm.oci:
     type: containers::checkm.oci
   fastani.oci:
@@ -39,10 +41,14 @@ manifest:
     type: containers::ppanggolin.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
+  qiime2.oci:
+    type: containers::qiime2.oci
   samtools.oci:
     type: containers::samtools.oci
   seqkit.oci:
     type: containers::seqkit.oci
   sra-tools.oci:
     type: containers::sra-tools.oci
+  vsearch.oci:
+    type: containers::vsearch.oci
 schema: v1

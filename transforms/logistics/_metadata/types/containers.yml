@@ -18,6 +18,12 @@ types:
       provides:
       - bedtools
       - bedtools/genomecov
+  blast.oci:
+    properties:
+      Format: OCI
+      provides:
+      - blastn
+      - makeblastdb
   checkm.oci:
     properties:
       Format: OCI
@@ -110,6 +116,10 @@ types:
       - py/xmltodict
       - py/yaml
       - python=3.12
+  qiime2.oci:
+    properties:
+      Format: OCI
+      provides: qiime
   samtools.oci:
     properties:
       Format: OCI
@@ -127,3 +137,7 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch
