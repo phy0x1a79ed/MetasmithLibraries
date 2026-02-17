@@ -28,6 +28,10 @@ types:
     properties:
       Format: OCI
       provides: checkm
+  comebin.oci:
+    properties:
+      Format: OCI
+      provides: run_comebin.sh
   container:
     properties:
       Format: OCI
@@ -71,6 +75,12 @@ types:
     properties:
       Format: OCI
       provides: megahit
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - jgi_summarize_bam_contig_depths
+      - metabat2
   metabuli.oci:
     properties:
       Format: OCI
@@ -124,6 +134,10 @@ types:
     properties:
       Format: OCI
       provides: samtools
+  semibin.oci:
+    properties:
+      Format: OCI
+      provides: SemiBin2
   seqkit.oci:
     properties:
       Format: OCI

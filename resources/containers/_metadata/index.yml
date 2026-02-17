@@ -7,6 +7,8 @@ manifest:
     type: containers::blast.oci
   checkm.oci:
     type: containers::checkm.oci
+  comebin.oci:
+    type: containers::comebin.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
@@ -27,6 +29,8 @@ manifest:
     type: containers::hifiasm.oci
   megahit.oci:
     type: containers::megahit.oci
+  metabat2.oci:
+    type: containers::metabat2.oci
   metabuli.oci:
     type: containers::metabuli.oci
   miniasm.oci:
@@ -45,6 +49,8 @@ manifest:
     type: containers::qiime2.oci
   samtools.oci:
     type: containers::samtools.oci
+  semibin.oci:
+    type: containers::semibin.oci
   seqkit.oci:
     type: containers::seqkit.oci
   sra-tools.oci:

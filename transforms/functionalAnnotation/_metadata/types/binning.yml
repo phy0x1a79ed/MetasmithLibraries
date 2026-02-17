@@ -1,0 +1,29 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  bin_directory:
+    properties:
+      _:
+      - directory containing binned contig FASTA files
+      content: metagenomic bins
+  contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      content: bin assignments
+      ext: tsv
+  metagenome_sample:
+    properties:
+      _:
+      - a metagenome sample identifier
+      arity: 1
+  semibin_environment:
+    properties:
+      _:
+      - SemiBin habitat model name
+      arity: 1
+      ext: txt

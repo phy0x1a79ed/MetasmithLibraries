@@ -1,6 +1,12 @@
 manifest:
   binning/checkm.py:
     type: transforms::transform
+  binning/comebin.py:
+    type: transforms::transform
+  binning/metabat2.py:
+    type: transforms::transform
+  binning/semibin2.py:
+    type: transforms::transform
   taxonomy/fastani.py:
     type: transforms::transform
   taxonomy/gtdbtk.py:

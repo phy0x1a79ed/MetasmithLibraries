@@ -107,8 +107,24 @@ types:
   checkm.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - checkm
+  comebin.oci:
+    extends: container
+    properties:
+      provides:
+      - run_comebin.sh
+  semibin.oci:
+    extends: container
+    properties:
+      provides:
+      - SemiBin2
+  metabat2.oci:
+    extends: container
+    properties:
+      provides:
+      - metabat2
+      - jgi_summarize_bam_contig_depths
   metabuli.oci:
     extends: container
     properties:
