@@ -10,6 +10,14 @@ types:
       _:
       - directory containing binned contig FASTA files
       content: metagenomic bins
+  bin_fasta:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      _:
+      - a single metagenomic bin FASTA file
+      content: metagenomic bin
+      ext: fa
   contig_to_bin_table:
     properties:
       _:

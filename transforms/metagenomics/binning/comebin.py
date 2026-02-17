@@ -1,3 +1,5 @@
+import glob
+from pathlib import Path
 from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
@@ -5,14 +7,12 @@ model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::comebin.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"))
-bins        = model.AddProduct(lib.GetType("binning::bin_directory"))
+bin_fasta   = model.AddProduct(lib.GetType("binning::bin_fasta"))
 table       = model.AddProduct(lib.GetType("binning::contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
     iasm = context.Input(asm)
     ibam = context.Input(bam)
-    obins = context.Output(bins)
-    otable = context.Output(table)
 
     threads = context.params.get('cpus', 8)
     workdir = "comebin_out"
@@ -24,19 +24,26 @@ def protocol(context: ExecutionContext):
             mkdir -p {bam_dir}
             cp -L {ibam.container} {bam_dir}/
             run_comebin.sh -a {iasm.container} -o {workdir} -p {bam_dir} -t {threads}
-            mv {workdir}/comebin_res/comebin_res_bins {obins.container}
-            cp {workdir}/comebin_res/comebin_res_contig_bin.tsv {otable.container}
         """
     )
 
+    # Find all bin files and output each one separately
+    outputs = []
+    bin_dir = f"{workdir}/comebin_res/comebin_res_bins"
+    bin_files = sorted(glob.glob(f"{bin_dir}/*.fa"))
+
+    for i, bin_path in enumerate(bin_files):
+        out_bin = context.Output(bin_fasta, i=i)
+        context.LocalShell(f"cp {bin_path} {out_bin.local}")
+        outputs.append({bin_fasta: out_bin.local})
+
+    # Copy contig-to-bin table
+    otable = context.Output(table)
+    context.LocalShell(f"cp {workdir}/comebin_res/comebin_res_contig_bin.tsv {otable.local}")
+
     return ExecutionResult(
-        manifest=[
-            {
-                bins: obins.local,
-                table: otable.local,
-            },
-        ],
-        success=obins.local.exists() and otable.local.exists(),
+        manifest=outputs + [{table: otable.local}],
+        success=len(outputs) > 0 and otable.local.exists(),
     )
 
 TransformInstance(

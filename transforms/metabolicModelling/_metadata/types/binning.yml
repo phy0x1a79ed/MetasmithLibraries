@@ -5,6 +5,13 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  bin_fasta:
+    properties:
+      _: a single metagenomic bin FASTA file
+      Data: DNA sequence
+      Format: FASTA
+      content: metagenomic bin
+      ext: fa
   bin_directory:
     properties:
       _: directory containing binned contig FASTA files

@@ -1,3 +1,5 @@
+import glob
+from pathlib import Path
 from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
@@ -5,46 +7,51 @@ model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::metabat2.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"))
-bins        = model.AddProduct(lib.GetType("binning::bin_directory"))
+bin_fasta   = model.AddProduct(lib.GetType("binning::bin_fasta"))
 table       = model.AddProduct(lib.GetType("binning::contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
     iasm = context.Input(asm)
     ibam = context.Input(bam)
-    obins = context.Output(bins)
-    otable = context.Output(table)
 
     threads = context.params.get('cpus', 8)
     depth_file = "depth.txt"
-    bin_prefix = "metabat_bins/bin"
+    bin_dir = "metabat_bins"
+    bin_prefix = f"{bin_dir}/bin"
 
     context.ExecWithContainer(
         image = image,
         cmd = f"""
-            mkdir -p metabat_bins
+            mkdir -p {bin_dir}
             jgi_summarize_bam_contig_depths --outputDepth {depth_file} {ibam.container}
             metabat2 -i {iasm.container} -a {depth_file} -o {bin_prefix} -t {threads}
-            mv metabat_bins {obins.container}
-
-            # Generate contig-to-bin table from bin files
-            echo -e "contig\\tbin" > {otable.container}
-            for f in {obins.container}/*.fa; do
-                bin_name=$(basename "$f" .fa)
-                grep "^>" "$f" | sed 's/^>//' | while read contig; do
-                    echo -e "$contig\\t$bin_name"
-                done
-            done >> {otable.container}
         """
     )
 
+    # Find all bin files and output each one separately
+    outputs = []
+    bin_files = sorted(glob.glob(f"{bin_dir}/*.fa"))
+
+    for i, bin_path in enumerate(bin_files):
+        out_bin = context.Output(bin_fasta, i=i)
+        context.LocalShell(f"cp {bin_path} {out_bin.local}")
+        outputs.append({bin_fasta: out_bin.local})
+
+    # Generate contig-to-bin table from bin files
+    otable = context.Output(table)
+    with open(otable.local, "w") as f:
+        f.write("contig\tbin\n")
+        for bin_path in bin_files:
+            bin_name = Path(bin_path).stem
+            with open(bin_path) as bf:
+                for line in bf:
+                    if line.startswith(">"):
+                        contig = line[1:].strip().split()[0]
+                        f.write(f"{contig}\t{bin_name}\n")
+
     return ExecutionResult(
-        manifest=[
-            {
-                bins: obins.local,
-                table: otable.local,
-            },
-        ],
-        success=obins.local.exists() and otable.local.exists(),
+        manifest=outputs + [{table: otable.local}],
+        success=len(outputs) > 0 and otable.local.exists(),
     )
 
 TransformInstance(

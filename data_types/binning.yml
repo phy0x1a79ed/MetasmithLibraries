@@ -3,6 +3,13 @@ types:
     properties:
       _: a metagenome sample identifier
       arity: 1
+  bin_fasta:
+    properties:
+      _: a single metagenomic bin FASTA file
+      Format: FASTA
+      Data: DNA sequence
+      content: metagenomic bin
+      ext: fa
   bin_directory:
     properties:
       _: directory containing binned contig FASTA files
