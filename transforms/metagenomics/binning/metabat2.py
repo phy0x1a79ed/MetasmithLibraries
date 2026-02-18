@@ -6,9 +6,9 @@ lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::metabat2.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
-bam         = model.AddRequirement(lib.GetType("alignment::bam"))
-bin_fasta   = model.AddProduct(lib.GetType("binning::bin_fasta"))
-table       = model.AddProduct(lib.GetType("binning::contig_to_bin_table"))
+bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
+bin_fasta   = model.AddProduct(lib.GetType("binning::metabat2_bin_fasta"))
+table       = model.AddProduct(lib.GetType("binning::metabat2_contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
     iasm = context.Input(asm)
@@ -60,7 +60,7 @@ TransformInstance(
     group_by=asm,
     resources=Resources(
         cpus=8,
-        memory=Size.GB(8),
+        memory=Size.GB(16),
         duration=Duration(hours=2),
     )
 )

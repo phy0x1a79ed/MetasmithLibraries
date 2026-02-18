@@ -6,9 +6,9 @@ lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::comebin.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
-bam         = model.AddRequirement(lib.GetType("alignment::bam"))
-bin_fasta   = model.AddProduct(lib.GetType("binning::bin_fasta"))
-table       = model.AddProduct(lib.GetType("binning::contig_to_bin_table"))
+bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
+bin_fasta   = model.AddProduct(lib.GetType("binning::comebin_bin_fasta"))
+table       = model.AddProduct(lib.GetType("binning::comebin_contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
     iasm = context.Input(asm)

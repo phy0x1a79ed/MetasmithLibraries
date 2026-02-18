@@ -1,26 +1,44 @@
 types:
-  metagenome_sample:
-    properties:
-      _: a metagenome sample identifier
-      arity: 1
   bin_fasta:
     properties:
       _: a single metagenomic bin FASTA file
       Format: FASTA
       Data: DNA sequence
-      content: metagenomic bin
-      ext: fa
-  bin_directory:
-    properties:
-      _: directory containing binned contig FASTA files
-      content: metagenomic bins
+      ext: fna
   contig_to_bin_table:
     properties:
       _: contig to bin assignment table
       ext: tsv
-      content: bin assignments
-  semibin_environment:
+
+  metabat2_bin_fasta:
+    extends:
+    - bin_fasta
     properties:
-      _: SemiBin habitat model name
-      arity: 1
-      ext: txt
+      method: metabat2
+  metabat2_contig_to_bin_table:
+    extends:
+    - contig_to_bin_table
+    properties:
+      method: metabat2
+
+  semibin2_bin_fasta:
+    extends:
+    - bin_fasta
+    properties:
+      method: semibin2
+  semibin2_contig_to_bin_table:
+    extends:
+    - contig_to_bin_table
+    properties:
+      method: semibin2
+
+  comebin_bin_fasta:
+    extends:
+    - bin_fasta
+    properties:
+      method: comebin
+  comebin_contig_to_bin_table:
+    extends:
+    - contig_to_bin_table
+    properties:
+      method: comebin
