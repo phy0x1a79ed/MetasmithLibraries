@@ -35,6 +35,10 @@ types:
   container:
     properties:
       Format: OCI
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides: diamond
   fastani.oci:
     properties:
       Format: OCI

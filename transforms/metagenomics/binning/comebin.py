@@ -23,6 +23,7 @@ def protocol(context: ExecutionContext):
         cmd = f"""
             mkdir -p {bam_dir}
             cp -L {ibam.container} {bam_dir}/
+            mkdir -p {workdir}
             run_comebin.sh -a {iasm.container} -o {workdir} -p {bam_dir} -t {threads}
         """
     )

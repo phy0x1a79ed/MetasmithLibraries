@@ -1,5 +1,11 @@
 manifest:
+  downloadInterProScanDB.py:
+    type: transforms::transform
+  downloadKofamDB.py:
+    type: transforms::transform
   downloadSilvaDB.py:
+    type: transforms::transform
+  downloadUniRef50DB.py:
     type: transforms::transform
   dumpNcbiSra.py:
     type: transforms::transform

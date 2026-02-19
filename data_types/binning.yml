@@ -1,4 +1,8 @@
 types:
+  metagenome_sample:
+    properties:
+      _: a metagenome sample identifier for binning
+
   bin_fasta:
     properties:
       _: a single metagenomic bin FASTA file

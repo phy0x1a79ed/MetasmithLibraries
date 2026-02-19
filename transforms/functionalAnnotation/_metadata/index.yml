@@ -1,4 +1,14 @@
 manifest:
+  deepec.py:
+    type: transforms::transform
+  diamond_uniref50.py:
+    type: transforms::transform
+  interproscan.py:
+    type: transforms::transform
+  kofamscan.py:
+    type: transforms::transform
   pprodigal.py:
+    type: transforms::transform
+  proteinbert.py:
     type: transforms::transform
 schema: v1

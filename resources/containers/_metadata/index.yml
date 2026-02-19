@@ -9,6 +9,10 @@ manifest:
     type: containers::checkm.oci
   comebin.oci:
     type: containers::comebin.oci
+  deepec.oci:
+    type: containers::deepec.oci
+  diamond.oci:
+    type: containers::diamond.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
@@ -27,6 +31,10 @@ manifest:
     type: containers::hifiasm-meta.oci
   hifiasm.oci:
     type: containers::hifiasm.oci
+  interproscan.oci:
+    type: containers::interproscan.oci
+  kofamscan.oci:
+    type: containers::kofamscan.oci
   megahit.oci:
     type: containers::megahit.oci
   metabat2.oci:
@@ -41,8 +49,14 @@ manifest:
     type: containers::nanoplot.oci
   ncbi-datasets.oci:
     type: containers::ncbi-datasets.oci
+  polars.oci:
+    type: containers::polars.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
+  pprodigal.oci:
+    type: containers::pprodigal.oci
+  proteinbert.oci:
+    type: containers::proteinbert.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
   qiime2.oci:

@@ -1,0 +1,32 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  interproscan_data:
+    properties:
+    - InterProScan data directory
+  interproscan_source:
+    properties:
+    - Marker for InterProScan data location
+  kofamscan_ko_list:
+    properties:
+      _:
+      - KofamScan KO list file
+      ext: tsv
+  kofamscan_profiles:
+    properties:
+    - KofamScan HMM profile directory containing .hmm files
+  kofamscan_source:
+    properties:
+    - Marker for KofamScan database download
+  uniref50_diamond_db:
+    properties:
+      _:
+      - DIAMOND-formatted UniRef50 database
+      ext: dmnd
+  uniref50_source:
+    properties:
+    - Marker for UniRef50 database download

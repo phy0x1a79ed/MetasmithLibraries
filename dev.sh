@@ -57,6 +57,20 @@ case $1 in
         --transforms $HERE/transforms/*
     ;;
     ###################################################
+    # test
+    -t1)
+        pytest tests/test_*.py -v -m "not slow" --ignore=tests/cache
+    ;;
+    -t2)
+        pytest tests/test_*.py -v --ignore=tests/cache
+    ;;
+    --test-binning)
+        pytest tests/test_*.py -v --ignore=tests/cache
+    ;;
+    --test-annotation)
+        pytest tests/test_annotation_workflow.py
+    ;;
+    ###################################################
     *)
         echo "bad option"
         echo $1
