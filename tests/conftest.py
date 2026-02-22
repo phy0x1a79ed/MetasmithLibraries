@@ -203,6 +203,89 @@ def verify_json_output(filepath):
         return False
 
 
+@pytest.fixture(scope="session")
+def ab48_bam(agent, base_resources, mlib, test_data_dir):
+    """
+    Generate (or return cached) BAM for AB48 community data.
+
+    Runs the assembly_stats workflow via Docker to align reads to assembly,
+    producing a sorted BAM. The result is cached to disk for reuse.
+    """
+    import shutil
+
+    ab48_dir = test_data_dir / "ab48_community"
+    cached_bam = ab48_dir / "ABC-240403_KD.bam"
+
+    # Return cached BAM if it exists
+    if cached_bam.exists():
+        return cached_bam
+
+    assembly_path = ab48_dir / "ABC-240403_KD.fna"
+    reads_path = ab48_dir / "ABC-240403_KD.fastq.gz"
+
+    if not assembly_path.exists():
+        pytest.skip("AB48 assembly not available: ABC-240403_KD.fna")
+    if not reads_path.exists():
+        pytest.skip("AB48 reads not available: ABC-240403_KD.fastq.gz")
+
+    # Build input library
+    inputs_dir = ab48_dir / "_bam_gen_inputs.xgdb"
+    inputs = DataInstanceLibrary(inputs_dir)
+    for tl in ["sequences.yml", "alignment.yml"]:
+        inputs.AddTypeLibrary(mlib / "data_types" / tl)
+
+    meta = inputs.AddValue(
+        "reads_metadata.json",
+        {"parity": "single", "length_class": "long"},
+        "sequences::read_metadata",
+    )
+    reads = inputs.AddItem(reads_path, "sequences::long_reads", parents={meta})
+    inputs.AddItem(assembly_path, "sequences::assembly", parents={reads})
+    inputs.Save()
+
+    # Load assembly transforms
+    assembly_transforms = [
+        TransformInstanceLibrary.Load(mlib / "transforms/assembly"),
+    ]
+
+    # Target the BAM output
+    targets = TargetBuilder()
+    targets.Add("alignment::bam")
+
+    task = agent.GenerateWorkflow(
+        samples=list(inputs.AsSamples("sequences::read_metadata")),
+        resources=base_resources + [inputs],
+        transforms=assembly_transforms,
+        targets=targets,
+    )
+    assert task.ok, f"BAM generation workflow failed to plan: {task}"
+
+    agent.StageWorkflow(task, on_exist="clear")
+    agent.RunWorkflow(
+        task,
+        config_file=agent.GetNxfConfigPresets()["local"],
+        params=dict(
+            executor=dict(cpus=14, queueSize=1),
+            process=dict(tries=1),
+        ),
+        resource_overrides={
+            "*": Resources(cpus=14, memory=Size.GB(7)),
+        },
+    )
+
+    results = wait_for_workflow(agent, task, timeout=3600)
+    results_path = agent.GetResultSource(task).GetPath()
+
+    # Find and copy the BAM from results
+    for path, type_name, endpoint in results.Iterate():
+        if "bam" in type_name:
+            bam_source = path if path.is_absolute() else results_path / path
+            shutil.copy2(bam_source, cached_bam)
+            return cached_bam
+
+    raise RuntimeError("BAM not found in assembly_stats workflow results")
+
+
 @pytest.fixture
 def kofam_db_input(mlib, test_data_dir):
     """Create input library with KofamScan databases using absolute paths."""

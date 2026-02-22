@@ -37,17 +37,12 @@ def binning_transforms(mlib):
 
 
 @pytest.fixture
-def binning_input(tmp_inputs, test_data_dir):
-    """Create input library with assembly and BAM for binning."""
+def binning_input(tmp_inputs, test_data_dir, ab48_bam):
+    """Create input library with AB48 assembly and BAM for binning."""
     inputs = tmp_inputs(["sequences.yml", "alignment.yml", "binning.yml"])
 
-    assembly_path = test_data_dir / "Ana_PS.fna"
-    bam_path = test_data_dir / "Ana_PS.bam"
-
-    if not assembly_path.exists():
-        pytest.skip("Test data not available: Ana_PS.fna")
-    if not bam_path.exists():
-        pytest.skip("Test data not available: Ana_PS.bam")
+    assembly_path = test_data_dir / "ab48_community" / "ABC-240403_KD.fna"
+    bam_path = ab48_bam
 
     # NOTE: Don't use parents={sample} for assembly - it causes an infinite loop
     # in PrepareNextflow() because metagenome_sample endpoint isn't in plan.given
@@ -243,7 +238,7 @@ class TestBinningWorkflowExecution:
             },
         )
 
-        results = wait_for_workflow(agent, task, timeout=600)
+        results = wait_for_workflow(agent, task, timeout=1800)
         results_path = agent.GetResultSource(task).GetPath()
 
         found_bins = False

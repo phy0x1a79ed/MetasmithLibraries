@@ -40,7 +40,7 @@ def protocol(context: ExecutionContext):
 
     # Copy contig-to-bin table
     otable = context.Output(table)
-    context.LocalShell(f"cp {workdir}/comebin_res/comebin_res_contig_bin.tsv {otable.local}")
+    context.LocalShell(f"cp {workdir}/comebin_res/comebin_res.tsv {otable.local}")
 
     return ExecutionResult(
         manifest=outputs + [{table: otable.local}],
