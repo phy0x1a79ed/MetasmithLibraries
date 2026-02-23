@@ -88,30 +88,30 @@ task.plan.RenderDAG("./dag.svg")
 
 smith.StageWorkflow(task, on_exist="update")
 
-smith.RunWorkflow(
-    task,
-    config_file=smith.GetNxfConfigPresets()["local"],
-    params= dict(
-        executor=dict(
-            cpus=15,
-            queueSize=3,
-        ),
-        process=dict(
-            tries=1,
-        ),
-    ),
-    resource_overrides={
-        "*": Resources(
-            memory=Size.GB(1),
-        ),
-        "fastani": Resources(
-            cpus=14,
-        )
-    },
-    stub_delay=
-)
+# smith.RunWorkflow(
+#     task,
+#     config_file=smith.GetNxfConfigPresets()["local"],
+#     params= dict(
+#         executor=dict(
+#             cpus=15,
+#             queueSize=3,
+#         ),
+#         process=dict(
+#             tries=1,
+#         ),
+#     ),
+#     resource_overrides={
+#         "*": Resources(
+#             memory=Size.GB(1),
+#         ),
+#         "fastani": Resources(
+#             cpus=14,
+#         )
+#     },
+#     stub_delay=
+# )
 
-smith.GetResultSource(task)
+# smith.GetResultSource(task)
 
 # dag = task.plan.RenderDAG(WORKSPACE/"ani_dag.svg")
 # ipynbButtonLink(dag)

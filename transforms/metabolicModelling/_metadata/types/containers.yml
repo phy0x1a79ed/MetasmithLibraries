@@ -13,3 +13,17 @@ types:
     properties:
       Format: OCI
       provides: ppanggolin
+  comebin.oci:
+    properties:
+      Format: OCI
+      provides: run_comebin.sh
+  semibin.oci:
+    properties:
+      Format: OCI
+      provides: SemiBin2
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - metabat2
+      - jgi_summarize_bam_contig_depths

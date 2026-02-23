@@ -18,6 +18,7 @@ asm     = model.AddRequirement(lib.GetType("sequences::assembly"), parents={read
 stats   = model.AddProduct(lib.GetType("sequences::assembly_stats"))
 concov  = model.AddProduct(lib.GetType("sequences::assembly_per_contig_coverage"))
 bpcov   = model.AddProduct(lib.GetType("sequences::assembly_per_bp_coverage"))
+bam     = model.AddProduct(lib.GetType("alignment::bam"))
 
 def protocol(context: ExecutionContext):
     irmeta = context.Input(meta)
@@ -27,6 +28,7 @@ def protocol(context: ExecutionContext):
     istats = context.Output(stats)
     icontig_cov = context.Output(concov)
     ibp_cov = context.Output(bpcov)
+    obam = context.Output(bam)
 
     # https://lh3.github.io/minimap2/minimap2.html
     # minimap2 options:
@@ -212,6 +214,10 @@ def protocol(context: ExecutionContext):
     with open(istats.local, "w") as j:
         json.dump(assembly_stats, j)
 
+    # copy BAM to output
+    Log.Info("copying BAM to output")
+    context.LocalShell(f"cp {bam_file} {obam.local}")
+
     # just a bit of cleanup
     if temp_sam_path.exists(): temp_sam_path.unlink()
 
@@ -220,8 +226,9 @@ def protocol(context: ExecutionContext):
             stats: istats.local,
             concov: icontig_cov.local,
             bpcov: ibp_cov.local,
+            bam: obam.local,
         }],
-        success=Path(bam_file).exists() and icontig_cov.local.exists(),
+        success=obam.local.exists() and icontig_cov.local.exists(),
     )
 
 TransformInstance(

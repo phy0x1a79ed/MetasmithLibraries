@@ -3,8 +3,14 @@ manifest:
     type: containers::bbtools.oci
   bedtools.oci:
     type: containers::bedtools.oci
+  blast.oci:
+    type: containers::blast.oci
   checkm.oci:
     type: containers::checkm.oci
+  comebin.oci:
+    type: containers::comebin.oci
+  deepec.oci:
+    type: containers::deepec.oci
   diamond.oci:
     type: containers::diamond.oci
   fastani.oci:
@@ -17,8 +23,6 @@ manifest:
     type: containers::filtlong.oci
   flye.oci:
     type: containers::flye.oci
-  genomad.oci:
-    type: containers::genomad.oci
   gfatools.oci:
     type: containers::gfatools.oci
   gtdbtk.oci:
@@ -27,8 +31,14 @@ manifest:
     type: containers::hifiasm-meta.oci
   hifiasm.oci:
     type: containers::hifiasm.oci
+  interproscan.oci:
+    type: containers::interproscan.oci
+  kofamscan.oci:
+    type: containers::kofamscan.oci
   megahit.oci:
     type: containers::megahit.oci
+  metabat2.oci:
+    type: containers::metabat2.oci
   metabuli.oci:
     type: containers::metabuli.oci
   miniasm.oci:
@@ -39,16 +49,26 @@ manifest:
     type: containers::nanoplot.oci
   ncbi-datasets.oci:
     type: containers::ncbi-datasets.oci
+  polars.oci:
+    type: containers::polars.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
   pprodigal.oci:
     type: containers::pprodigal.oci
+  proteinbert.oci:
+    type: containers::proteinbert.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
+  qiime2.oci:
+    type: containers::qiime2.oci
   samtools.oci:
     type: containers::samtools.oci
+  semibin.oci:
+    type: containers::semibin.oci
   seqkit.oci:
     type: containers::seqkit.oci
   sra-tools.oci:
     type: containers::sra-tools.oci
+  vsearch.oci:
+    type: containers::vsearch.oci
 schema: v1

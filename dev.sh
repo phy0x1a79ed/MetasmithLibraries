@@ -57,6 +57,29 @@ case $1 in
         --transforms $HERE/transforms/*
     ;;
     ###################################################
+    # test
+    --test-binning)
+        pytest tests/test_*.py -v --ignore=tests/cache
+    ;;
+    --test-comebin)
+        pytest tests/test_binning_workflow.py::TestBinningWorkflowExecution::test_comebin_e2e \
+            -v --ignore=tests/cache \
+            -s --log-cli-level=INFO
+    ;;
+    --test-semibin2)
+        pytest tests/test_binning_workflow.py::TestBinningWorkflowExecution::test_semibin2_e2e \
+            -v --ignore=tests/cache \
+            -s --log-cli-level=INFO
+    ;;
+    --test-metabat2)
+        pytest tests/test_binning_workflow.py::TestBinningWorkflowExecution::test_metabat2_e2e \
+            -v --ignore=tests/cache \
+            -s --log-cli-level=INFO
+    ;;
+    --test-annotation)
+        pytest tests/test_annotation_workflow.py
+    ;;
+    ###################################################
     *)
         echo "bad option"
         echo $1

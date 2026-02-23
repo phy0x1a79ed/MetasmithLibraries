@@ -8,8 +8,7 @@ types:
     properties:
       ext: log
       atomic_description: pulled OCI container
-  # -------------------------------------------------
-  # read qc
+
   fastp.oci:
     extends: container
     properties:
@@ -44,8 +43,6 @@ types:
       - seqkit
       - seqkit/stat
 
-  # -------------------------------------------------
-  # read mapping
   minimap2.oci:
     extends: container
     properties:
@@ -63,8 +60,6 @@ types:
       provides: 
       - samtools
 
-  # -------------------------------------------------
-  # assembly
   flye.oci:
     extends: container
     properties:
@@ -96,8 +91,6 @@ types:
       provides: 
       - gfatools
 
-  # -------------------------------------------------
-  # ncbi
   ncbi-datasets.oci:
     extends: container
     properties:
@@ -111,13 +104,58 @@ types:
       - sratk/prefetch
       - sratk/vdb-validate
 
-  # -------------------------------------------------
-  # taxonomy
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides:
+      - pprodigal
+  deepec.oci:
+    extends: container
+    properties:
+      provides:
+      - deepEC
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+      - diamond
+  interproscan.oci:
+    extends: container
+    properties:
+      provides:
+      - interproscan
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - kofamscan
+  proteinbert.oci:
+    extends: container
+    properties:
+      provides:
+      - proteinBERT
+
   checkm.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - checkm
+  comebin.oci:
+    extends: container
+    properties:
+      provides:
+      - run_comebin.sh
+  semibin.oci:
+    extends: container
+    properties:
+      provides:
+      - SemiBin2
+  metabat2.oci:
+    extends: container
+    properties:
+      provides:
+      - metabat2
+      - jgi_summarize_bam_contig_depths
   metabuli.oci:
     extends: container
     properties:
@@ -131,32 +169,25 @@ types:
   fastani.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - fastani
-  genomad.oci:
+  blast.oci:
     extends: container
     properties:
       provides:
-        - genomad
-
-  # -------------------------------------------------
-  # proteins
-  pprodigal.oci:
-    extends: container
-    properties:
-      provides: 
-      - pprodigal
-  diamond.oci:
+      - blastn
+      - makeblastdb
+  vsearch.oci:
     extends: container
     properties:
       provides:
-        - diamond
-        - diamond/makedb
-        - diamond/blastp
-        - diamond/linclust
+      - vsearch
+  qiime2.oci:
+    extends: container
+    properties:
+      provides:
+      - qiime
 
-  # -------------------------------------------------
-  # pangenome
   ppanggolin.oci:
     extends: container
     properties:
@@ -179,3 +210,10 @@ types:
       - py/biopython
       - py/jupyter
       - py/notebook
+  polars.oci:
+    extends: container
+    properties:
+      provides: 
+      - python=3.12
+      - py/numpy
+      - py/polars

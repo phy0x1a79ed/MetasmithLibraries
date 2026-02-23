@@ -1,8 +1,14 @@
 manifest:
-  add_orfs_to_centroids.py:
+  deepec.py:
     type: transforms::transform
-  diamond_linclust.py:
+  diamond_uniref50.py:
+    type: transforms::transform
+  interproscan.py:
+    type: transforms::transform
+  kofamscan.py:
     type: transforms::transform
   pprodigal.py:
+    type: transforms::transform
+  proteinbert.py:
     type: transforms::transform
 schema: v1

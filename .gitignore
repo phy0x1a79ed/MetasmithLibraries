@@ -5,3 +5,5 @@ __pycache__
 .DS_Store
 secrets
 scratch
+/tests/test_data
+/tests/test_msm_home

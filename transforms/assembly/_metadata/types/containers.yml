@@ -18,21 +18,31 @@ types:
       provides:
       - bedtools
       - bedtools/genomecov
+  blast.oci:
+    properties:
+      Format: OCI
+      provides:
+      - blastn
+      - makeblastdb
   checkm.oci:
     properties:
       Format: OCI
       provides: checkm
+  comebin.oci:
+    properties:
+      Format: OCI
+      provides: run_comebin.sh
   container:
     properties:
       Format: OCI
+  deepec.oci:
+    properties:
+      Format: OCI
+      provides: deepEC
   diamond.oci:
     properties:
       Format: OCI
-      provides:
-      - diamond
-      - diamond/blastp
-      - diamond/linclust
-      - diamond/makedb
+      provides: diamond
   fastani.oci:
     properties:
       Format: OCI
@@ -53,10 +63,6 @@ types:
     properties:
       Format: OCI
       provides: flye
-  genomad.oci:
-    properties:
-      Format: OCI
-      provides: genomad
   gfatools.oci:
     properties:
       Format: OCI
@@ -73,10 +79,24 @@ types:
     properties:
       Format: OCI
       provides: hifiasm
+  interproscan.oci:
+    properties:
+      Format: OCI
+      provides: interproscan
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: kofamscan
   megahit.oci:
     properties:
       Format: OCI
       provides: megahit
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - jgi_summarize_bam_contig_depths
+      - metabat2
   metabuli.oci:
     properties:
       Format: OCI
@@ -97,6 +117,13 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
+  polars.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/numpy
+      - py/polars
+      - python=3.12
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -105,6 +132,10 @@ types:
     properties:
       Format: OCI
       provides: pprodigal
+  proteinbert.oci:
+    properties:
+      Format: OCI
+      provides: proteinBERT
   pulled_container:
     properties:
       atomic_description: pulled OCI container
@@ -126,10 +157,18 @@ types:
       - py/xmltodict
       - py/yaml
       - python=3.12
+  qiime2.oci:
+    properties:
+      Format: OCI
+      provides: qiime
   samtools.oci:
     properties:
       Format: OCI
       provides: samtools
+  semibin.oci:
+    properties:
+      Format: OCI
+      provides: SemiBin2
   seqkit.oci:
     properties:
       Format: OCI
@@ -143,3 +182,7 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch
