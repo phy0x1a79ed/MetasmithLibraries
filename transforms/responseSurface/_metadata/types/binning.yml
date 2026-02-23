@@ -1,0 +1,61 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  bin_fasta:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      _:
+      - a single metagenomic bin FASTA file
+      ext: fna
+  comebin_bin_fasta:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      _:
+      - a single metagenomic bin FASTA file
+      ext: fna
+      method: comebin
+  comebin_contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: comebin
+  contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      ext: tsv
+  metabat2_bin_fasta:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      _:
+      - a single metagenomic bin FASTA file
+      ext: fna
+      method: metabat2
+  metabat2_contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: metabat2
+  semibin2_bin_fasta:
+    properties:
+      Data: DNA sequence
+      Format: FASTA
+      _:
+      - a single metagenomic bin FASTA file
+      ext: fna
+      method: semibin2
+  semibin2_contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: semibin2
