@@ -29,6 +29,11 @@ types:
     properties:
       provides: 
       - filtlong
+  orad.oci:
+    extends: container
+    properties:
+      provides:
+      - orad
   bbtools.oci:
     extends: container
     properties:
@@ -157,6 +162,42 @@ types:
       provides:
       - qiime
 
+  deepec.oci:
+    extends: container
+    properties:
+      provides:
+      - deepec
+  interproscan.oci:
+    extends: container
+    properties:
+      provides:
+      - interproscan
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+      - diamond
+      - diamond/makedb
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - kofamscan
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides:
+      - pprodigal
+  proteinbert.oci:
+    extends: container
+    properties:
+      provides:
+      - proteinbert
+  polars.oci:
+    extends: container
+    properties:
+      provides:
+      - py/polars
   ppanggolin.oci:
     extends: container
     properties:

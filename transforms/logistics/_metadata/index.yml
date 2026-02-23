@@ -17,6 +17,8 @@ manifest:
     type: transforms::transform
   interleave_zipped_short_reads.py:
     type: transforms::transform
+  ora2fastq.py:
+    type: transforms::transform
   pullContainer.py:
     type: transforms::transform
   scatterNcbiAccession.py:
