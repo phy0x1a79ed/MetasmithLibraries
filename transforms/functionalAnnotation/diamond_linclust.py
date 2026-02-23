@@ -4,7 +4,7 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::diamond.oci"))
-orfs    = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
+orfs    = model.AddRequirement(lib.GetType("sequences::orfs"))
 identity = model.AddRequirement(lib.GetType("clustering::min_identity"))
 centroids_out = model.AddProduct(lib.GetType("clustering::centroids"))
 table_out     = model.AddProduct(lib.GetType("clustering::cluster_table"))

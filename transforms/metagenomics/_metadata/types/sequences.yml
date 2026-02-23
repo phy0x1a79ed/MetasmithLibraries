@@ -206,7 +206,7 @@ types:
       _:
       - nanoplot raw report
       ext: gz
-  open_reading_frames:
+  orfs:
     properties:
       Data: protein sequence
       Format: FASTA

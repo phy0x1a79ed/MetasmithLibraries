@@ -8,7 +8,6 @@ model = Transform()
 image = model.AddRequirement(lib.GetType("containers::interproscan.oci"))
 orfs = model.AddRequirement(lib.GetType("sequences::orfs"))
 data_dir = model.AddRequirement(lib.GetType("annotation::interproscan_data"))
-out_json = model.AddProduct(lib.GetType("annotation::interproscan_json"))
 out_gff = model.AddProduct(lib.GetType("annotation::interproscan_results"))
 
 
@@ -69,7 +68,7 @@ def protocol(context: ExecutionContext):
                 --seqtype p \
                 {cpus_string} \
                 -i ./{iorfs.container.stem}.clean.faa \
-                -f json,gff3 \
+                -f gff3 \
                 -d output
         """,
     )

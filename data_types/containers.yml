@@ -161,6 +161,11 @@ types:
     properties:
       provides: 
       - metabuli
+  genomad.oci:
+    extends: container
+    properties:
+      provides: 
+      - genomad
   gtdbtk.oci:
     extends: container
     properties:

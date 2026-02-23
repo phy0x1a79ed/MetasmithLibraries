@@ -19,12 +19,6 @@ types:
   interproscan_data:
     properties:
     - InterProScan data directory
-  interproscan_json:
-    properties:
-      Format: JSON
-      _:
-      - InterProScan annotations in JSON format
-      ext: json
   interproscan_results:
     properties:
       Format: CSV

@@ -63,6 +63,10 @@ types:
     properties:
       Format: OCI
       provides: flye
+  genomad.oci:
+    properties:
+      Format: OCI
+      provides: genomad
   gfatools.oci:
     properties:
       Format: OCI
