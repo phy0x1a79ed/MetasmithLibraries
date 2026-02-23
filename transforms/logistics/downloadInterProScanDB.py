@@ -4,14 +4,12 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
 img_ipr = model.AddRequirement(lib.GetType("containers::interproscan.oci"))
-src     = model.AddRequirement(lib.GetType("annotation::interproscan_source"))
 data    = model.AddProduct(lib.GetType("annotation::interproscan_data"))
 
 # InterProScan 5.67-99.0 data bundle
 IPRSCAN_DATA_URL = "https://ftp.ebi.ac.uk/pub/databases/interpro/iprscan/5/5.67-99.0/interproscan-5.67-99.0-64-bit.tar.gz"
 
 def protocol(context: ExecutionContext):
-    img_ipr = context.Input(img_ipr)
     idata = context.Output(data)
 
     context.ExecWithContainer(
@@ -40,7 +38,7 @@ def protocol(context: ExecutionContext):
 TransformInstance(
     protocol=protocol,
     model=model,
-    group_by=src,
+    group_by=img_ipr,
     labels=["local"],
     resources=Resources(
         cpus=1,

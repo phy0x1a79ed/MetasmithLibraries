@@ -35,6 +35,10 @@ types:
   container:
     properties:
       Format: OCI
+  deepec.oci:
+    properties:
+      Format: OCI
+      provides: deepEC
   diamond.oci:
     properties:
       Format: OCI
@@ -75,6 +79,14 @@ types:
     properties:
       Format: OCI
       provides: hifiasm
+  interproscan.oci:
+    properties:
+      Format: OCI
+      provides: interproscan
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: kofamscan
   megahit.oci:
     properties:
       Format: OCI
@@ -105,10 +117,25 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
+  polars.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/numpy
+      - py/polars
+      - python=3.12
   ppanggolin.oci:
     properties:
       Format: OCI
       provides: ppanggolin
+  pprodigal.oci:
+    properties:
+      Format: OCI
+      provides: pprodigal
+  proteinbert.oci:
+    properties:
+      Format: OCI
+      provides: proteinBERT
   pulled_container:
     properties:
       atomic_description: pulled OCI container
