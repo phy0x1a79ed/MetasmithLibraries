@@ -5,4 +5,6 @@ manifest:
     type: lib::local
   pangenome_heatmap.py:
     type: lib::pangenome_heatmap.py
+  response_surface.py:
+    type: lib::response_surface.py
 schema: v1

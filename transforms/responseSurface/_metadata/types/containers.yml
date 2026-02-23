@@ -1,0 +1,157 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  bbtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bbtools/bbduk.sh
+      - bbtools/filterbyname.sh
+      - bbtools/reformat.sh
+  bedtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bedtools
+      - bedtools/genomecov
+  blast.oci:
+    properties:
+      Format: OCI
+      provides:
+      - blastn
+      - makeblastdb
+  checkm.oci:
+    properties:
+      Format: OCI
+      provides: checkm
+  comebin.oci:
+    properties:
+      Format: OCI
+      provides: run_comebin.sh
+  container:
+    properties:
+      Format: OCI
+  fastani.oci:
+    properties:
+      Format: OCI
+      provides: fastani
+  fastp.oci:
+    properties:
+      Format: OCI
+      provides: fastp
+  fastqc.oci:
+    properties:
+      Format: OCI
+      provides: fastqc
+  filtlong.oci:
+    properties:
+      Format: OCI
+      provides: filtlong
+  flye.oci:
+    properties:
+      Format: OCI
+      provides: flye
+  gfatools.oci:
+    properties:
+      Format: OCI
+      provides: gfatools
+  gtdbtk.oci:
+    properties:
+      Format: OCI
+      provides: gtdbtk
+  hifiasm-meta.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm-meta
+  hifiasm.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm
+  megahit.oci:
+    properties:
+      Format: OCI
+      provides: megahit
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - jgi_summarize_bam_contig_depths
+      - metabat2
+  metabuli.oci:
+    properties:
+      Format: OCI
+      provides: metabuli
+  miniasm.oci:
+    properties:
+      Format: OCI
+      provides: miniasm
+  minimap2.oci:
+    properties:
+      Format: OCI
+      provides: minimap2
+  nanoplot.oci:
+    properties:
+      Format: OCI
+      provides: nanoplot
+  ncbi-datasets.oci:
+    properties:
+      Format: OCI
+      provides: ncbi-datasets
+  ppanggolin.oci:
+    properties:
+      Format: OCI
+      provides: ppanggolin
+  pulled_container:
+    properties:
+      atomic_description: pulled OCI container
+      ext: log
+  python_for_data_science.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/biopython
+      - py/jupyter
+      - py/matplotlib
+      - py/notebook
+      - py/numba
+      - py/numpy
+      - py/pandas
+      - py/plotly
+      - py/requests
+      - py/scipy
+      - py/xmltodict
+      - py/yaml
+      - python=3.12
+  qiime2.oci:
+    properties:
+      Format: OCI
+      provides: qiime
+  samtools.oci:
+    properties:
+      Format: OCI
+      provides: samtools
+  semibin.oci:
+    properties:
+      Format: OCI
+      provides: SemiBin2
+  seqkit.oci:
+    properties:
+      Format: OCI
+      provides:
+      - seqkit
+      - seqkit/stat
+  sra-tools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - fasterq-dump
+      - sratk/prefetch
+      - sratk/vdb-validate
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch
