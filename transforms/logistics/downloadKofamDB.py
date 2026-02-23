@@ -3,7 +3,6 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
-src     = model.AddRequirement(lib.GetType("annotation::kofamscan_source"))
 profiles = model.AddProduct(lib.GetType("annotation::kofamscan_profiles"))
 ko_list  = model.AddProduct(lib.GetType("annotation::kofamscan_ko_list"))
 
@@ -35,7 +34,7 @@ def protocol(context: ExecutionContext):
 TransformInstance(
     protocol=protocol,
     model=model,
-    group_by=src,
+    group_by=image,
     labels=["local"],
     resources=Resources(
         cpus=1,

@@ -109,6 +109,37 @@ types:
       - sratk/prefetch
       - sratk/vdb-validate
 
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides:
+      - pprodigal
+  deepec.oci:
+    extends: container
+    properties:
+      provides:
+      - deepEC
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+      - diamond
+  interproscan.oci:
+    extends: container
+    properties:
+      provides:
+      - interproscan
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - kofamscan
+  proteinbert.oci:
+    extends: container
+    properties:
+      provides:
+      - proteinBERT
+
   checkm.oci:
     extends: container
     properties:
@@ -135,6 +166,11 @@ types:
     properties:
       provides: 
       - metabuli
+  genomad.oci:
+    extends: container
+    properties:
+      provides: 
+      - genomad
   gtdbtk.oci:
     extends: container
     properties:
@@ -220,3 +256,10 @@ types:
       - py/biopython
       - py/jupyter
       - py/notebook
+  polars.oci:
+    extends: container
+    properties:
+      provides: 
+      - python=3.12
+      - py/numpy
+      - py/polars

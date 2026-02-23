@@ -7,8 +7,10 @@ schema: v1
 types:
   100x_long_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       coverage: 100x
       ext: fq.gz
@@ -17,7 +19,7 @@ types:
       read_length: long
   assembly:
     properties:
-      Data: DNA sequence
+      Data: nucleic acid sequence
       Format: FASTA
       ext: fna
   assembly_per_bp_coverage:
@@ -43,8 +45,10 @@ types:
       - number_of_contigs
   clean_long_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: single
@@ -52,23 +56,29 @@ types:
       read_length: long
   clean_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: filtered
   clean_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: filtered
       read_length: short
   clean_short_reads_pe:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: interleaved
@@ -76,8 +86,10 @@ types:
       read_length: short
   clean_short_reads_se:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: single
@@ -85,8 +97,10 @@ types:
       read_length: short
   discarded_long_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: single
@@ -94,15 +108,19 @@ types:
       read_length: long
   discarded_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: discarded
   discarded_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: discarded
@@ -119,13 +137,13 @@ types:
       ext: zip
   flye_assembly:
     properties:
-      Data: DNA sequence
+      Data: nucleic acid sequence
       Format: FASTA
       ext: fna
       method: flye
   flye_raw_assembly:
     properties:
-      Data: DNA sequence
+      Data: nucleic acid sequence
       Format: FASTA
       ext: fna
       method: flye using raw reads
@@ -141,8 +159,10 @@ types:
       read_length: short
   forward_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: none
       direction: forward
       ext: fq
@@ -159,20 +179,22 @@ types:
       ext: gff
   hifiasm_meta_assembly:
     properties:
-      Data: DNA sequence
+      Data: nucleic acid sequence
       Format: FASTA
       ext: fna
       method: hifiasm-meta
   isolate_assembly:
     properties:
-      Data: DNA sequence
+      Data: nucleic acid sequence
       Format: FASTA
       ext: fna
       subject: isolate
   long_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: single
@@ -196,8 +218,9 @@ types:
       ext: gz
   orfs:
     properties:
-      Data: AA sequence
+      Data: protein sequence
       Format: FASTA
+      content: open reading frames
       ext: faa
   read_metadata:
     properties:
@@ -224,8 +247,10 @@ types:
       - reads
   reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: none
@@ -241,8 +266,10 @@ types:
       read_length: short
   reverse_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: none
       direction: reverse
       ext: fq
@@ -251,16 +278,20 @@ types:
       read_length: short
   short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       qc: none
       read_length: short
   short_reads_pe:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: interleaved
@@ -268,8 +299,10 @@ types:
       read_length: short
   short_reads_se:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       ext: fq.gz
       parity: single
@@ -277,8 +310,10 @@ types:
       read_length: short
   zipped_forward_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       direction: forward
       ext: fq.gz
@@ -287,8 +322,10 @@ types:
       read_length: short
   zipped_reverse_short_reads:
     properties:
-      Data: DNA read
+      Data: nucleic acid sequence
       Format: FASTQ
+      _:
+      - DNA reads
       compression: gzip
       direction: reverse
       ext: fq.gz

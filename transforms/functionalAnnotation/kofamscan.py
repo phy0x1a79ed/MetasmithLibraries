@@ -10,6 +10,25 @@ ko_list  = model.AddRequirement(lib.GetType("annotation::kofamscan_ko_list"))
 out_results = model.AddProduct(lib.GetType("annotation::kofamscan_results"))
 
 
+def parse_kofamscan(input_path, output_path):
+    header = "gene_name,KO,thrshld,score,E-value,best\n"
+    with open(input_path, 'r') as infile, open(output_path, 'w') as outfile:
+        outfile.write(header)
+        for line in infile:
+            if line.startswith('#') or not line.strip():
+                continue
+            stripped = line.strip()
+            is_best = "*" if stripped.startswith("*") else ""
+            parts = stripped.lstrip('* ').split()
+            if len(parts) >= 5:
+                gene, ko, thr, score, evalue = parts[:5]
+                try:
+                    if float(score) >= float(thr):
+                        outfile.write(f"{gene},{ko},{thr},{score},{evalue},{is_best}\n")
+                except ValueError:
+                    outfile.write(f"{gene},{ko},{thr},{score},{evalue},{is_best}\n")
+
+
 def protocol(context: ExecutionContext):
     iorfs = context.Input(orfs)
     iprofiles = context.Input(profiles)
@@ -38,8 +57,8 @@ def protocol(context: ExecutionContext):
         """,
     )
 
-    # Copy output
-    context.LocalShell(f"cp kofam_results.txt {iout.local}")
+    # Parse and filter results into CSV
+    parse_kofamscan("kofam_results.txt", str(iout.local))
 
     return ExecutionResult(
         manifest=[

@@ -1,0 +1,9 @@
+types:
+  reference_database:
+    properties:
+      _: reference database
+  genomad:
+    extends:
+    - reference_database
+    properties:
+      _: for geNomad

@@ -38,7 +38,7 @@ types:
   deepec.oci:
     properties:
       Format: OCI
-      provides: deepec
+      provides: deepEC
   diamond.oci:
     properties:
       Format: OCI
@@ -65,6 +65,10 @@ types:
     properties:
       Format: OCI
       provides: flye
+  genomad.oci:
+    properties:
+      Format: OCI
+      provides: genomad
   gfatools.oci:
     properties:
       Format: OCI
@@ -126,7 +130,10 @@ types:
   polars.oci:
     properties:
       Format: OCI
-      provides: py/polars
+      provides:
+      - py/numpy
+      - py/polars
+      - python=3.12
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -138,7 +145,7 @@ types:
   proteinbert.oci:
     properties:
       Format: OCI
-      provides: proteinbert
+      provides: proteinBERT
   pulled_container:
     properties:
       atomic_description: pulled OCI container

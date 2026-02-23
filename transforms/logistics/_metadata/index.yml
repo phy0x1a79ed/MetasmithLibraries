@@ -21,6 +21,8 @@ manifest:
     type: transforms::transform
   pullContainer.py:
     type: transforms::transform
+  ref_genomad.py:
+    type: transforms::transform
   scatterNcbiAccession.py:
     type: transforms::transform
 schema: v1

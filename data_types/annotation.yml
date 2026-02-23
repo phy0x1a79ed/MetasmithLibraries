@@ -1,22 +1,17 @@
 types:
   # InterProScan
-  interproscan_json:
+  interproscan_results:
     properties:
-      _: InterProScan annotations in JSON format
-      Format: JSON
-      ext: json
-  interproscan_gff:
-    properties:
-      _: InterProScan annotations in GFF3 format
-      Format: GFF3
-      ext: gff3
+      _: Parsed InterProScan protein matches
+      Format: CSV
+      ext: csv
 
   # KofamScan
   kofamscan_results:
     properties:
-      _: KEGG KO assignments from KofamScan
-      Format: TSV
-      ext: txt
+      _: Filtered KofamScan KO assignments
+      Format: CSV
+      ext: csv
 
   # ProteinBERT
   proteinbert_embeddings:

@@ -2,7 +2,7 @@ types:
   assembly:
     properties:
       Format: FASTA
-      Data: DNA sequence
+      Data: nucleic acid sequence
       ext: fna
   gbk:
     properties:
@@ -12,16 +12,12 @@ types:
     properties:
       Format: gene feature format
       ext: gff
-  orfs:
-    properties:
-      Format: FASTA
-      Data: AA sequence
-      ext: faa
   reads:
     properties:
+      _: DNA reads
       qc: none
       Format: FASTQ
-      Data: DNA read
+      Data: nucleic acid sequence
       compression: gzip
       ext: fq.gz
   clean_reads:
@@ -233,3 +229,11 @@ types:
     - assembly
     properties:
       method: flye using raw reads
+# -----------------------------------------
+# protein
+  orfs:
+    properties:
+      Format: FASTA
+      Data: protein sequence
+      content: open reading frames
+      ext: faa

@@ -23,6 +23,8 @@ manifest:
     type: containers::filtlong.oci
   flye.oci:
     type: containers::flye.oci
+  genomad.oci:
+    type: containers::genomad.oci
   gfatools.oci:
     type: containers::gfatools.oci
   gtdbtk.oci:

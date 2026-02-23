@@ -19,18 +19,12 @@ types:
   interproscan_data:
     properties:
     - InterProScan data directory
-  interproscan_gff:
+  interproscan_results:
     properties:
-      Format: GFF3
+      Format: CSV
       _:
-      - InterProScan annotations in GFF3 format
-      ext: gff3
-  interproscan_json:
-    properties:
-      Format: JSON
-      _:
-      - InterProScan annotations in JSON format
-      ext: json
+      - Parsed InterProScan protein matches
+      ext: csv
   interproscan_source:
     properties:
     - Marker for InterProScan data location
@@ -44,10 +38,10 @@ types:
     - KofamScan HMM profile directory containing .hmm files
   kofamscan_results:
     properties:
-      Format: TSV
+      Format: CSV
       _:
-      - KEGG KO assignments from KofamScan
-      ext: txt
+      - Filtered KofamScan KO assignments
+      ext: csv
   kofamscan_source:
     properties:
     - Marker for KofamScan database download

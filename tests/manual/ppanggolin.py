@@ -98,34 +98,38 @@ task.plan.RenderDAG(base_dir/f"{notebook_name}/dag")
 print(task.ok, len(task.plan.steps))
 
 # # smith.StageWorkflow(task, on_exist="clear")
-# smith.StageWorkflow(task, on_exist="update_all")
-# params = dict(
-#     executor=dict(
-#         cpus=14,
-#         queueSize=3,
-#     ),
-#     process=dict(
-#         tries=1,
-#     ),
-# )
-# smith.RunWorkflow(
-#     task=task,
-#     config_file=smith.GetNxfConfigPresets()["local"],
-#     params=params,
-#     resource_overrides={
-#         "*": Resources(
-#             memory=Size.GB(1),
-#             cpus=14,
-#         )
-#     }
-# )
+smith.StageWorkflow(task, on_exist="update")
+params = dict(
+    executor=dict(
+        cpus=14,
+        queueSize=3,
+    ),
+    process=dict(
+        tries=1,
+    ),
+)
+smith.RunWorkflow(
+    task=task,
+    config_file=smith.GetNxfConfigPresets()["local"],
+    params=params,
+    resource_overrides={
+        "*": Resources(
+            memory=Size.GB(1),
+            cpus=14,
+        ),
+        "getNcbiAssembly": Resources(
+            memory=Size.GB(1),
+            cpus=2,
+        )
+    },
+)
 
-# # with open("../secrets/slurm_account_fir") as f:
-# #     SLURM_ACCOUNT = f.readline()
-# # smith.RunWorkflow(
-# #     task,
-# #     config_file=smith.GetNxfConfigPresets()["slurm"],
-# #     params=dict(
-# #         slurmAccount=SLURM_ACCOUNT,
-# #     )
-# # )
+# with open("../secrets/slurm_account_fir") as f:
+#     SLURM_ACCOUNT = f.readline()
+# smith.RunWorkflow(
+#     task,
+#     config_file=smith.GetNxfConfigPresets()["slurm"],
+#     params=dict(
+#         slurmAccount=SLURM_ACCOUNT,
+#     )
+# )
