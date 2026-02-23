@@ -42,7 +42,9 @@ types:
   diamond.oci:
     properties:
       Format: OCI
-      provides: diamond
+      provides:
+      - diamond
+      - diamond/makedb
   fastani.oci:
     properties:
       Format: OCI
@@ -117,10 +119,14 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
+  orad.oci:
+    properties:
+      Format: OCI
+      provides: orad
   polars.oci:
     properties:
       Format: OCI
-      provides: polars
+      provides: py/polars
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -132,7 +138,7 @@ types:
   proteinbert.oci:
     properties:
       Format: OCI
-      provides: pbert
+      provides: proteinbert
   pulled_container:
     properties:
       atomic_description: pulled OCI container

@@ -87,6 +87,24 @@ types:
       parity: paired end
       direction: reverse
       read_length: short
+  forward_ora_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: forward
+      read_length: short
+      ext: fastq.ora
+      compression: ora
+  reverse_ora_reads:
+    extends:
+    - reads
+    properties:
+      parity: paired end
+      direction: reverse
+      read_length: short
+      ext: fastq.ora
+      compression: ora
   clean_short_reads:
     extends:
     - clean_reads

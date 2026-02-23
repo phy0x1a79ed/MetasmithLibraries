@@ -45,6 +45,9 @@ types:
       - contig to bin assignment table
       ext: tsv
       method: metabat2
+  metagenome_sample:
+    properties:
+    - a metagenome sample identifier for binning
   semibin2_bin_fasta:
     properties:
       Data: DNA sequence

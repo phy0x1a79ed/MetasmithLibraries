@@ -49,6 +49,8 @@ manifest:
     type: containers::nanoplot.oci
   ncbi-datasets.oci:
     type: containers::ncbi-datasets.oci
+  orad.oci:
+    type: containers::orad.oci
   polars.oci:
     type: containers::polars.oci
   ppanggolin.oci:
