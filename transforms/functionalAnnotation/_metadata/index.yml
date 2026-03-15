@@ -3,6 +3,10 @@ manifest:
     type: transforms::transform
   diamond_uniref50.py:
     type: transforms::transform
+  dramv.py:
+    type: transforms::transform
+  eggnog_mapper.py:
+    type: transforms::transform
   interproscan.py:
     type: transforms::transform
   kofamscan.py:
@@ -10,5 +14,7 @@ manifest:
   pprodigal.py:
     type: transforms::transform
   proteinbert.py:
+    type: transforms::transform
+  virsorter2.py:
     type: transforms::transform
 schema: v1

@@ -13,6 +13,10 @@ manifest:
     type: containers::deepec.oci
   diamond.oci:
     type: containers::diamond.oci
+  dram.oci:
+    type: containers::dram.oci
+  eggnog-mapper.oci:
+    type: containers::eggnog-mapper.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
@@ -69,6 +73,8 @@ manifest:
     type: containers::seqkit.oci
   sra-tools.oci:
     type: containers::sra-tools.oci
+  virsorter2.oci:
+    type: containers::virsorter2.oci
   vsearch.oci:
     type: containers::vsearch.oci
 schema: v1

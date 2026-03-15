@@ -64,6 +64,16 @@ types:
     properties:
       _: Marker for KofamScan database download
 
+  # EggNOG-mapper
+  eggnog_mapper_results:
+    properties:
+      _: EggNOG-mapper functional annotations (KO, EC, COG, GO, pathways)
+      Format: TSV
+      ext: tsv
+  eggnog_db:
+    properties:
+      _: EggNOG-mapper diamond and HMM databases directory
+
   # InterProScan data
   interproscan_data:
     properties:
@@ -71,3 +81,37 @@ types:
   interproscan_source:
     properties:
       _: Marker for InterProScan data location
+
+  # VirSorter2
+  virsorter2_viral_sequences:
+    properties:
+      _: VirSorter2 identified viral sequences
+      Format: FASTA
+      ext: fa
+  virsorter2_scores:
+    properties:
+      _: VirSorter2 viral scores and metadata
+      ext: tsv
+  virsorter2_affi_contigs:
+    properties:
+      _: VirSorter2 gene affiliation table for DRAM-v
+      ext: tab
+  virsorter2_boundary:
+    properties:
+      _: VirSorter2 viral boundary positions
+      ext: tsv
+  virsorter2_db:
+    properties:
+      _: VirSorter2 reference database directory
+
+  # DRAM-v
+  dramv_annotations:
+    properties:
+      _: DRAM-v gene annotations for viral contigs
+      ext: tsv
+  dramv_distill:
+    properties:
+      _: DRAM-v distilled AMG summary and visualizations
+  dram_db:
+    properties:
+      _: DRAM database directory
