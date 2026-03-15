@@ -4,7 +4,7 @@ lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 image = model.AddRequirement(lib.GetType("containers::eggnog-mapper.oci"))
 src   = model.AddRequirement(lib.GetType("annotation::eggnog_source"))
-out   = model.AddProduct(lib.GetType("annotation::eggnog_data"))
+out   = model.AddProduct(lib.GetType("annotation::eggnog_db"))
 
 # Official download_eggnog_data.py uses eggnogdb.embl.de which is 404.
 # Mirror at eggnog5.embl.de works. Download manually with wget.

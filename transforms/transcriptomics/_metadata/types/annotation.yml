@@ -31,6 +31,9 @@ types:
   eggnog_data:
     properties:
     - eggNOG-mapper database directory
+  eggnog_db:
+    properties:
+    - EggNOG-mapper diamond and HMM databases directory
   eggnog_results:
     properties:
       Format: TSV

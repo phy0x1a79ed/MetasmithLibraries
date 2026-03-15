@@ -1,7 +1,11 @@
 manifest:
+  busco.py:
+    type: transforms::transform
   braker3.py:
     type: transforms::transform
   deseq2.py:
+    type: transforms::transform
+  eggnog_mapper.py:
     type: transforms::transform
   gffread_proteins.py:
     type: transforms::transform

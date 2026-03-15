@@ -229,11 +229,13 @@ types:
     extends: container
     properties:
       provides:
+      - pbert
       - proteinbert
   polars.oci:
     extends: container
     properties:
       provides:
+      - python=3.12
       - py/polars
   ppanggolin.oci:
     extends: container
@@ -241,43 +243,6 @@ types:
       provides:
       - ppanggolin
 
-  # Functional annotation containers
-  kofamscan.oci:
-    extends: container
-    properties:
-      provides:
-      - kofamscan
-  interproscan.oci:
-    extends: container
-    properties:
-      provides:
-      - interproscan
-  deepec.oci:
-    extends: container
-    properties:
-      provides:
-      - deepec
-  diamond.oci:
-    extends: container
-    properties:
-      provides:
-      - diamond
-  proteinbert.oci:
-    extends: container
-    properties:
-      provides:
-      - pbert
-  polars.oci:
-    extends: container
-    properties:
-      provides:
-      - python=3.12
-      - py/polars
-  pprodigal.oci:
-    extends: container
-    properties:
-      provides:
-      - pprodigal
   eggnog-mapper.oci:
     extends: container
     properties:

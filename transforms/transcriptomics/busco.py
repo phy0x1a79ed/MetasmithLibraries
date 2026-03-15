@@ -1,25 +1,29 @@
+from pathlib import Path
+
 from metasmith.python_api import *
 
-lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
-model    = Transform()
-image    = model.AddRequirement(lib.GetType("containers::busco.oci"))
-orfs     = model.AddRequirement(lib.GetType("transcriptomics::braker3_proteins"))
-lineage  = model.AddRequirement(lib.GetType("annotation::busco_lineage"))
-out      = model.AddProduct(lib.GetType("annotation::busco_results"))
+lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
+model = Transform()
+
+image = model.AddRequirement(lib.GetType("containers::busco.oci"))
+proteins = model.AddRequirement(lib.GetType("transcriptomics::braker3_proteins"))
+lineage = model.AddRequirement(lib.GetType("annotation::busco_lineage"))
+out = model.AddProduct(lib.GetType("annotation::busco_results"))
+
 
 def protocol(context: ExecutionContext):
-    iorfs    = context.Input(orfs)
+    iproteins = context.Input(proteins)
     ilineage = context.Input(lineage)
-    iout     = context.Output(out)
-    cpus     = context.params.get("cpus")
-    cpus     = 8 if cpus is None else cpus
+    iout = context.Output(out)
+    cpus = context.params.get("cpus")
+    cpus = 8 if cpus is None else cpus
 
     context.ExecWithContainer(
         image=image,
         binds=[(ilineage.external, "/busco_lineage/lineages/eukaryota_odb10")],
         cmd=f"""\
             busco \
-                -i {iorfs.container} \
+                -i {iproteins.container} \
                 -o busco_out \
                 -m proteins \
                 -l eukaryota_odb10 \
@@ -43,10 +47,11 @@ def protocol(context: ExecutionContext):
         success=iout.local.exists(),
     )
 
+
 TransformInstance(
     protocol=protocol,
     model=model,
-    group_by=orfs,
+    group_by=proteins,
     resources=Resources(
         cpus=8,
         memory=Size.GB(16),
