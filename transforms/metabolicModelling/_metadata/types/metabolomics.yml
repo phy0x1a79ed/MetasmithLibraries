@@ -1,0 +1,29 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  jgi_metabolomics_dataset:
+    properties:
+      _: JGI metabolomics dataset directory containing Targeted/ and Untargeted/ subdirectories
+  metabolomics_feature_table:
+    properties:
+      _: Normalized annotated metabolomics feature matrix (metabolites x samples)
+      Format: CSV
+      ext: csv
+  metabolomics_differential:
+    properties:
+      _: Directory with per-comparison fold-change/p-value/FDR CSVs and volcano plots
+  metabolomics_pathway_enrichment:
+    properties:
+      _: Directory with KEGG ORA results CSV and enrichment dot plot
+  metabolic_model_sbml:
+    properties:
+      _: SBML genome-scale metabolic model file
+      Format: SBML
+      ext: xml
+  metabolomics_fba_results:
+    properties:
+      _: Directory with per-condition FBA flux CSV and Escher JSON
