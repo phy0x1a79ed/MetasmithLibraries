@@ -16,26 +16,25 @@ def protocol(context: ExecutionContext):
     threads = context.params.get('cpus')
     threads = "" if threads is None else f"-p {threads}"
 
-    # Decompress ORA files to FASTQ using orad
+    # Decompress ORA files to gzipped FASTQ using orad (one file at a time)
+    # Note: on Apptainer (HPC), /app/oradata needs a bind mount from outside.
+    # The runner script or Nextflow config should add:
+    #   containerOptions = '--bind /path/to/oradata:/app/oradata'
     context.ExecWithContainer(
         image=orad,
         cmd=f'''
-        orad "{ir1.container}" "{ir2.container}"
+        orad -q -c "{ir1.container}" > r1.fastq.gz
+        orad -q -c "{ir2.container}" > r2.fastq.gz
         '''
     )
-
-    # orad writes .fastq files alongside the .fastq.ora files
-    # Derive the decompressed FASTQ paths by stripping the .ora extension
-    r1_fq = f'"{ir1.container}"'.replace('.ora"', '"')
-    r2_fq = f'"{ir2.container}"'.replace('.ora"', '"')
 
     # Interleave R1+R2 with reformat.sh and compress with pigz
     context.ExecWithContainer(
         image=bbtools,
         cmd=f'''
         reformat.sh \
-            in1={r1_fq} \
-            in2={r2_fq} \
+            in1=r1.fastq.gz \
+            in2=r2.fastq.gz \
             out=stdout.fq \
         | pigz {threads} > {iout.container}
         '''
@@ -53,8 +52,8 @@ TransformInstance(
     model=model,
     group_by=r1,
     resources=Resources(
-        cpus=2,
-        memory=Size.GB(8),
+        cpus=4,
+        memory=Size.GB(16),
         duration=Duration(hours=3),
     )
 )
