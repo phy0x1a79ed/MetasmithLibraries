@@ -21,6 +21,16 @@ types:
     properties:
       Format: OCI
       provides: SemiBin2
+  metabolomics-python.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/cobra
+      - py/sspa
+      - py/matchms
+      - py/statsmodels
+      - py/seaborn
+      - python=3.11
   metabat2.oci:
     properties:
       Format: OCI
