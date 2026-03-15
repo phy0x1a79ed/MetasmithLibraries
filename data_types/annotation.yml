@@ -64,6 +64,32 @@ types:
     properties:
       _: Marker for KofamScan database download
 
+  # eggNOG-mapper
+  eggnog_data:
+    properties:
+      _: eggNOG-mapper database directory
+  eggnog_source:
+    properties:
+      _: Marker for eggNOG database download
+  eggnog_results:
+    properties:
+      _: eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
+      Format: TSV
+      ext: tsv
+
+  # BUSCO
+  busco_results:
+    properties:
+      _: BUSCO completeness assessment summary
+      Format: JSON
+      ext: json
+  busco_lineage:
+    properties:
+      _: Pre-downloaded BUSCO lineage dataset directory
+  busco_source:
+    properties:
+      _: Marker for BUSCO lineage dataset specification
+
   # InterProScan data
   interproscan_data:
     properties:

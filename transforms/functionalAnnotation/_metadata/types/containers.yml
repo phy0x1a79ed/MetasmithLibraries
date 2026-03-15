@@ -24,6 +24,14 @@ types:
       provides:
       - blastn
       - makeblastdb
+  braker3.oci:
+    properties:
+      Format: OCI
+      provides: braker.pl
+  busco.oci:
+    properties:
+      Format: OCI
+      provides: busco
   checkm.oci:
     properties:
       Format: OCI
@@ -43,6 +51,10 @@ types:
     properties:
       Format: OCI
       provides: diamond
+  eggnog-mapper.oci:
+    properties:
+      Format: OCI
+      provides: emapper.py
   fastani.oci:
     properties:
       Format: OCI
@@ -67,6 +79,10 @@ types:
     properties:
       Format: OCI
       provides: gfatools
+  gffread.oci:
+    properties:
+      Format: OCI
+      provides: gffread
   gtdbtk.oci:
     properties:
       Format: OCI
@@ -120,7 +136,7 @@ types:
   polars.oci:
     properties:
       Format: OCI
-      provides: polars
+      provides: py/polars
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -132,11 +148,18 @@ types:
   proteinbert.oci:
     properties:
       Format: OCI
-      provides: pbert
+      provides: proteinbert
   pulled_container:
     properties:
       atomic_description: pulled OCI container
       ext: log
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/numpy
+      - py/pandas
+      - py/pydeseq2
   python_for_data_science.oci:
     properties:
       Format: OCI
@@ -158,6 +181,10 @@ types:
     properties:
       Format: OCI
       provides: qiime
+  salmon.oci:
+    properties:
+      Format: OCI
+      provides: salmon
   samtools.oci:
     properties:
       Format: OCI
@@ -179,6 +206,14 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+  star.oci:
+    properties:
+      Format: OCI
+      provides: STAR
+  stringtie.oci:
+    properties:
+      Format: OCI
+      provides: stringtie
   vsearch.oci:
     properties:
       Format: OCI

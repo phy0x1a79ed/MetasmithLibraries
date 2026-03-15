@@ -1,0 +1,32 @@
+manifest:
+  braker3.py:
+    type: transforms::transform
+  deseq2.py:
+    type: transforms::transform
+  gffread_proteins.py:
+    type: transforms::transform
+  merge_bams.py:
+    type: transforms::transform
+  pydeseq2.py:
+    type: transforms::transform
+  salmon_count_table.py:
+    type: transforms::transform
+  salmon_index.py:
+    type: transforms::transform
+  salmon_quant.py:
+    type: transforms::transform
+  star_align.py:
+    type: transforms::transform
+  star_genome_index.py:
+    type: transforms::transform
+  stringtie_assemble.py:
+    type: transforms::transform
+  stringtie_count_matrix.py:
+    type: transforms::transform
+  stringtie_merge.py:
+    type: transforms::transform
+  stringtie_quant.py:
+    type: transforms::transform
+  volcano_plot.py:
+    type: transforms::transform
+schema: v1

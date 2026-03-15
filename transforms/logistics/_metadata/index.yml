@@ -1,4 +1,8 @@
 manifest:
+  downloadBuscoLineage.py:
+    type: transforms::transform
+  downloadEggnogDB.py:
+    type: transforms::transform
   downloadInterProScanDB.py:
     type: transforms::transform
   downloadKofamDB.py:

@@ -130,6 +130,11 @@ types:
     properties:
       provides: 
       - metabuli
+  gffread.oci:
+    extends: container
+    properties:
+      provides:
+      - gffread
   gtdbtk.oci:
     extends: container
     properties:
@@ -140,6 +145,16 @@ types:
     properties:
       provides:
       - fastani
+  braker3.oci:
+    extends: container
+    properties:
+      provides:
+      - braker.pl
+  busco.oci:
+    extends: container
+    properties:
+      provides:
+      - busco
   blast.oci:
     extends: container
     properties:
@@ -157,15 +172,77 @@ types:
       provides:
       - qiime
 
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - kofamscan
   ppanggolin.oci:
     extends: container
     properties:
       provides: 
       - ppanggolin
+  salmon.oci:
+    extends: container
+    properties:
+      provides:
+      - salmon
+  star.oci:
+    extends: container
+    properties:
+      provides:
+      - STAR
+  stringtie.oci:
+    extends: container
+    properties:
+      provides:
+      - stringtie
+  eggnog-mapper.oci:
+    extends: container
+    properties:
+      provides:
+      - emapper.py
+  deepec.oci:
+    extends: container
+    properties:
+      provides:
+      - deepec
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+      - diamond
+  interproscan.oci:
+    extends: container
+    properties:
+      provides:
+      - interproscan
+  polars.oci:
+    extends: container
+    properties:
+      provides:
+      - py/polars
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides:
+      - pprodigal
+  proteinbert.oci:
+    extends: container
+    properties:
+      provides:
+      - proteinbert
+  pydeseq2.oci:
+    extends: container
+    properties:
+      provides:
+      - py/pydeseq2
+      - py/pandas
+      - py/numpy
   python_for_data_science.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - python=3.12
       - py/numpy
       - py/scipy

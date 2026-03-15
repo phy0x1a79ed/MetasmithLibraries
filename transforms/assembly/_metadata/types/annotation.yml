@@ -1,0 +1,98 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  busco_results:
+    properties:
+      Format: JSON
+      _:
+      - BUSCO completeness assessment summary
+      ext: json
+  busco_lineage:
+    properties:
+      _:
+      - Pre-downloaded BUSCO lineage dataset directory
+  busco_source:
+    properties:
+    - Marker for BUSCO lineage dataset specification
+  deepec_predictions:
+    properties:
+      _:
+      - DeepEC EC number predictions
+      ext: tsv
+  diamond_uniref50_results:
+    properties:
+      Format: BLAST6
+      _:
+      - DIAMOND alignment to UniRef50
+      ext: tsv
+  eggnog_data:
+    properties:
+    - eggNOG-mapper database directory
+  eggnog_results:
+    properties:
+      Format: TSV
+      _:
+      - eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
+      ext: tsv
+  eggnog_source:
+    properties:
+    - Marker for eggNOG database download
+  interproscan_data:
+    properties:
+    - InterProScan data directory
+  interproscan_gff:
+    properties:
+      Format: GFF3
+      _:
+      - InterProScan annotations in GFF3 format
+      ext: gff3
+  interproscan_json:
+    properties:
+      Format: JSON
+      _:
+      - InterProScan annotations in JSON format
+      ext: json
+  interproscan_source:
+    properties:
+    - Marker for InterProScan data location
+  kofamscan_ko_list:
+    properties:
+      _:
+      - KofamScan KO list file
+      ext: tsv
+  kofamscan_profiles:
+    properties:
+    - KofamScan HMM profile directory containing .hmm files
+  kofamscan_results:
+    properties:
+      Format: TSV
+      _:
+      - KEGG KO assignments from KofamScan
+      ext: txt
+  kofamscan_source:
+    properties:
+    - Marker for KofamScan database download
+  proteinbert_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - ProteinBERT embedding vectors
+      ext: parquet
+  proteinbert_index:
+    properties:
+      Format: CSV
+      _:
+      - ProteinBERT sequence index
+      ext: csv
+  uniref50_diamond_db:
+    properties:
+      _:
+      - DIAMOND-formatted UniRef50 database
+      ext: dmnd
+  uniref50_source:
+    properties:
+    - Marker for UniRef50 database download

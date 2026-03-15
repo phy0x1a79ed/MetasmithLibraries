@@ -18,6 +18,14 @@ types:
       provides:
       - bedtools
       - bedtools/genomecov
+  braker3.oci:
+    properties:
+      Format: OCI
+      provides: braker.pl
+  busco.oci:
+    properties:
+      Format: OCI
+      provides: busco
   blast.oci:
     properties:
       Format: OCI
@@ -35,6 +43,18 @@ types:
   container:
     properties:
       Format: OCI
+  deepec.oci:
+    properties:
+      Format: OCI
+      provides: deepec
+  eggnog-mapper.oci:
+    properties:
+      Format: OCI
+      provides: emapper.py
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides: diamond
   fastani.oci:
     properties:
       Format: OCI
@@ -59,6 +79,10 @@ types:
     properties:
       Format: OCI
       provides: gfatools
+  gffread.oci:
+    properties:
+      Format: OCI
+      provides: gffread
   gtdbtk.oci:
     properties:
       Format: OCI
@@ -71,6 +95,14 @@ types:
     properties:
       Format: OCI
       provides: hifiasm
+  interproscan.oci:
+    properties:
+      Format: OCI
+      provides: interproscan
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: kofamscan
   megahit.oci:
     properties:
       Format: OCI
@@ -101,14 +133,33 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
+  polars.oci:
+    properties:
+      Format: OCI
+      provides: py/polars
   ppanggolin.oci:
     properties:
       Format: OCI
       provides: ppanggolin
+  pprodigal.oci:
+    properties:
+      Format: OCI
+      provides: pprodigal
+  proteinbert.oci:
+    properties:
+      Format: OCI
+      provides: proteinbert
   pulled_container:
     properties:
       atomic_description: pulled OCI container
       ext: log
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/numpy
+      - py/pandas
+      - py/pydeseq2
   python_for_data_science.oci:
     properties:
       Format: OCI
@@ -130,6 +181,10 @@ types:
     properties:
       Format: OCI
       provides: qiime
+  salmon.oci:
+    properties:
+      Format: OCI
+      provides: salmon
   samtools.oci:
     properties:
       Format: OCI
@@ -151,6 +206,14 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+  star.oci:
+    properties:
+      Format: OCI
+      provides: STAR
+  stringtie.oci:
+    properties:
+      Format: OCI
+      provides: stringtie
   vsearch.oci:
     properties:
       Format: OCI

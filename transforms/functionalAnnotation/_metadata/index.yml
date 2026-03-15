@@ -1,13 +1,15 @@
 manifest:
+  busco.py:
+    type: transforms::transform
   deepec.py:
     type: transforms::transform
   diamond_uniref50.py:
     type: transforms::transform
+  eggnog_mapper.py:
+    type: transforms::transform
   interproscan.py:
     type: transforms::transform
   kofamscan.py:
-    type: transforms::transform
-  pprodigal.py:
     type: transforms::transform
   proteinbert.py:
     type: transforms::transform
