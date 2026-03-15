@@ -37,3 +37,10 @@ types:
       provides:
       - metabat2
       - jgi_summarize_bam_contig_depths
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/numpy
+      - py/pandas
+      - py/pydeseq2

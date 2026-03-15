@@ -30,12 +30,36 @@ types:
   eggnog_db:
     properties:
     - EggNOG-mapper diamond and HMM databases directory
+  eggnog_data:
+    properties:
+    - eggNOG-mapper database directory
+  eggnog_source:
+    properties:
+    - Marker for eggNOG database download
   eggnog_mapper_results:
     properties:
       Format: TSV
       _:
       - EggNOG-mapper functional annotations (KO, EC, COG, GO, pathways)
       ext: tsv
+  eggnog_results:
+    properties:
+      Format: TSV
+      _:
+      - eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
+      ext: tsv
+  busco_results:
+    properties:
+      Format: JSON
+      _:
+      - BUSCO completeness assessment summary
+      ext: json
+  busco_lineage:
+    properties:
+    - Pre-downloaded BUSCO lineage dataset directory
+  busco_source:
+    properties:
+    - Marker for BUSCO lineage dataset specification
   interproscan_data:
     properties:
     - InterProScan data directory

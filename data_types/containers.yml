@@ -161,6 +161,43 @@ types:
     properties:
       provides:
       - qiime
+  gffread.oci:
+    extends: container
+    properties:
+      provides:
+      - gffread
+  braker3.oci:
+    extends: container
+    properties:
+      provides:
+      - braker.pl
+  busco.oci:
+    extends: container
+    properties:
+      provides:
+      - busco
+  salmon.oci:
+    extends: container
+    properties:
+      provides:
+      - salmon
+  star.oci:
+    extends: container
+    properties:
+      provides:
+      - STAR
+  stringtie.oci:
+    extends: container
+    properties:
+      provides:
+      - stringtie
+  pydeseq2.oci:
+    extends: container
+    properties:
+      provides:
+      - py/pydeseq2
+      - py/pandas
+      - py/numpy
 
   deepec.oci:
     extends: container

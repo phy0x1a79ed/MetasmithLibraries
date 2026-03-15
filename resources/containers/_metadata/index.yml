@@ -5,6 +5,10 @@ manifest:
     type: containers::bedtools.oci
   blast.oci:
     type: containers::blast.oci
+  braker3.oci:
+    type: containers::braker3.oci
+  busco.oci:
+    type: containers::busco.oci
   checkm.oci:
     type: containers::checkm.oci
   comebin.oci:
@@ -29,6 +33,8 @@ manifest:
     type: containers::flye.oci
   gfatools.oci:
     type: containers::gfatools.oci
+  gffread.oci:
+    type: containers::gffread.oci
   gtdbtk.oci:
     type: containers::gtdbtk.oci
   hifiasm-meta.oci:
@@ -63,10 +69,14 @@ manifest:
     type: containers::pprodigal.oci
   proteinbert.oci:
     type: containers::proteinbert.oci
+  pydeseq2.oci:
+    type: containers::pydeseq2.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
   qiime2.oci:
     type: containers::qiime2.oci
+  salmon.oci:
+    type: containers::salmon.oci
   samtools.oci:
     type: containers::samtools.oci
   semibin.oci:
@@ -75,6 +85,10 @@ manifest:
     type: containers::seqkit.oci
   sra-tools.oci:
     type: containers::sra-tools.oci
+  star.oci:
+    type: containers::star.oci
+  stringtie.oci:
+    type: containers::stringtie.oci
   virsorter2.oci:
     type: containers::virsorter2.oci
   vsearch.oci:

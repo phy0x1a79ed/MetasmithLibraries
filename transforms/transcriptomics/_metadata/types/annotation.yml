@@ -5,6 +5,18 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  busco_lineage:
+    properties:
+    - Pre-downloaded BUSCO lineage dataset directory
+  busco_results:
+    properties:
+      Format: JSON
+      _:
+      - BUSCO completeness assessment summary
+      ext: json
+  busco_source:
+    properties:
+    - Marker for BUSCO lineage dataset specification
   deepec_predictions:
     properties:
       _:
@@ -16,50 +28,18 @@ types:
       _:
       - DIAMOND alignment to UniRef50
       ext: tsv
-  dram_db:
-    properties:
-    - DRAM database directory
-  dramv_annotations:
-    properties:
-      _:
-      - DRAM-v gene annotations for viral contigs
-      ext: tsv
-  dramv_distill:
-    properties:
-    - DRAM-v distilled AMG summary and visualizations
-  eggnog_db:
-    properties:
-    - EggNOG-mapper diamond and HMM databases directory
   eggnog_data:
     properties:
     - eggNOG-mapper database directory
-  eggnog_source:
-    properties:
-    - Marker for eggNOG database download
-  eggnog_mapper_results:
-    properties:
-      Format: TSV
-      _:
-      - EggNOG-mapper functional annotations (KO, EC, COG, GO, pathways)
-      ext: tsv
   eggnog_results:
     properties:
       Format: TSV
       _:
       - eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
       ext: tsv
-  busco_results:
+  eggnog_source:
     properties:
-      Format: JSON
-      _:
-      - BUSCO completeness assessment summary
-      ext: json
-  busco_lineage:
-    properties:
-    - Pre-downloaded BUSCO lineage dataset directory
-  busco_source:
-    properties:
-    - Marker for BUSCO lineage dataset specification
+    - Marker for eggNOG database download
   interproscan_data:
     properties:
     - InterProScan data directory
@@ -115,27 +95,3 @@ types:
   uniref50_source:
     properties:
     - Marker for UniRef50 database download
-  virsorter2_affi_contigs:
-    properties:
-      _:
-      - VirSorter2 gene affiliation table for DRAM-v
-      ext: tab
-  virsorter2_boundary:
-    properties:
-      _:
-      - VirSorter2 viral boundary positions
-      ext: tsv
-  virsorter2_db:
-    properties:
-    - VirSorter2 reference database directory
-  virsorter2_scores:
-    properties:
-      _:
-      - VirSorter2 viral scores and metadata
-      ext: tsv
-  virsorter2_viral_sequences:
-    properties:
-      Format: FASTA
-      _:
-      - VirSorter2 identified viral sequences
-      ext: fa

@@ -50,15 +50,7 @@ types:
   diamond.oci:
     properties:
       Format: OCI
-      provides:
-      - diamond
-      - diamond/makedb
-  dram.oci:
-    properties:
-      Format: OCI
-      provides:
-      - DRAM-v.py
-      - DRAM.py
+      provides: diamond
   eggnog-mapper.oci:
     properties:
       Format: OCI
@@ -141,16 +133,10 @@ types:
     properties:
       Format: OCI
       provides: ncbi-datasets
-  orad.oci:
-    properties:
-      Format: OCI
-      provides: orad
   polars.oci:
     properties:
       Format: OCI
-      provides:
-      - py/polars
-      - python=3.12
+      provides: py/polars
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -162,9 +148,7 @@ types:
   proteinbert.oci:
     properties:
       Format: OCI
-      provides:
-      - pbert
-      - proteinbert
+      provides: proteinbert
   pulled_container:
     properties:
       atomic_description: pulled OCI container
@@ -230,10 +214,6 @@ types:
     properties:
       Format: OCI
       provides: stringtie
-  virsorter2.oci:
-    properties:
-      Format: OCI
-      provides: virsorter
   vsearch.oci:
     properties:
       Format: OCI

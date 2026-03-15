@@ -1,4 +1,6 @@
 manifest:
+  busco.py:
+    type: transforms::transform
   deepec.py:
     type: transforms::transform
   diamond_uniref50.py:
