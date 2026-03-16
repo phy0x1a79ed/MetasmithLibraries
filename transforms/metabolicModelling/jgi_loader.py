@@ -228,7 +228,6 @@ TransformInstance(
     protocol=protocol,
     model=model,
     group_by=dataset,
-    output_signature={out_ft: "feature_table.csv"},
     resources=Resources(
         cpus=4,
         memory=Size.GB(8),

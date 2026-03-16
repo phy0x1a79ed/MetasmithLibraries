@@ -1,0 +1,8 @@
+path:map05032	cpd:C00020
+path:map05032	cpd:C00076
+path:map05032	cpd:C00212
+path:map05032	cpd:C00238
+path:map05032	cpd:C00334
+path:map05032	cpd:C00575
+path:map05032	cpd:C00698
+path:map05032	cpd:C03758

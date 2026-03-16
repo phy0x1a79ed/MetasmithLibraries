@@ -1,0 +1,15 @@
+path:map04071	cpd:C00065
+path:map04071	cpd:C00154
+path:map04071	cpd:C00165
+path:map04071	cpd:C00195
+path:map04071	cpd:C00212
+path:map04071	cpd:C00319
+path:map04071	cpd:C00346
+path:map04071	cpd:C00533
+path:map04071	cpd:C00550
+path:map04071	cpd:C00836
+path:map04071	cpd:C01245
+path:map04071	cpd:C05981
+path:map04071	cpd:C06124
+path:map04071	cpd:C12126
+path:map04071	cpd:C16845

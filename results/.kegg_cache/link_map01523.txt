@@ -1,0 +1,17 @@
+path:map01523	cpd:C00020
+path:map01523	cpd:C00073
+path:map01523	cpd:C00101
+path:map01523	cpd:C00119
+path:map01523	cpd:C00130
+path:map01523	cpd:C00143
+path:map01523	cpd:C00144
+path:map01523	cpd:C00155
+path:map01523	cpd:C00234
+path:map01523	cpd:C00364
+path:map01523	cpd:C00365
+path:map01523	cpd:C00415
+path:map01523	cpd:C00440
+path:map01523	cpd:C00504
+path:map01523	cpd:C11374
+path:map01523	cpd:C21279
+path:map01523	cpd:C21280

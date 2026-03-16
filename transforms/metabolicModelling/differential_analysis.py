@@ -181,7 +181,6 @@ TransformInstance(
     protocol=protocol,
     model=model,
     group_by=feat_ft,
-    output_signature={out_dir: "differential"},
     resources=Resources(
         cpus=2,
         memory=Size.GB(4),

@@ -1,0 +1,8 @@
+path:map00572	cpd:C00569
+path:map00572	cpd:C02970
+path:map00572	cpd:C03319
+path:map00572	cpd:C05896
+path:map00572	cpd:C17481
+path:map00572	cpd:C21904
+path:map00572	cpd:C22876
+path:map00572	cpd:C22879

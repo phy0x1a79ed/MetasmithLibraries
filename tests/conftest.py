@@ -110,6 +110,7 @@ def tmp_inputs(tmp_path, mlib):
             "amplicon.yml",
             "pangenome.yml",
             "ncbi.yml",
+            "metabolomics.yml",
         ]
 
         if type_libs is None:

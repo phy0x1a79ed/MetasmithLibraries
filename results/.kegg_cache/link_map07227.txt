@@ -1,0 +1,10 @@
+path:map07227	cpd:C00388
+path:map07227	cpd:C07448
+path:map07227	cpd:C07454
+path:map07227	cpd:C11800
+path:map07227	cpd:C17929
+path:map07227	cpd:C17930
+path:map07227	cpd:C17931
+path:map07227	cpd:C17932
+path:map07227	cpd:C17933
+path:map07227	cpd:C17934

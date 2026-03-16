@@ -1,0 +1,5 @@
+path:map04015	cpd:C00035
+path:map04015	cpd:C00044
+path:map04015	cpd:C00076
+path:map04015	cpd:C00165
+path:map04015	cpd:C00575

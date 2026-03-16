@@ -1,0 +1,17 @@
+path:map01054	cpd:C00065
+path:map01054	cpd:C01540
+path:map01054	cpd:C01895
+path:map01054	cpd:C05371
+path:map01054	cpd:C11218
+path:map01054	cpd:C11615
+path:map01054	cpd:C12030
+path:map01054	cpd:C12041
+path:map01054	cpd:C12042
+path:map01054	cpd:C12043
+path:map01054	cpd:C12265
+path:map01054	cpd:C12266
+path:map01054	cpd:C12267
+path:map01054	cpd:C12268
+path:map01054	cpd:C15482
+path:map01054	cpd:C18618
+path:map01054	cpd:C22668

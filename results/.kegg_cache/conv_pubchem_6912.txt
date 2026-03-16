@@ -1,0 +1,1 @@
+pubchem:6912	cpd:C04247

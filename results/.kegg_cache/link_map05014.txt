@@ -1,0 +1,14 @@
+path:map05014	cpd:C00001
+path:map05014	cpd:C00008
+path:map05014	cpd:C00025
+path:map05014	cpd:C00027
+path:map05014	cpd:C00039
+path:map05014	cpd:C00046
+path:map05014	cpd:C00062
+path:map05014	cpd:C00070
+path:map05014	cpd:C00076
+path:map05014	cpd:C00533
+path:map05014	cpd:C00704
+path:map05014	cpd:C04549
+path:map05014	cpd:C16844
+path:map05014	cpd:C16845

@@ -1,0 +1,3 @@
+path:map04658	cpd:C00076
+path:map04658	cpd:C00165
+path:map04658	cpd:C01245

@@ -1,0 +1,12 @@
+path:map00552	cpd:C00043
+path:map00552	cpd:C00114
+path:map00552	cpd:C00133
+path:map00552	cpd:C00307
+path:map00552	cpd:C00344
+path:map00552	cpd:C00513
+path:map00552	cpd:C00588
+path:map00552	cpd:C00641
+path:map00552	cpd:C00789
+path:map00552	cpd:C04574
+path:map00552	cpd:C04613
+path:map00552	cpd:C17556

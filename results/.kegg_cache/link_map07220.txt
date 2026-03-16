@@ -1,0 +1,2 @@
+path:map07220	cpd:C07473
+path:map07220	cpd:C11760

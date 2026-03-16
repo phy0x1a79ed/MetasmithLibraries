@@ -1,0 +1,11 @@
+path:map04745	cpd:C00076
+path:map04745	cpd:C00165
+path:map04745	cpd:C00219
+path:map04745	cpd:C01245
+path:map04745	cpd:C01330
+path:map04745	cpd:C01530
+path:map04745	cpd:C02112
+path:map04745	cpd:C18195
+path:map04745	cpd:C18196
+path:map04745	cpd:C20428
+path:map04745	cpd:C20429

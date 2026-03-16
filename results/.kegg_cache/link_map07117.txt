@@ -1,0 +1,6 @@
+path:map07117	cpd:C11688
+path:map07117	cpd:C15026
+path:map07117	cpd:C15040
+path:map07117	cpd:C15094
+path:map07117	cpd:C15096
+path:map07117	cpd:C15104
