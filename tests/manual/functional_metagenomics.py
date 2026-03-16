@@ -144,11 +144,12 @@ with open("../secrets/slurm_account_sockeye") as f:
     SLURM_ACCOUNT = f.readline()
 params = dict(
     slurmAccount=SLURM_ACCOUNT,
-    executor=dict(
-        cpus=15,
-        memory='6 GB',
-        queueSize=3,
-    ),
+    # # this is for local
+    # executor=dict(
+    #     cpus=15,
+    #     memory='6 GB',
+    #     queueSize=3,
+    # ),
 )
 smith.RunWorkflow(
     task=task,

@@ -1,0 +1,5 @@
+task_id	hash	native_id	name	status	exit	submit	duration	realtime	%cpu	peak_rss	peak_vmem	rchar	wchar
+1	53/dcdb1c	3501134	p01__downloadBuscoLineage (1)	COMPLETED	0	2026-03-09 02:18:35.887	42.2s	42.1s	0.2%	8.3 MB	10.9 MB	127 KB	39.1 KB
+2	91/34572e	8520258_1	p02__merge_bams (1)	COMPLETED	0	2026-03-09 02:18:39.936	29m 25s	28m 36s	0.7%	142.9 MB	3 GB	59.3 MB	1.8 MB
+3	51/d7eb05	8520258_0	p02__merge_bams (2)	COMPLETED	0	2026-03-09 02:18:39.936	1h 6m 35s	1h 2m 24s	0.3%	145.1 MB	2.9 GB	59.3 MB	1.8 MB
+4	26/e75cce	8521976	p03__braker3 (1)	FAILED	143	2026-03-09 03:25:19.142	40m 36s	40m 20s	-	-	-	-	-

@@ -1,0 +1,17 @@
+nextflow.trace/v2
+realtime=3743909
+%cpu=3
+cpu_model=Intel(R) Xeon(R) Gold 6130 CPU @ 2.10GHz
+rchar=62146449
+wchar=1855418
+syscr=22340
+syscw=370
+read_bytes=189393920
+write_bytes=1830912
+%mem=1
+vmem=3082924
+rss=148588
+peak_vmem=3082924
+peak_rss=148588
+vol_ctxt=12698
+inv_ctxt=158

@@ -1,0 +1,999 @@
+Mar-09 02:18:30.138 [main] DEBUG nextflow.cli.Launcher - $> nextflow -config ./workflow.resources.nf -config ./workflow.config.nf -log _metasmith/logs.2026-03-08_19-18-20/nxf.log run ./workflow.nf -params-file ./workflow.params.yml --hostName login01 --output results -with-report _metasmith/logs.2026-03-08_19-18-20/nxf_report.html -with-dag _metasmith/logs.2026-03-08_19-18-20/workflow.dag_nxf.dot -with-timeline _metasmith/logs.2026-03-08_19-18-20/nxf_timeline.html -with-trace _metasmith/logs.2026-03-08_19-18-20/nxf_trace.tsv -lib ./lib -ansi-log false -resume -work-dir ./nxf_work
+Mar-09 02:18:30.277 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Mar-09 02:18:30.379 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /msm_home/runs/62Tq8B53/./workflow.resources.nf
+Mar-09 02:18:30.380 [main] DEBUG nextflow.config.ConfigBuilder - User config file: /msm_home/runs/62Tq8B53/./workflow.config.nf
+Mar-09 02:18:30.382 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /msm_home/runs/62Tq8B53/workflow.resources.nf
+Mar-09 02:18:30.383 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /msm_home/runs/62Tq8B53/workflow.config.nf
+Mar-09 02:18:30.417 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-09 02:18:31.349 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Mar-09 02:18:31.624 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=./.nextflow/plugins; core-plugins: nf-amazon@3.4.1,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.3,nf-k8s@1.2.2,nf-tower@1.17.1,nf-wave@1.16.1
+Mar-09 02:18:31.642 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Mar-09 02:18:31.643 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Mar-09 02:18:31.647 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Mar-09 02:18:31.673 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Mar-09 02:18:31.902 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Mar-09 02:18:31.904 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Mar-09 02:18:31.904 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Mar-09 02:18:31.928 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: ./.nextflow/secrets/store.json
+Mar-09 02:18:31.932 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@7a3269f5] - activable => nextflow.secret.LocalSecretsProvider@7a3269f5
+Mar-09 02:18:31.950 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Mar-09 02:18:31.993 [main] INFO  nextflow.cli.CmdRun - Launching `./workflow.nf` [trusting_blackwell] DSL2 - revision: 7a4bf7f54a
+Mar-09 02:18:32.072 [main] DEBUG nextflow.Session - Session UUID: 410093c0-ed4a-44f1-83b3-64356c794e1d
+Mar-09 02:18:32.072 [main] DEBUG nextflow.Session - Run name: trusting_blackwell
+Mar-09 02:18:32.073 [main] DEBUG nextflow.Session - Executor pool size: 2
+Mar-09 02:18:32.087 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Mar-09 02:18:32.129 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.0 build 10289
+  Created: 22-10-2025 16:26 UTC (16:26 GMT)
+  System: Linux 5.14.0-611.16.1.el9_7.x86_64
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 23.0.2-internal-adhoc.conda.src
+  Encoding: UTF-8 (UTF-8)
+  Process: 3500499@login01 [206.12.119.243]
+  CPUs: 1 - Mem: 187.5 GB (26.5 GB) - Swap: 0 (0) - Virtual threads ON
+Mar-09 02:18:32.171 [main] DEBUG nextflow.Session - Work-dir: /msm_home/runs/62Tq8B53/nxf_work [lustre]
+Mar-09 02:18:32.172 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /msm_home/runs/62Tq8B53/bin
+Mar-09 02:18:32.185 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Mar-09 02:18:32.200 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Mar-09 02:18:32.204 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Mar-09 02:18:32.268 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Mar-09 02:18:32.281 [main] DEBUG nextflow.util.CustomPoolFactory - Creating virtual thread pool
+Mar-09 02:18:32.491 [main] DEBUG nextflow.Session - Session start
+Mar-09 02:18:32.500 [main] DEBUG nextflow.trace.TraceFileObserver - Workflow started -- trace file: _metasmith/logs.2026-03-08_19-18-20/nxf_trace.tsv
+Mar-09 02:18:32.513 [main] DEBUG nextflow.Session - Adding to the classpath library: /msm_home/runs/62Tq8B53/lib
+Mar-09 02:18:34.291 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Mar-09 02:18:34.985 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withLabel:xlocalx` matches labels `xXzlTFjWrx,xlocalx` for process with name p01__downloadBuscoLineage
+Mar-09 02:18:34.989 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p01__downloadBuscoLineage` matches process p01__downloadBuscoLineage
+Mar-09 02:18:35.006 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: local
+Mar-09 02:18:35.006 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Mar-09 02:18:35.023 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Mar-09 02:18:35.033 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=1; memory=187.5 GB; capacity=100; pollInterval=10s; dumpInterval=5m
+Mar-09 02:18:35.036 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Mar-09 02:18:35.038 [main] DEBUG n.processor.TaskPollingMonitor - Creating submit rate limit of 1 submissions per 5 seconds
+Mar-09 02:18:35.067 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p01__downloadBuscoLineage': maxForks=0; fair=false; array=0
+Mar-09 02:18:35.135 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p02__merge_bams` matches process p02__merge_bams
+Mar-09 02:18:35.139 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.140 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.147 [main] DEBUG nextflow.executor.Executor - [warm up] executor > slurm
+Mar-09 02:18:35.149 [main] DEBUG n.processor.TaskPollingMonitor - Creating task monitor for executor 'slurm' > capacity: 100; pollInterval: 10s; dumpInterval: 5m 
+Mar-09 02:18:35.149 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: slurm)
+Mar-09 02:18:35.150 [main] DEBUG n.processor.TaskPollingMonitor - Creating submit rate limit of 1 submissions per 5 seconds
+Mar-09 02:18:35.151 [main] DEBUG n.executor.AbstractGridExecutor - Creating executor 'slurm' > queue-stat-interval: 1m
+Mar-09 02:18:35.155 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p02__merge_bams': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.197 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p03__braker3` matches process p03__braker3
+Mar-09 02:18:35.200 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.201 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.202 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p03__braker3': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.252 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p04__stringtie_merge` matches process p04__stringtie_merge
+Mar-09 02:18:35.256 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.256 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.257 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p04__stringtie_merge': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.296 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p05__gffread_proteins` matches process p05__gffread_proteins
+Mar-09 02:18:35.299 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.299 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.300 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p05__gffread_proteins': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.329 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p06__stringtie_quant` matches process p06__stringtie_quant
+Mar-09 02:18:35.334 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.334 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.335 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p06__stringtie_quant': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.363 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p07__busco` matches process p07__busco
+Mar-09 02:18:35.366 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.367 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.368 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p07__busco': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.399 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p08__eggnog_mapper` matches process p08__eggnog_mapper
+Mar-09 02:18:35.401 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.402 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.403 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p08__eggnog_mapper': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.471 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p09__pydeseq2` matches process p09__pydeseq2
+Mar-09 02:18:35.474 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.474 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.475 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p09__pydeseq2': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.504 [main] DEBUG n.script.dsl.ProcessConfigBuilder - Config settings `withName:p10__stringtie_count_matrix` matches process p10__stringtie_count_matrix
+Mar-09 02:18:35.506 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: slurm
+Mar-09 02:18:35.506 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'slurm'
+Mar-09 02:18:35.507 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'p10__stringtie_count_matrix': maxForks=0; fair=false; array=20
+Mar-09 02:18:35.538 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: p05__gffread_proteins, p09__pydeseq2, p04__stringtie_merge, p10__stringtie_count_matrix, p07__busco, p08__eggnog_mapper, p02__merge_bams, p06__stringtie_quant, p01__downloadBuscoLineage, p03__braker3
+Mar-09 02:18:35.543 [main] DEBUG nextflow.Session - Igniting dataflow network (28)
+Mar-09 02:18:35.557 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p01__downloadBuscoLineage
+Mar-09 02:18:35.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p02__merge_bams
+Mar-09 02:18:35.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p03__braker3
+Mar-09 02:18:35.558 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p04__stringtie_merge
+Mar-09 02:18:35.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p05__gffread_proteins
+Mar-09 02:18:35.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p06__stringtie_quant
+Mar-09 02:18:35.559 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p07__busco
+Mar-09 02:18:35.561 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p08__eggnog_mapper
+Mar-09 02:18:35.561 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p09__pydeseq2
+Mar-09 02:18:35.561 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > p10__stringtie_count_matrix
+Mar-09 02:18:35.562 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_3c071248002f6f6f: /msm_home/runs/62Tq8B53/workflow.nf
+Mar-09 02:18:35.562 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Mar-09 02:18:35.562 [main] DEBUG nextflow.Session - Session await
+Mar-09 02:18:35.884 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Mar-09 02:18:35.887 [Task submitter] INFO  nextflow.Session - [53/dcdb1c] Submitted process > p01__downloadBuscoLineage (1)
+Mar-09 02:18:35.904 [Actor Thread 449] DEBUG n.processor.TaskArrayCollector - Creating task array run >> /msm_home/runs/62Tq8B53/nxf_work/ec/22662c4a0b0691d75c6db7c37ffdab
+array=( /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 )
+export nxf_array_task_dir=${array[SLURM_ARRAY_TASK_ID]}
+bash $nxf_array_task_dir/.command.run 2>&1 > $nxf_array_task_dir/.command.log
+
+Mar-09 02:18:39.936 [Task submitter] DEBUG nextflow.executor.GridTaskHandler - [SLURM] submitted process p02__merge_bams (1) > jobId: 8520258; workDir: /msm_home/runs/62Tq8B53/nxf_work/ec/22662c4a0b0691d75c6db7c37ffdab
+Mar-09 02:18:39.937 [Task submitter] INFO  nextflow.Session - [51/d7eb05] Submitted process > p02__merge_bams (2)
+Mar-09 02:18:39.939 [Task submitter] INFO  nextflow.Session - [91/34572e] Submitted process > p02__merge_bams (1)
+Mar-09 02:19:18.078 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: p01__downloadBuscoLineage (1); status: COMPLETED; exit: 0; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b]
+Mar-09 02:23:45.161 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+~> TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: -; ]
+Mar-09 02:23:48.121 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:28:45.172 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+~> TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: -; ]
+Mar-09 02:28:48.137 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:33:45.200 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+~> TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: -; ]
+Mar-09 02:33:48.154 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:38:45.207 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+~> TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: -; ]
+Mar-09 02:38:48.170 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:43:45.216 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 2 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+~> TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: -; ]
+Mar-09 02:43:48.184 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:48:05.233 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[jobId: 8520258_1; id: 2; name: p02__merge_bams (1); status: COMPLETED; exit: 0; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/91/34572e74bf8f1531dbbec6d1817979 started: 1773022735156; exited: 2026-03-09T02:48:02Z; ]
+Mar-09 02:48:45.230 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 02:48:48.199 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:53:45.236 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 02:53:48.212 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 02:58:45.241 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 02:58:48.227 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:03:45.247 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 03:03:48.239 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:08:45.259 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 03:08:48.252 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:13:45.269 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 03:13:48.265 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:18:45.299 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 03:18:48.278 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:23:45.303 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: -; ]
+Mar-09 03:23:48.291 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p03__braker3
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:25:15.309 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[jobId: 8520258_0; id: 3; name: p02__merge_bams (2); status: COMPLETED; exit: 0; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/51/d7eb050607a129bab15c5b17002a6f started: 1773022735153; exited: 2026-03-09T03:25:14Z; ]
+Mar-09 03:25:19.142 [Task submitter] DEBUG nextflow.executor.GridTaskHandler - [SLURM] submitted process p03__braker3 (1) > jobId: 8521976; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62
+Mar-09 03:25:19.143 [Task submitter] INFO  nextflow.Session - [26/e75cce] Submitted process > p03__braker3 (1)
+Mar-09 03:28:45.310 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:28:48.303 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:33:45.330 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:33:48.316 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:38:45.338 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:38:48.329 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:43:45.369 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:43:48.343 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:48:45.398 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:48:48.356 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:53:45.401 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:53:48.368 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 03:58:45.410 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 03:58:48.381 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 04:03:45.418 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor slurm > tasks to be completed: 1 -- submitted tasks are shown below
+~> TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: RUNNING; exit: -; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: -; ]
+Mar-09 04:03:48.393 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > No more task to compute -- The following nodes are still active:
+[process] p04__stringtie_merge
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p05__gffread_proteins
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p06__stringtie_quant
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p07__busco
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p08__eggnog_mapper
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p09__pydeseq2
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+[process] p10__stringtie_count_matrix
+  status=ACTIVE
+  port 0: (queue) OPEN  ; channel: -
+  port 1: (cntrl) -     ; channel: $
+
+Mar-09 04:05:55.423 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[jobId: 8521976; id: 4; name: p03__braker3 (1); status: COMPLETED; exit: 143; error: -; workDir: /msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62 started: 1773026735308; exited: 2026-03-09T04:05:46Z; ]
+Mar-09 04:05:55.430 [TaskFinalizer] DEBUG nextflow.processor.TaskProcessor - Handling unexpected condition for
+  task: name=p03__braker3 (1); work-dir=/msm_home/runs/62Tq8B53/nxf_work/26/e75cce16c78c9b5e2b6bd749760c62
+  error [nextflow.exception.ProcessFailedException]: Process `p03__braker3 (1)` terminated with an error exit status (143)
+Mar-09 04:05:55.493 [TaskFinalizer] INFO  nextflow.processor.TaskProcessor - [26/e75cce] NOTE: Process `p03__braker3 (1)` terminated with an error exit status (143) -- Execution is retried (1)
+Mar-09 04:05:59.137 [Task submitter] DEBUG nextflow.executor.GridTaskHandler - [SLURM] submitted process p03__braker3 (1) > jobId: 8522565; workDir: /msm_home/runs/62Tq8B53/nxf_work/00/29d8bc92e69935bbb4a87e4edd867d
+Mar-09 04:05:59.137 [Task submitter] INFO  nextflow.Session - [00/29d8bc] Re-submitted process > p03__braker3 (1)

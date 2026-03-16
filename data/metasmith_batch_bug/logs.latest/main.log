@@ -1,0 +1,22 @@
+2026-03-08_19-18-27  | workspace [/msm_home/runs/62Tq8B53]
+2026-03-08_19-18-27  | external workspace [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53]
+2026-03-08_19-18-27  | workflow steps [10]
+2026-03-08_19-18-27  | samples estimate [9]
+2026-03-08_19-18-27  | locating input data with personal globus endpoint
+2026-03-08_19-18-27  | [7KZN90A9RGjb] is at [/msm_home/runs/62Tq8B53/_metasmith/task/transforms/7KZN90A9RGjb]
+2026-03-08_19-18-27  | [UlIgG6xtMeKR] is at [/msm_home/runs/62Tq8B53/_metasmith/task/transforms/UlIgG6xtMeKR]
+2026-03-08_19-18-27  | [LHHcW8pOr2Cu] is at [/msm_home/runs/62Tq8B53/_metasmith/task/transforms/LHHcW8pOr2Cu]
+2026-03-08_19-18-27  | [NadlYOPBIIkO] is at [/msm_home/runs/62Tq8B53/_metasmith/task/data/NadlYOPBIIkO]
+2026-03-08_19-18-27  | [gxhC7yTosthI] is at [/msm_home/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI]
+2026-03-08_19-18-27  | [NadlYOPBIIkO] is at [/msm_home/runs/62Tq8B53/_metasmith/task/data/NadlYOPBIIkO]
+2026-03-08_19-18-27  | calling nextflow from container
+2026-03-08_19-18-27  | nextflow PID is [3500499]
+2026-03-08_19-18-28 E| Nextflow 25.10.4 is available - Please consider updating your version to it
+2026-03-08_19-18-30  | N E X T F L O W  ~  version 25.10.0
+2026-03-08_19-18-31  | Launching `./workflow.nf` [trusting_blackwell] DSL2 - revision: 7a4bf7f54a
+2026-03-08_19-18-35  | [53/dcdb1c] Submitted process > p01__downloadBuscoLineage (1)
+2026-03-08_19-18-39  | [51/d7eb05] Submitted process > p02__merge_bams (2)
+2026-03-08_19-18-39  | [91/34572e] Submitted process > p02__merge_bams (1)
+2026-03-08_20-25-19  | [26/e75cce] Submitted process > p03__braker3 (1)
+2026-03-08_21-05-55  | [26/e75cce] NOTE: Process `p03__braker3 (1)` terminated with an error exit status (143) -- Execution is retried (1)
+2026-03-08_21-05-59  | [00/29d8bc] Re-submitted process > p03__braker3 (1)

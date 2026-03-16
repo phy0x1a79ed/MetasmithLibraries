@@ -1,0 +1,148 @@
+step 6, sample [[Rsoo8XE7:[408064623690479551], k0BWqyxf:[822627013523906702, 156226118216467402, 633523990048773908, 566498055328118649, 310195413067453707, 811104384982471761, 305980042534366556, 1073592773866965764, 893397822587109542], X81sU15q:[21411998107916809, 103787138414242676, 788988813649367965, 1027134131912865531, 516877951974789573, 332865333310364923, 1093495104679151016, 116675944663454785, 403745550167237259], VwXt5dAr:[178111524324759755], AmC7DKKQ:[506249955841459167], iNlpm1XR:[844291736049150133], ea9yJktW:[1072381707910174208], 3J2d8bJE:[62860528870412389], rRC4FxHn:[95057754585947582], Myb7Pxjl:[805647359005683236], FILES:[[1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam], [1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf], [stringtie.oci]]]]
+stringtie_quant
+bootstrap ======================
+cwd [/tmp/slurm/8518366/nxf.3whwmYwb2L]
+task [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53]
+step [6]
+deploy relay ===================
+including dev binds
+including linked data binds
+final binds:
+--bind /tmp/slurm/8518366/nxf.3whwmYwb2L:/ws,/scratch/st-shallam-1/pwy_group/metasmith:/msm_home --bind /scratch/st-shallam-1/pwy_group/metasmith/dev/metasmith:/opt/conda/envs/metasmith_env/lib/python3.12/site-packages/metasmith --bind /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams:/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams
+2026-03-08_16-49-21  | api call to [deploy_from_container] with [{'workspace': '_metasmith', 'architecture': 'x86_64', 'system': 'Linux'}]
+2026-03-08_16-49-21  | deploying to [_metasmith]
+2026-03-08_16-49-21  | platform [x86_64/linux]
+2026-03-08_16-49-21  | deploying relay server to [_metasmith/relay/msm_relay]
+2026-03-08_16-49-21  | deployment complete
+_metasmith/relay/
+_metasmith/relay/msm_relay
+pre execute ====================
+.
+./1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf
+./1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam
+./stringtie.oci
+./.command.err
+./.command.out
+./.command.trace
+./.command.metadata
+./.command.binds
+./_metasmith
+./_metasmith/relay
+./_metasmith/relay/msm_relay
+total 0
+lrwxrwxrwx 1 txyliu txyliu 109 Mar  8 16:49 1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam -> /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams/1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam
+lrwxrwxrwx 1 txyliu txyliu 134 Mar  8 16:49 1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf -> /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/70/d074e9312ba9c4f15c2fbecaddf7e0/1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf
+drwxrwx--- 3 txyliu txyliu  19 Mar  8 16:49 _metasmith
+lrwxrwxrwx 1 txyliu txyliu 103 Mar  8 16:49 stringtie.oci -> /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/stringtie.oci
+relay ==========================
+Starting relay:
+  - at: [/tmp/slurm/8518366/nxf.3whwmYwb2L/_metasmith/relay/se166]
+  - cwd: [/tmp/slurm/8518366/nxf.3whwmYwb2L]
+ - Creating local workspace at: /tmp/slurm/8518366/nxf.3whwmYwb2L/_metasmith/relay/se166
+Watcher daemon PID: 911949
+pid [911949]
+success
+execute ========================
+including dev binds
+including linked data binds
+final binds:
+--bind /tmp/slurm/8518366/nxf.3whwmYwb2L:/ws,/scratch/st-shallam-1/pwy_group/metasmith:/msm_home --bind /scratch/st-shallam-1/pwy_group/metasmith/dev/metasmith:/opt/conda/envs/metasmith_env/lib/python3.12/site-packages/metasmith --bind /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams:/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams
+2026-03-08_16-49-24  | api call to [execute_transform] with [{'step_index': '6', 'workspace': '/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53', 'host': 'se166'}]
+2026-03-08_16-49-24  | cwd [/tmp/slurm/8518366/nxf.3whwmYwb2L]
+2026-03-08_16-49-24  | loading agent config
+2026-03-08_16-49-24  | agent home [/scratch/st-shallam-1/pwy_group/metasmith]
+2026-03-08_16-49-24  | connecting to relay [_metasmith/relay/se166]
+2026-03-08_16-49-27  | external cwd [/tmp/slurm/8518366/nxf.3whwmYwb2L]
+2026-03-08_16-49-27  | loading task from [/msm_home/runs/62Tq8B53/_metasmith/task]
+2026-03-08_16-49-31  | step [6:stringtie_quant:s8VnlfHU]
+2026-03-08_16-49-31  | uses:
+2026-03-08_16-49-31  |     [k0BWqyxf transcriptomics::star_bam] at:
+2026-03-08_16-49-31  |         ✓ [5.01 GB] [1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam]
+2026-03-08_16-49-31  |     [Myb7Pxjl transcriptomics::merged_gtf] at:
+2026-03-08_16-49-31  |         ✓ [2.82 MB] [/msm_home/runs/62Tq8B53/nxf_work/70/d074e9312ba9c4f15c2fbecaddf7e0/1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf]
+2026-03-08_16-49-31  |     [rRC4FxHn containers::stringtie.oci] at:
+2026-03-08_16-49-31  |         ✓ [59.00 B] [/msm_home/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/stringtie.oci]
+2026-03-08_16-49-31  | setup commands for external shell:
+2026-03-08_16-49-31  |     module load gcc/9.4.0
+2026-03-08_16-49-31  |     module load apptainer/1.3.1
+2026-03-08_16-49-31  | >>> executing
+2026-03-08_16-49-31  | >>> protocol >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2026-03-08_16-49-32  | cached image exists
+2026-03-08_16-49-33  | executing container [docker://quay.io/biocontainers/stringtie:2.2.3--h43eeafb_1] using [APPTAINER]
+2026-03-08_16-49-33  | command with bounce at [_metasmith/.bounce.5soiNHc6]:
+2026-03-08_16-49-33  |     stringtie -e -B -p 4                 -G /msm_home/runs/62Tq8B53/nxf_work/70/d074e9312ba9c4f15c2fbecaddf7e0/1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf                 -o quant.gtf                 1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam
+2026-03-08_16-49-33  |     
+2026-03-08_16-49-33  | binds:
+2026-03-08_16-49-33  |     ${TMPDIR-"/tmp"} -> ${TMPDIR-"/tmp"}
+2026-03-08_16-49-33  |     /scratch/st-shallam-1/pwy_group/metasmith -> /msm_home
+2026-03-08_16-49-33  |     /tmp/slurm/8518366/nxf.3whwmYwb2L -> /ws
+2026-03-08_16-49-33  |     /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams -> /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams
+2026-03-08_16-49-33  | -> container start: [apptainer exec --no-home --cleanenv --env TMPDIR=${TMPDIR-"/tmp"} --workdir "/ws" --bind ${TMPDIR-"/tmp"}:${TMPDIR-"/tmp"},/scratch/st-shallam-1/pwy_group/metasmith:/msm_home,/tmp/slurm/8518366/nxf.3whwmYwb2L:/ws,/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams:/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_stringtie..2.2.3--h43eeafb_1.sif bash]
+2026-03-08_16-49-33  | -> container ->---------------------------------------------
+2026-03-08_16-56-17  | <- container exit [0] <-------------------------------------
+2026-03-08_16-56-17  | invoked local shell, calling subprocess.run() with:
+2026-03-08_16-56-17  |     mv quant.gtf 1-1-1.G9qpGL07OFV9eJ41-pDpp0Ttl.gtf
+2026-03-08_16-56-17  | <<< protocol <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+2026-03-08_16-56-17  | <<< [stringtie_quant:s8VnlfHU] reports success
+2026-03-08_16-56-17  | branch [1] of [1]
+2026-03-08_16-56-17  |     ✓ [2.00 MB] [pDpp0Ttl transcriptomics::stringtie_quant_gtf] produced at [1-1-1.G9qpGL07OFV9eJ41-pDpp0Ttl.gtf]
+post execute ===================
+.
+./1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf
+./1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam
+./stringtie.oci
+./.command.err
+./.command.out
+./.command.trace
+./.command.metadata
+./.command.binds
+./_metasmith
+./_metasmith/relay
+./_metasmith/relay/msm_relay
+./_metasmith/relay/se166
+./_metasmith/relay/se166/main.log
+./_metasmith/relay/se166/active
+./_metasmith/relay/se166/launcher.sh
+./_metasmith/.bounce.5soiNHc6
+./t_data.ctab
+./e_data.ctab
+./i_data.ctab
+./e2t.ctab
+./i2t.ctab
+./1-1-1.G9qpGL07OFV9eJ41-pDpp0Ttl.gtf
+./.command.success
+total 4.0M
+-rw-rw---- 1 txyliu txyliu 2.1M Mar  8 16:56 1-1-1.G9qpGL07OFV9eJ41-pDpp0Ttl.gtf
+lrwxrwxrwx 1 txyliu txyliu  109 Mar  8 16:49 1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam -> /arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams/1-1-1.SZV4oNiEOp2dIAHQ-9mrjFffM.bam
+lrwxrwxrwx 1 txyliu txyliu  134 Mar  8 16:49 1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf -> /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/70/d074e9312ba9c4f15c2fbecaddf7e0/1-1-1.t47wv6goJpqJOKaw-Myb7Pxjl.gtf
+drwxrwx--- 3 txyliu txyliu   43 Mar  8 16:49 _metasmith
+-rw-rw---- 1 txyliu txyliu 128K Mar  8 16:56 e2t.ctab
+-rw-rw---- 1 txyliu txyliu 954K Mar  8 16:56 e_data.ctab
+-rw-rw---- 1 txyliu txyliu  30K Mar  8 16:56 i2t.ctab
+-rw-rw---- 1 txyliu txyliu 136K Mar  8 16:56 i_data.ctab
+lrwxrwxrwx 1 txyliu txyliu  103 Mar  8 16:49 stringtie.oci -> /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/stringtie.oci
+-rw-rw---- 1 txyliu txyliu 792K Mar  8 16:56 t_data.ctab
+cleanup ========================
+Signalled relay to stop by removing 'active' file
+shutdown success
+relay logs =====================
+2026-03-08 16:49:21  | >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2026-03-08 16:49:21  | Cleaning up previous workspace
+2026-03-08 16:49:21  | Setting up launcher script at: /tmp/slurm/8518366/nxf.3whwmYwb2L/_metasmith/relay/se166/launcher.sh
+2026-03-08 16:49:24  | ------------------------->>>
+2026-03-08 16:49:24  | module load gcc/9.4.0
+2026-03-08 16:49:24  | module load apptainer/1.3.1
+2026-03-08 16:49:24  | pwd -P && sleep 1
+2026-03-08 16:49:24  | <<<-------------------------
+2026-03-08 16:49:31  | ------------------------->>>
+2026-03-08 16:49:31  | module load gcc/9.4.0
+2026-03-08 16:49:31  | module load apptainer/1.3.1
+2026-03-08 16:49:31  | [ -e /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_stringtie..2.2.3--h43eeafb_1.sif ] && echo "cached image exists"
+2026-03-08 16:49:31  | <<<-------------------------
+2026-03-08 16:49:33  | ------------------------->>>
+2026-03-08 16:49:33  | module load gcc/9.4.0
+2026-03-08 16:49:33  | module load apptainer/1.3.1
+2026-03-08 16:49:33  | apptainer exec --no-home --cleanenv --env TMPDIR=${TMPDIR-"/tmp"} --workdir "/ws" --bind ${TMPDIR-"/tmp"}:${TMPDIR-"/tmp"},/scratch/st-shallam-1/pwy_group/metasmith:/msm_home,/tmp/slurm/8518366/nxf.3whwmYwb2L:/ws,/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams:/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/star_bams /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_stringtie..2.2.3--h43eeafb_1.sif bash /ws/_metasmith/.bounce.5soiNHc6
+2026-03-08 16:49:33  | <<<-------------------------
+-
+2026-03-08 16:55:10  | 'active' file was deleted

@@ -1,0 +1,668 @@
+step 1, sample [[H7g3InfC:[54446232961680702], OvFEfok5:[634031039128142113], FILES:[[busco.oci], [busco_source.txt]]]]
+downloadBuscoLineage
+bootstrap called from container, bouncing to external [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53 1 login01]
+bootstrap ======================
+cwd [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b]
+task [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53]
+step [1]
+deploy relay ===================
+including dev binds
+including linked data binds
+final binds:
+--bind /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b:/ws,/scratch/st-shallam-1/pwy_group/metasmith:/msm_home --bind /scratch/st-shallam-1/pwy_group/metasmith/dev/metasmith:/opt/conda/envs/metasmith_env/lib/python3.12/site-packages/metasmith 
+2026-03-08_19-18-39  | api call to [deploy_from_container] with [{'workspace': '_metasmith', 'architecture': 'x86_64', 'system': 'Linux'}]
+2026-03-08_19-18-39  | deploying to [_metasmith]
+2026-03-08_19-18-39  | platform [x86_64/linux]
+2026-03-08_19-18-39  | deploying relay server to [_metasmith/relay/msm_relay]
+2026-03-08_19-18-39  | deployment complete
+_metasmith/relay/
+_metasmith/relay/msm_relay
+pre execute ====================
+.
+./.command.err
+./.command.out
+./.command.log
+./.command.trace
+./.command.begin
+./.command.metadata
+./_metasmith
+./_metasmith/relay
+./_metasmith/relay/msm_relay
+./busco.oci
+./.command.sh
+./.command.binds
+./.command.run
+./busco_source.txt
+total 12K
+drwxrwx--- 3 txyliu txyliu 4.0K Mar  8 19:18 _metasmith
+lrwxrwxrwx 1 txyliu txyliu   67 Mar  8 19:18 busco.oci -> /msm_home/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/busco.oci
+lrwxrwxrwx 1 txyliu txyliu   74 Mar  8 19:18 busco_source.txt -> /msm_home/runs/62Tq8B53/_metasmith/task/data/NadlYOPBIIkO/busco_source.txt
+relay ==========================
+Starting relay:
+  - at: [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b/_metasmith/relay/login01]
+  - cwd: [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b]
+ - Creating local workspace at: /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b/_metasmith/relay/login01
+Watcher daemon PID: 3501657
+pid [3501657]
+success
+execute ========================
+including dev binds
+including linked data binds
+final binds:
+--bind /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b:/ws,/scratch/st-shallam-1/pwy_group/metasmith:/msm_home --bind /scratch/st-shallam-1/pwy_group/metasmith/dev/metasmith:/opt/conda/envs/metasmith_env/lib/python3.12/site-packages/metasmith 
+2026-03-08_19-18-43  | api call to [execute_transform] with [{'step_index': '1', 'workspace': '/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53', 'host': 'login01'}]
+2026-03-08_19-18-43  | cwd [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b]
+2026-03-08_19-18-43  | loading agent config
+2026-03-08_19-18-43  | agent home [/scratch/st-shallam-1/pwy_group/metasmith]
+2026-03-08_19-18-43  | connecting to relay [_metasmith/relay/login01]
+2026-03-08_19-18-46  | external cwd [/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b]
+2026-03-08_19-18-46  | loading task from [/msm_home/runs/62Tq8B53/_metasmith/task]
+2026-03-08_19-18-49  | step [1:downloadBuscoLineage:XzlTFjWr]
+2026-03-08_19-18-49  | uses:
+2026-03-08_19-18-49  |     [H7g3InfC containers::busco.oci] at:
+2026-03-08_19-18-49  |         ✓ [57.00 B] [/msm_home/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/busco.oci]
+2026-03-08_19-18-49  |     [OvFEfok5 annotation::busco_source] at:
+2026-03-08_19-18-49  |         ✓ [15.00 B] [/msm_home/runs/62Tq8B53/_metasmith/task/data/NadlYOPBIIkO/busco_source.txt]
+2026-03-08_19-18-49  | setup commands for external shell:
+2026-03-08_19-18-49  |     module load gcc/9.4.0
+2026-03-08_19-18-49  |     module load apptainer/1.3.1
+2026-03-08_19-18-49  | >>> executing
+2026-03-08_19-18-49  | >>> protocol >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2026-03-08_19-18-51  | cached image exists
+2026-03-08_19-18-51  | executing container [docker://quay.io/biocontainers/busco:5.8.3--pyhdfd78af_0] using [APPTAINER]
+2026-03-08_19-18-51  | command with bounce at [_metasmith/.bounce.2DOdYX18]:
+2026-03-08_19-18-51  |     busco                 --download eukaryota_odb10                 --download_path ./busco_downloads
+2026-03-08_19-18-51  |     mv ./busco_downloads/lineages/eukaryota_odb10 /ws/1-1-1.iw52puJy2jU1STsw-b83cdTFq
+2026-03-08_19-18-51  |     
+2026-03-08_19-18-51  | binds:
+2026-03-08_19-18-51  |     ${TMPDIR-"/tmp"} -> ${TMPDIR-"/tmp"}
+2026-03-08_19-18-51  |     /scratch/st-shallam-1/pwy_group/metasmith -> /msm_home
+2026-03-08_19-18-51  |     /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b -> /ws
+2026-03-08_19-18-51  | -> container start: [apptainer exec --no-home --cleanenv --env TMPDIR=${TMPDIR-"/tmp"} --workdir "/ws" --bind ${TMPDIR-"/tmp"}:${TMPDIR-"/tmp"},/scratch/st-shallam-1/pwy_group/metasmith:/msm_home,/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b:/ws /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_busco..5.8.3--pyhdfd78af_0.sif bash]
+2026-03-08_19-18-51  | -> container ->---------------------------------------------
+2026-03-08_19-19-02  | 2026-03-08 19:19:02 INFO:	Downloading information on latest versions of BUSCO data...
+2026-03-08_19-19-05  | 2026-03-08 19:19:05 INFO:	Downloading file 'https://busco-data.ezlab.org/v5/data/lineages/eukaryota_odb10.2024-01-08.tar.gz'
+2026-03-08_19-19-10  | 2026-03-08 19:19:10 INFO:	Decompressing file '/ws/busco_downloads/lineages/eukaryota_odb10.tar.gz'
+2026-03-08_19-19-17  | <- container exit [0] <-------------------------------------
+2026-03-08_19-19-17  | <<< protocol <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+2026-03-08_19-19-17  | <<< [downloadBuscoLineage:XzlTFjWr] reports success
+2026-03-08_19-19-17  | branch [1] of [1]
+2026-03-08_19-19-17  |     ✓ [4.00 KB] [b83cdTFq annotation::busco_lineage] produced at [1-1-1.iw52puJy2jU1STsw-b83cdTFq]
+post execute ===================
+.
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/refseq_db.faa.gz
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/info
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/info/ogs.id.info
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/info/species.info
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/info/.ocupancy.ratio
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/lengths_cutoff
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/ancestral_variants
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/refseq_db.faa.gz.md5
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/scores_cutoff
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1421503at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/759498at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1459797at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/855834at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1395649at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1370285at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1247641at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1382842at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/176625at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1223488at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1348942at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1051021at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1038775at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1563319at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/293315at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/375960at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1096688at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1364586at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1312453at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1479417at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/931188at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/388820at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/383503at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1025450at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1248958at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1442062at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/817008at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1087488at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1284731at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/142542at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/179362at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1324510at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/974865at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/570797at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/777920at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1193442at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1620056at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1287094at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1426075at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1441854at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1236198at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/39650at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/261328at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1259741at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/687505at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/887370at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1445102at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1526152at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1322299at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1197019at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1001705at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1434266at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1567796at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/369837at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1339553at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1530008at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/679187at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1623701at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1291729at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/396755at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/604979at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1488235at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1432328at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/674160at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1370304at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/166920at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/858842at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/320059at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/917326at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/330169at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1111142at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1513531at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1346432at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/257318at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1504863at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1079827at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/156083at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1314980at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/160593at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1428854at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/290630at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/306227at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/761109at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1407446at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/719531at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1430056at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/426305at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1525971at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1304061at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1398309at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1112002at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/956854at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/655400at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/898782at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1575179at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/768809at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/674169at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/721605at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/981902at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1617752at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/975557at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1220881at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/325552at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/973442at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/937686at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1404162at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1257440at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1454155at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/911863at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/245208at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/453044at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1076134at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/392369at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1233814at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/779909at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1545004at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1094121at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1266231at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1065019at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/341721at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1258856at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1474000at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1053181at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1342242at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1003258at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/751335at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1194691at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1079130at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1157302at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/598949at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/801857at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1323575at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1355894at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1115196at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1322642at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1490022at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1405073at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1309031at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/834694at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/418107at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/671846at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1346165at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1161199at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/975158at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/976469at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/345441at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1030907at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/946128at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/679771at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1576404at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1249159at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/271586at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1455730at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/390348at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1558822at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/549762at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/270107at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1128607at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1626636at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1440961at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/736068at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/924753at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1260807at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1264469at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1269244at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/919955at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/878143at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1645187at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/937275at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/844748at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/814241at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1018517at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1173229at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/100698at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1182451at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1287401at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1041560at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1380409at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/543764at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/836599at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1085752at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1049599at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/901894at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/865202at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/324863at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/671536at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1222562at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1377237at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1032689at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/774318at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1338131at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1178688at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1057950at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1251252at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1269649at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1138059at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1593937at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1275837at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1588798at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/97116at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/708105at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/491869at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/734341at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/464990at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/939345at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1107630at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/261419at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1423847at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/331411at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/918816at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1538526at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/513979at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1019762at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/905026at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1129824at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1633672at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/457861at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/734666at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/866359at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/664730at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1217666at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1488436at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1405146at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1358374at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1108845at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/673132at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/944899at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1379600at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/355408at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/621827at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/625387at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1106766at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/83779at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1194797at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1552706at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1450538at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/692986at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/891751at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/869548at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1228942at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/582756at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/551907at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/87842at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1014314at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1010730at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/450058at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/720340at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/296129at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/996662at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1090038at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/299766at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1428265at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/1200489at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/722805at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/prfl/923657at2759.prfl
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/dataset.cfg
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1588798at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/774318at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/946128at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/426305at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1322642at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1379600at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1049599at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/290630at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1258856at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/39650at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1525971at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/692986at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/450058at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/320059at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1079130at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1346165at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/142542at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/245208at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1441854at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1617752at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/604979at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1504863at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1428854at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/491869at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/261328at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/777920at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/457861at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/944899at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/261419at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1355894at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1115196at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1220881at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1474000at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1247641at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1563319at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1575179at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1138059at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1322299at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/330169at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1182451at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1380409at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1287401at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1157302at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1530008at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1346432at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1382842at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1513531at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/869548at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1228942at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1407446at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/996662at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/918816at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/976469at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1370304at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1193442at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/388820at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1194691at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1314980at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1014314at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1032689at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/671846at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/551907at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1312453at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/176625at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1450538at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1395649at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1076134at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/974865at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/720340at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1085752at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1038775at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1003258at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/917326at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/418107at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/734666at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/923657at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/801857at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1291729at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1079827at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1223488at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1364586at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/375960at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/768809at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1432328at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1488436at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/156083at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1405073at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1626636at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/734341at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1370285at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/722805at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/911863at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/919955at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1197019at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/331411at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1287094at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/761109at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1398309at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1421503at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/858842at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/513979at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1269649at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1051021at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1324510at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/83779at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/664730at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/814241at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1065019at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1251252at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/844748at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1248958at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1019762at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1194797at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/549762at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/299766at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1269244at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1309031at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1025450at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/891751at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/836599at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/674169at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/751335at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1173229at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1358374at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1178688at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/866359at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/270107at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/779909at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/655400at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1455730at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/166920at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1041560at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/937686at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1338131at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1264469at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1567796at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1405146at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/905026at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1479417at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/87842at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1222562at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1623701at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1260807at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/396755at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/865202at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1094121at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/570797at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1111142at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1010730at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1257440at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/355408at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1233814at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1284731at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1128607at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/383503at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/293315at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/582756at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1090038at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/975557at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/598949at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1404162at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/369837at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/956854at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1633672at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/901894at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/878143at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/341721at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1266231at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1348942at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/271586at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1576404at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/392369at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/759498at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1442062at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1558822at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1552706at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1593937at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1030907at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/981902at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/855834at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1526152at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/324863at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1106766at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1107630at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1129824at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1200489at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1545004at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/973442at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/390348at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/671536at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1434266at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/939345at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1645187at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1112002at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1620056at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1108845at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1323575at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/100698at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/464990at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/931188at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1459797at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1430056at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/898782at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1423847at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1057950at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/296129at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1538526at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1236198at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1249159at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/687505at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/160593at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1428265at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/937275at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1426075at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/453044at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/673132at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/708105at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1087488at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/817008at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1454155at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/679771at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/679187at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/924753at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1053181at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/721605at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1440961at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1490022at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/97116at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/975158at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1001705at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1445102at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1275837at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/345441at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/257318at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/625387at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1342242at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/719531at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/887370at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1217666at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/621827at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/179362at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1161199at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/306227at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1488235at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1259741at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/325552at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1018517at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1377237at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/674160at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1339553at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/834694at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1096688at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/1304061at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/736068at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/hmms/543764at2759.hmm
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/links_to_ODB10.txt
+./1-1-1.iw52puJy2jU1STsw-b83cdTFq/ancestral
+./.command.err
+./.command.out
+./.command.log
+./.command.success
+./.command.trace
+./.command.begin
+./.command.metadata
+./_metasmith
+./_metasmith/.bounce.2DOdYX18
+./_metasmith/relay
+./_metasmith/relay/login01
+./_metasmith/relay/login01/main.log
+./_metasmith/relay/login01/active
+./_metasmith/relay/login01/launcher.sh
+./_metasmith/relay/msm_relay
+./busco.oci
+./.command.sh
+./busco_downloads
+./busco_downloads/lineages
+./busco_downloads/file_versions.tsv
+./.command.binds
+./.command.run
+./busco_source.txt
+total 20K
+drwxr-xr-x 5 txyliu txyliu 4.0K Mar  8 19:19 1-1-1.iw52puJy2jU1STsw-b83cdTFq
+drwxrwx--- 3 txyliu txyliu 4.0K Mar  8 19:18 _metasmith
+lrwxrwxrwx 1 txyliu txyliu   67 Mar  8 19:18 busco.oci -> /msm_home/runs/62Tq8B53/_metasmith/task/data/gxhC7yTosthI/busco.oci
+drwxrwx--- 3 txyliu txyliu 4.0K Mar  8 19:19 busco_downloads
+lrwxrwxrwx 1 txyliu txyliu   74 Mar  8 19:18 busco_source.txt -> /msm_home/runs/62Tq8B53/_metasmith/task/data/NadlYOPBIIkO/busco_source.txt
+cleanup ========================
+Signalled relay to stop by removing 'active' file
+shutdown success
+relay logs =====================
+2026-03-08 19:18:39  | >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+2026-03-08 19:18:39  | Cleaning up previous workspace
+2026-03-08 19:18:39  | Setting up launcher script at: /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b/_metasmith/relay/login01/launcher.sh
+2026-03-08 19:18:43  | ------------------------->>>
+2026-03-08 19:18:43  | module load gcc/9.4.0
+2026-03-08 19:18:43  | module load apptainer/1.3.1
+2026-03-08 19:18:43  | pwd -P && sleep 1
+2026-03-08 19:18:43  | <<<-------------------------
+2026-03-08 19:18:49  | ------------------------->>>
+2026-03-08 19:18:49  | module load gcc/9.4.0
+2026-03-08 19:18:49  | module load apptainer/1.3.1
+2026-03-08 19:18:49  | [ -e /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_busco..5.8.3--pyhdfd78af_0.sif ] && echo "cached image exists"
+2026-03-08 19:18:49  | <<<-------------------------
+2026-03-08 19:18:51  | ------------------------->>>
+2026-03-08 19:18:51  | module load gcc/9.4.0
+2026-03-08 19:18:51  | module load apptainer/1.3.1
+2026-03-08 19:18:51  | apptainer exec --no-home --cleanenv --env TMPDIR=${TMPDIR-"/tmp"} --workdir "/ws" --bind ${TMPDIR-"/tmp"}:${TMPDIR-"/tmp"},/scratch/st-shallam-1/pwy_group/metasmith:/msm_home,/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/nxf_work/53/dcdb1c927c7419da2ee2c88e54227b:/ws /scratch/st-shallam-1/pwy_group/metasmith/container_images/docker..quay.io_biocontainers_busco..5.8.3--pyhdfd78af_0.sif bash /ws/_metasmith/.bounce.2DOdYX18
+2026-03-08 19:18:51  | <<<-------------------------
