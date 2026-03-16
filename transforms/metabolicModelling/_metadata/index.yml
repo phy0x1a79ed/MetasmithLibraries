@@ -3,8 +3,4 @@ manifest:
     type: transforms::transform
   differential_analysis.py:
     type: transforms::transform
-  pathway_enrichment.py:
-    type: transforms::transform
-  fba_constraint.py:
-    type: transforms::transform
 schema: 0.11.4
