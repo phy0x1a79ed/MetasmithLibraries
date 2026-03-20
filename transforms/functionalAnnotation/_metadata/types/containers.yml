@@ -101,6 +101,10 @@ types:
     properties:
       Format: OCI
       provides: ppanggolin
+  promotech.oci:
+    properties:
+      Format: OCI
+      provides: promotech
   pprodigal.oci:
     properties:
       Format: OCI

@@ -160,8 +160,17 @@ types:
   ppanggolin.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - ppanggolin
+
+  # -------------------------------------------------
+  # functional annotation
+  promotech.oci:
+    extends: container
+    properties:
+      provides:
+        - promotech
+
   python_for_data_science.oci:
     extends: container
     properties:

@@ -41,6 +41,8 @@ manifest:
     type: containers::ncbi-datasets.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
+  promotech.oci:
+    type: containers::promotech.oci
   pprodigal.oci:
     type: containers::pprodigal.oci
   python_for_data_science.oci:
