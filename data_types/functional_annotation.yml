@@ -1,0 +1,7 @@
+types:
+  # PromoTech
+  promotech_predictions:
+    properties:
+      _: PromoTech bacterial promoter predictions per assembly
+      Format: TSV
+      ext: tsv

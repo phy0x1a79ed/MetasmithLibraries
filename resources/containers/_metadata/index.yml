@@ -43,6 +43,8 @@ manifest:
     type: containers::ppanggolin.oci
   pprodigal.oci:
     type: containers::pprodigal.oci
+  promotech.oci:
+    type: containers::promotech.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
   samtools.oci:
