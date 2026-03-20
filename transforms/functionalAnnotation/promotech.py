@@ -14,11 +14,13 @@ def protocol(context: ExecutionContext):
     opred = context.Output(out_pred)
 
     # Step 1: Parse genome into 40nt sliding windows and encode
+    # PromoTech uses relative model paths, so CWD must be /opt/promotech.
+    # iasm.container is relative to /ws, so use absolute path.
     context.ExecWithContainer(
         image=image,
         cmd=f"""
             cd /opt/promotech &&
-            python promotech.py -pg -f {iasm.container} -o /tmp/pt -m RF-HOT
+            python promotech.py -pg -f /ws/{iasm.container} -o /tmp/pt -m RF-HOT
         """,
     )
 
