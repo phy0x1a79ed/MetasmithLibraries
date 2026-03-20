@@ -101,14 +101,14 @@ types:
     properties:
       Format: OCI
       provides: ppanggolin
-  promotech.oci:
-    properties:
-      Format: OCI
-      provides: promotech
   pprodigal.oci:
     properties:
       Format: OCI
       provides: pprodigal
+  promotech.oci:
+    properties:
+      Format: OCI
+      provides: promotech
   pulled_container:
     properties:
       atomic_description: pulled OCI container

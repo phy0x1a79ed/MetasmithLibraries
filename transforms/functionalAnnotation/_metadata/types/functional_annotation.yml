@@ -8,5 +8,6 @@ types:
   promotech_predictions:
     properties:
       Format: TSV
-      _: PromoTech bacterial promoter predictions per assembly
+      _:
+      - PromoTech bacterial promoter predictions per assembly
       ext: tsv

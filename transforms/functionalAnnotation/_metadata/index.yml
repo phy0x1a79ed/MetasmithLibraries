@@ -3,8 +3,8 @@ manifest:
     type: transforms::transform
   diamond_linclust.py:
     type: transforms::transform
-  promotech.py:
-    type: transforms::transform
   pprodigal.py:
+    type: transforms::transform
+  promotech.py:
     type: transforms::transform
 schema: v1
