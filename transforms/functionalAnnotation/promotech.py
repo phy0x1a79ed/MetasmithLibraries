@@ -16,11 +16,13 @@ def protocol(context: ExecutionContext):
     # Step 1: Parse genome into 40nt sliding windows and encode
     # PromoTech uses relative model paths, so CWD must be /opt/promotech.
     # iasm.container is relative to /ws, so use absolute path.
+    # Must cd back to /ws so the bounce script can write exitcode.
     context.ExecWithContainer(
         image=image,
         cmd=f"""
             cd /opt/promotech &&
-            python promotech.py -pg -f /ws/{iasm.container} -o /tmp/pt -m RF-HOT
+            python promotech.py -pg -f /ws/{iasm.container} -o /tmp/pt -m RF-HOT &&
+            cd /ws
         """,
     )
 
@@ -29,7 +31,8 @@ def protocol(context: ExecutionContext):
         image=image,
         cmd=f"""
             cd /opt/promotech &&
-            python promotech.py -g -i /tmp/pt -o /tmp/pt -m RF-HOT -t 0.5
+            python promotech.py -g -i /tmp/pt -o /tmp/pt -m RF-HOT -t 0.5 &&
+            cd /ws
         """,
     )
 
