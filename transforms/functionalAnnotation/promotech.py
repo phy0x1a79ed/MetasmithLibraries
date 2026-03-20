@@ -51,7 +51,7 @@ TransformInstance(
     group_by=assembly,
     resources=Resources(
         cpus=2,
-        memory=Size.GB(32),
+        memory=Size.GB(48),
         duration=Duration(hours=4),
     ),
 )
