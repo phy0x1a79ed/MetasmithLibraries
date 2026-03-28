@@ -97,3 +97,40 @@ types:
   interproscan_source:
     properties:
       _: Marker for InterProScan data location
+
+  # Bakta non-coding annotation
+  bakta_db:
+    properties:
+      _: Bakta light database directory
+  bakta_gff:
+    properties:
+      _: Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
+      Format: GFF3
+      ext: gff3
+  bakta_tsv:
+    properties:
+      _: Bakta non-coding annotation summary table
+      Format: TSV
+      ext: tsv
+
+  # DeepTFactor
+  deeptfactor_results:
+    properties:
+      _: DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      Format: TSV
+      ext: tsv
+
+  # PredicTF
+  predictf_db:
+    properties:
+      _: PredicTF database directory (deeparg-largerepo + model files)
+  predictf_results:
+    properties:
+      _: PredicTF high-confidence TF predictions with family classification
+      Format: TSV
+      ext: tsv
+  predictf_potential:
+    properties:
+      _: PredicTF lower-confidence potential TF predictions
+      Format: TSV
+      ext: tsv

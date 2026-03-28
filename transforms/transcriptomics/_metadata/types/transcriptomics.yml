@@ -15,6 +15,11 @@ types:
       _:
       - Braker3 predicted protein sequences
       ext: faa
+  contamination_report:
+    properties:
+      _:
+      - BLASTn report of organellar sequences found in chromosome assembly
+      ext: tsv
   count_table:
     properties:
       _:
@@ -48,6 +53,27 @@ types:
       _:
       - StringTie merged transcript annotation across all samples
       ext: gtf
+  organellar_bam:
+    properties:
+      _:
+      - RNA-seq reads aligned to organellar genome with minimap2
+      ext: bam
+  organellar_gene_count_table:
+    properties:
+      _:
+      - Gene-level count matrix for organellar genes
+      - gene-level count matrix from StringTie
+      ext: csv
+  organellar_gff:
+    properties:
+      _:
+      - Organellar gene annotations in GFF3 format from GenBank reference
+      ext: gff3
+  organellar_reference:
+    properties:
+      _:
+      - Organellar genome FASTA extracted from GenBank reference
+      ext: fna
   salmon_index:
     properties:
     - salmon quasi-mapping index

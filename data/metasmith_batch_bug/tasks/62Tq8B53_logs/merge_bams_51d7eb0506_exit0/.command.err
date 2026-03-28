@@ -1,7 +1,0 @@
-INFO:    squashfuse not found, will not be able to use gocryptfs
-INFO:    gocryptfs not found, will not be able to use gocryptfs
-INFO:    squashfuse not found, will not be able to use gocryptfs
-INFO:    gocryptfs not found, will not be able to use gocryptfs
-2026-03-08_19-19-10 E| INFO:    squashfuse not found, will not be able to use gocryptfs
-2026-03-08_19-19-10 E| INFO:    gocryptfs not found, will not be able to use gocryptfs
-2026-03-08_19-59-58 E| [bam_sort_core] merging from 9 files and 8 in-memory blocks...

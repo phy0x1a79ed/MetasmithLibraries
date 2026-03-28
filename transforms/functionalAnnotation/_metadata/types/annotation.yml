@@ -5,6 +5,21 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  bakta_db:
+    properties:
+    - Bakta light database directory
+  bakta_gff:
+    properties:
+      Format: GFF3
+      _:
+      - Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
+      ext: gff3
+  bakta_tsv:
+    properties:
+      Format: TSV
+      _:
+      - Bakta non-coding annotation summary table
+      ext: tsv
   busco_lineage:
     properties:
     - Pre-downloaded BUSCO lineage dataset directory
@@ -21,6 +36,12 @@ types:
     properties:
       _:
       - DeepEC EC number predictions
+      ext: tsv
+  deeptfactor_results:
+    properties:
+      Format: TSV
+      _:
+      - DeepTFactor TF predictions (binary TF/non-TF with probability score)
       ext: tsv
   diamond_uniref50_results:
     properties:
@@ -75,6 +96,21 @@ types:
   kofamscan_source:
     properties:
     - Marker for KofamScan database download
+  predictf_db:
+    properties:
+    - PredicTF database directory (deeparg-largerepo + model files)
+  predictf_potential:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF lower-confidence potential TF predictions
+      ext: tsv
+  predictf_results:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF high-confidence TF predictions with family classification
+      ext: tsv
   proteinbert_embeddings:
     properties:
       Format: Parquet

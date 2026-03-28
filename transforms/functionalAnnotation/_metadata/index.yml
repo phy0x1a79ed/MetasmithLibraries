@@ -1,7 +1,11 @@
 manifest:
+  bakta_noncoding.py:
+    type: transforms::transform
   busco.py:
     type: transforms::transform
   deepec.py:
+    type: transforms::transform
+  deeptfactor.py:
     type: transforms::transform
   diamond_uniref50.py:
     type: transforms::transform
@@ -10,6 +14,8 @@ manifest:
   interproscan.py:
     type: transforms::transform
   kofamscan.py:
+    type: transforms::transform
+  predictf.py:
     type: transforms::transform
   proteinbert.py:
     type: transforms::transform

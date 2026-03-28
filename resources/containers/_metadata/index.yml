@@ -1,4 +1,6 @@
 manifest:
+  bakta.oci:
+    type: containers::bakta.oci
   bbtools.oci:
     type: containers::bbtools.oci
   bedtools.oci:
@@ -15,6 +17,8 @@ manifest:
     type: containers::comebin.oci
   deepec.oci:
     type: containers::deepec.oci
+  deeptfactor.oci:
+    type: containers::deeptfactor.oci
   diamond.oci:
     type: containers::diamond.oci
   eggnog-mapper.oci:
@@ -63,6 +67,8 @@ manifest:
     type: containers::ppanggolin.oci
   pprodigal.oci:
     type: containers::pprodigal.oci
+  predictf.oci:
+    type: containers::predictf.oci
   proteinbert.oci:
     type: containers::proteinbert.oci
   pydeseq2.oci:

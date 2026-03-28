@@ -1,11 +1,19 @@
 manifest:
+  blast_contamination_check.py:
+    type: transforms::transform
   braker3.py:
     type: transforms::transform
   deseq2.py:
     type: transforms::transform
+  genbank_to_reference.py:
+    type: transforms::transform
   gffread_proteins.py:
     type: transforms::transform
   merge_bams.py:
+    type: transforms::transform
+  minimap2_rnaseq_align.py:
+    type: transforms::transform
+  organellar_count_matrix.py:
     type: transforms::transform
   pydeseq2.py:
     type: transforms::transform

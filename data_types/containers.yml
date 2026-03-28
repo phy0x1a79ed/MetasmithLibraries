@@ -256,3 +256,18 @@ types:
       - py/biopython
       - py/jupyter
       - py/notebook
+  bakta.oci:
+    extends: container
+    properties:
+      provides:
+      - bakta
+  deeptfactor.oci:
+    extends: container
+    properties:
+      provides:
+      - deeptfactor
+  predictf.oci:
+    extends: container
+    properties:
+      provides:
+      - predictf

@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
@@ -15,10 +17,17 @@ def protocol(context: ExecutionContext):
     cpus = context.params.get("cpus")
     cpus = 16 if cpus is None else cpus
 
+    # Copy eggNOG DB to node-local storage to avoid Lustre I/O contention.
+    # Use ./ (CWD) which metasmith sets to the Nextflow work dir on localscratch
+    # (SLURM_TMPDIR). Do NOT use TMPDIR or /tmp — those resolve to a RAM disk
+    # (tmpfs) on Compute Canada nodes, and 100 concurrent 48GB copies OOM-kill.
+    local_data = Path("./eggnog_data")
+    context.LocalShell(f"cp -r {idata.external} {local_data}")
+
     # Strip stop codon asterisks from protein sequences (same as interproscan)
     context.ExecWithContainer(
         image=image,
-        binds=[(idata.external, "/eggnog_data")],
+        binds=[(local_data, "/eggnog_data")],
         cmd=f"""
             sed '/^[^>]/s/\\*//g' {iorfs.container} > ./proteins.clean.faa
             emapper.py \

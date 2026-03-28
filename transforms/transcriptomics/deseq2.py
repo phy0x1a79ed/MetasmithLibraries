@@ -28,6 +28,8 @@ output_file = sys.argv[2]
 n_cpus      = int(sys.argv[3])
 
 counts = pd.read_csv(count_file, index_col="gene_id")
+if "gene_name" in counts.columns:
+    counts = counts.drop(columns=["gene_name"])
 
 # Infer condition from sample name: everything before the trailing replicate number
 def get_condition(name):

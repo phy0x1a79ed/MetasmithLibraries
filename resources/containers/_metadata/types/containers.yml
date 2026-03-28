@@ -5,6 +5,10 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  bakta.oci:
+    properties:
+      Format: OCI
+      provides: bakta
   bbtools.oci:
     properties:
       Format: OCI
@@ -47,6 +51,10 @@ types:
     properties:
       Format: OCI
       provides: deepec
+  deeptfactor.oci:
+    properties:
+      Format: OCI
+      provides: deeptfactor
   diamond.oci:
     properties:
       Format: OCI
@@ -145,6 +153,10 @@ types:
     properties:
       Format: OCI
       provides: pprodigal
+  predictf.oci:
+    properties:
+      Format: OCI
+      provides: predictf
   proteinbert.oci:
     properties:
       Format: OCI
