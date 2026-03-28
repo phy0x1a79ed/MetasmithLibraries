@@ -1,8 +1,0 @@
-path:map04740	cpd:C00020
-path:map04740	cpd:C00076
-path:map04740	cpd:C00144
-path:map04740	cpd:C00238
-path:map04740	cpd:C00575
-path:map04740	cpd:C00698
-path:map04740	cpd:C00942
-path:map04740	cpd:C01330

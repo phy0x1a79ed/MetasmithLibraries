@@ -1,7 +1,0 @@
-path:map07015	cpd:C14166
-path:map07015	cpd:C14167
-path:map07015	cpd:C14168
-path:map07015	cpd:C14170
-path:map07015	cpd:C14171
-path:map07015	cpd:C14172
-path:map07015	cpd:C14173

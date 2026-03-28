@@ -1,6 +1,0 @@
-path:map07232	cpd:C06855
-path:map07232	cpd:C13729
-path:map07232	cpd:C13772
-path:map07232	cpd:C13776
-path:map07232	cpd:C13777
-path:map07232	cpd:C13820

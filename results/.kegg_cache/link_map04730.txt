@@ -1,9 +1,0 @@
-path:map04730	cpd:C00025
-path:map04730	cpd:C00076
-path:map04730	cpd:C00165
-path:map04730	cpd:C00219
-path:map04730	cpd:C00533
-path:map04730	cpd:C00641
-path:map04730	cpd:C00942
-path:map04730	cpd:C01245
-path:map04730	cpd:C01330

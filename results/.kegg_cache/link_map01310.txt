@@ -1,8 +1,0 @@
-path:map01310	cpd:C00014
-path:map01310	cpd:C00088
-path:map01310	cpd:C00192
-path:map01310	cpd:C00244
-path:map01310	cpd:C00533
-path:map01310	cpd:C00697
-path:map01310	cpd:C00887
-path:map01310	cpd:C05361

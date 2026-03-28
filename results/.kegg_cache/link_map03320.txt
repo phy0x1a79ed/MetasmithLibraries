@@ -1,5 +1,0 @@
-path:map03320	cpd:C02165
-path:map03320	cpd:C14762
-path:map03320	cpd:C14767
-path:map03320	cpd:C14776
-path:map03320	cpd:C15493

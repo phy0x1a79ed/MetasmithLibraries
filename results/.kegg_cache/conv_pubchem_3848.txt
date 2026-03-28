@@ -1,1 +1,0 @@
-pubchem:3848	cpd:C00569

@@ -1,3 +1,0 @@
-path:map04940	cpd:C00027
-path:map04940	cpd:C00533
-path:map04940	cpd:C00704

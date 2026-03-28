@@ -1,2 +1,0 @@
-path:map04932	cpd:C00031
-path:map04932	cpd:C00162

@@ -1,8 +1,0 @@
-path:map02025	cpd:C00044
-path:map02025	cpd:C00575
-path:map02025	cpd:C11837
-path:map02025	cpd:C11848
-path:map02025	cpd:C16463
-path:map02025	cpd:C18076
-path:map02025	cpd:C20643
-path:map02025	cpd:C21201

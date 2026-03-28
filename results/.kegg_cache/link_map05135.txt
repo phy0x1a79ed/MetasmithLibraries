@@ -1,5 +1,0 @@
-path:map05135	cpd:C00076
-path:map05135	cpd:C00338
-path:map05135	cpd:C01245
-path:map05135	cpd:C04637
-path:map05135	cpd:C05981

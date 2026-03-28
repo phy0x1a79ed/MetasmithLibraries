@@ -1,7 +1,0 @@
-path:map07034	cpd:C00219
-path:map07034	cpd:C00427
-path:map07034	cpd:C00909
-path:map07034	cpd:C02165
-path:map07034	cpd:C02198
-path:map07034	cpd:C05356
-path:map07034	cpd:C05956

@@ -1,4 +1,0 @@
-path:map07033	cpd:C07493
-path:map07033	cpd:C07499
-path:map07033	cpd:C14916
-path:map07033	cpd:C15341

@@ -1,6 +1,0 @@
-path:map04912	cpd:C00076
-path:map04912	cpd:C00165
-path:map04912	cpd:C00219
-path:map04912	cpd:C00416
-path:map04912	cpd:C00575
-path:map04912	cpd:C01245

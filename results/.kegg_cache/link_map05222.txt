@@ -1,3 +1,0 @@
-path:map05222	cpd:C00777
-path:map05222	cpd:C05981
-path:map05222	cpd:C15493
