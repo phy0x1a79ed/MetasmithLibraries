@@ -1,10 +1,16 @@
 types:
   # InterProScan
-  interproscan_results:
+  interproscan_gff3:
     properties:
-      _: Parsed InterProScan protein matches
-      Format: CSV
-      ext: csv
+      _: InterProScan protein domain annotations
+      Format: GFF3
+      ext: gff3
+
+  interproscan_json:
+    properties:
+      _: InterProScan protein domain annotations (JSON)
+      Format: JSON
+      ext: json
 
   # KofamScan
   kofamscan_results:

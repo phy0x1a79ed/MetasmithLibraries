@@ -19,12 +19,18 @@ types:
   interproscan_data:
     properties:
     - InterProScan data directory
-  interproscan_results:
+  interproscan_gff3:
     properties:
-      Format: CSV
+      Format: GFF3
       _:
-      - Parsed InterProScan protein matches
-      ext: csv
+      - InterProScan protein domain annotations
+      ext: gff3
+  interproscan_json:
+    properties:
+      Format: JSON
+      _:
+      - InterProScan protein domain annotations (JSON)
+      ext: json
   interproscan_source:
     properties:
     - Marker for InterProScan data location
