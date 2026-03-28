@@ -1,4 +1,6 @@
 manifest:
+  antismash.oci:
+    type: containers::antismash.oci
   bbtools.oci:
     type: containers::bbtools.oci
   bedtools.oci:
@@ -49,6 +51,8 @@ manifest:
     type: containers::samtools.oci
   seqkit.oci:
     type: containers::seqkit.oci
+  skani.oci:
+    type: containers::skani.oci
   sra-tools.oci:
     type: containers::sra-tools.oci
 schema: v1

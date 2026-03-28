@@ -1,0 +1,20 @@
+types:
+  # antiSMASH
+  antismash_json:
+    properties:
+      _: antiSMASH JSON results per assembly
+      Format: JSON
+      ext: json
+  antismash_regions_gbk:
+    properties:
+      _: antiSMASH GenBank region files (tar)
+      Format: GenBank
+      ext: tar.gz
+
+  # antiSMASH database
+  antismash_db:
+    properties:
+      _: antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
+  antismash_source:
+    properties:
+      _: Marker for antiSMASH database download

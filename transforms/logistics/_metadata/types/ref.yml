@@ -5,6 +5,9 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  antismash:
+    properties:
+    - for antiSMASH
   genomad:
     properties:
     - for geNomad

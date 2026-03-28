@@ -1,6 +1,8 @@
 manifest:
   add_orfs_to_centroids.py:
     type: transforms::transform
+  antismash.py:
+    type: transforms::transform
   diamond_linclust.py:
     type: transforms::transform
   pprodigal.py:

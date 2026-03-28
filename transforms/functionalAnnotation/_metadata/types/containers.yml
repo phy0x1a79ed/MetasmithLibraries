@@ -5,6 +5,10 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  antismash.oci:
+    properties:
+      Format: OCI
+      provides: antismash
   bbtools.oci:
     properties:
       Format: OCI

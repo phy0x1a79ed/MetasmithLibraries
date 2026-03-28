@@ -162,10 +162,18 @@ types:
     properties:
       provides: 
       - ppanggolin
+  # -------------------------------------------------
+  # functional annotation
+  antismash.oci:
+    extends: container
+    properties:
+      provides:
+        - antismash
+
   python_for_data_science.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - python=3.12
       - py/numpy
       - py/scipy

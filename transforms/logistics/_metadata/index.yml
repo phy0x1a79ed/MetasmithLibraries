@@ -1,4 +1,6 @@
 manifest:
+  downloadAntiSmashDB.py:
+    type: transforms::transform
   dumpNcbiSra.py:
     type: transforms::transform
   getNcbiAssembly.py:

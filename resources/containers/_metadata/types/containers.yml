@@ -5,6 +5,10 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  antismash.oci:
+    properties:
+      Format: OCI
+      provides: antismash
   bbtools.oci:
     properties:
       Format: OCI
@@ -136,6 +140,10 @@ types:
       provides:
       - seqkit
       - seqkit/stat
+  skani.oci:
+    properties:
+      Format: OCI
+      provides: skani
   sra-tools.oci:
     properties:
       Format: OCI

@@ -7,3 +7,8 @@ types:
     - reference_database
     properties:
       _: for geNomad
+  antismash:
+    extends:
+    - reference_database
+    properties:
+      _: for antiSMASH

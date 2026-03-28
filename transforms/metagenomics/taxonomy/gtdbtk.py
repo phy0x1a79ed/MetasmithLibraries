@@ -109,6 +109,6 @@ TransformInstance(
     resources=Resources(
         cpus=2,
         memory=Size.GB(120), # r226 used 107 GB
-        duration=Duration(hours=4),
+        duration=Duration(hours=12),
     )
 )

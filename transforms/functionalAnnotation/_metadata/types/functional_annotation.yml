@@ -1,0 +1,25 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  antismash_db:
+    properties:
+    - antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
+  antismash_json:
+    properties:
+      Format: JSON
+      _:
+      - antiSMASH JSON results per assembly
+      ext: json
+  antismash_regions_gbk:
+    properties:
+      Format: GenBank
+      _:
+      - antiSMASH GenBank region files (tar)
+      ext: tar.gz
+  antismash_source:
+    properties:
+    - Marker for antiSMASH database download
