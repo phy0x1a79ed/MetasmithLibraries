@@ -6,7 +6,7 @@ model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::megahit.oci"))
 meta    = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 reads   = model.AddRequirement(lib.GetType("sequences::clean_short_reads"), parents={meta})
-out     = model.AddProduct(lib.GetType("sequences::assembly"))
+out     = model.AddProduct(lib.GetType("sequences::megahit_assembly"))
 
 def protocol(context: ExecutionContext):
     ireads=context.Input(reads)

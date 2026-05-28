@@ -75,9 +75,9 @@ def kofam_db_input(tmp_path):
 
     inputs_dir = tmp_path / "kofam_db.xgdb"
     inputs = DataInstanceLibrary(inputs_dir)
-    inputs.AddTypeLibrary(MLIB / "data_types" / "annotation.yml")
-    inputs.AddItem(kofam_dir / "profiles", "annotation::kofamscan_profiles")
-    inputs.AddItem(kofam_dir / "ko_list", "annotation::kofamscan_ko_list")
+    inputs.AddTypeLibrary(MLIB / "data_types" / "ref.yml")
+    inputs.AddItem(kofam_dir / "profiles", "ref::kofamscan_profiles")
+    inputs.AddItem(kofam_dir / "ko_list", "ref::kofamscan_ko_list")
     inputs.LocalizeContents()
     inputs.Save()
     return inputs

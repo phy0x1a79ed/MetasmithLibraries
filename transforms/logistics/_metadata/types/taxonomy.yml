@@ -28,9 +28,6 @@ types:
       _:
       - genomad virus summary
       ext: tsv
-  gtdb:
-    properties:
-    - genome taxonomy database
   gtdbtk:
     properties:
       _:
@@ -49,9 +46,6 @@ types:
       _:
       - metabuli krona report
       ext: html
-  metabuli_ref:
-    properties:
-    - metabuli reference database
   metabuli_report:
     properties:
       _:

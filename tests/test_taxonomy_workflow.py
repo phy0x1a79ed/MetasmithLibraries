@@ -36,14 +36,39 @@ def taxonomy_transforms(mlib):
 
 @pytest.fixture
 def taxonomy_input(tmp_inputs, test_data_dir):
-    """Create input library with assembly for taxonomy classification."""
+    """Create input library with an isolate assembly for taxonomy classification.
+
+    After the putative_genome rework, gtdbtk requires `sequences::putative_genome`.
+    A raw `sequences::assembly` (mixed-contig metagenome) no longer satisfies it;
+    use `sequences::isolate_assembly` for single-organism inputs.
+    """
     inputs = tmp_inputs(["sequences.yml", "taxonomy.yml"])
 
     assembly_path = test_data_dir / "small_assembly.fna"
     if not assembly_path.exists():
         pytest.skip("Test data not available: small_assembly.fna")
 
-    inputs.AddItem(assembly_path, "sequences::assembly")
+    inputs.AddItem(assembly_path, "sequences::isolate_assembly")
+    inputs.LocalizeContents()
+    inputs.Save()
+
+    return inputs
+
+
+@pytest.fixture
+def raw_metagenome_input(tmp_inputs, test_data_dir):
+    """Create input library typed as a raw (mixed-contig) metagenome assembly.
+
+    Used to verify that gtdbtk REFUSES to run on a raw metagenome assembly,
+    which is the intentional behavior change from the putative_genome rework.
+    """
+    inputs = tmp_inputs(["sequences.yml", "taxonomy.yml"])
+
+    assembly_path = test_data_dir / "small_assembly.fna"
+    if not assembly_path.exists():
+        pytest.skip("Test data not available: small_assembly.fna")
+
+    inputs.AddItem(assembly_path, "sequences::megahit_assembly")
     inputs.LocalizeContents()
     inputs.Save()
 
@@ -78,7 +103,7 @@ class TestTaxonomyWorkflowGeneration:
         targets.Add("taxonomy::gtdbtk")
 
         task = agent.GenerateWorkflow(
-            samples=list(taxonomy_input.AsSamples("sequences::assembly")),
+            samples=list(taxonomy_input.AsSamples("sequences::isolate_assembly")),
             resources=taxonomy_resources + [taxonomy_input],
             transforms=taxonomy_transforms,
             targets=targets,
@@ -88,6 +113,26 @@ class TestTaxonomyWorkflowGeneration:
         if not task.ok or len(task.plan.steps) == 0:
             pytest.skip("GTDB-Tk workflow requires GTDB database")
 
+    def test_gtdbtk_refuses_raw_metagenome_assembly(
+        self, agent, taxonomy_resources, taxonomy_transforms, raw_metagenome_input
+    ):
+        """Negative test (matrix row #24): a raw `megahit_assembly` is NOT a
+        putative_genome, so the gtdbtk workflow must fail to plan.
+        """
+        targets = TargetBuilder()
+        targets.Add("taxonomy::gtdbtk")
+
+        task = agent.GenerateWorkflow(
+            samples=list(raw_metagenome_input.AsSamples("sequences::megahit_assembly")),
+            resources=taxonomy_resources + [raw_metagenome_input],
+            transforms=taxonomy_transforms,
+            targets=targets,
+        )
+        # Either planning fails outright, or the resulting plan is empty:
+        assert (not task.ok) or len(task.plan.steps) == 0, (
+            "gtdbtk should refuse a raw `megahit_assembly` (no putative_genome lineage)"
+        )
+
     def test_can_plan_metabuli_workflow(
         self, agent, taxonomy_resources, taxonomy_transforms, taxonomy_input
     ):
@@ -96,7 +141,7 @@ class TestTaxonomyWorkflowGeneration:
         targets.Add("taxonomy::metabuli")
 
         task = agent.GenerateWorkflow(
-            samples=list(taxonomy_input.AsSamples("sequences::assembly")),
+            samples=list(taxonomy_input.AsSamples("sequences::isolate_assembly")),
             resources=taxonomy_resources + [taxonomy_input],
             transforms=taxonomy_transforms,
             targets=targets,
@@ -119,7 +164,7 @@ class TestTaxonomyWorkflowExecution:
         targets.Add("taxonomy::gtdbtk")
 
         task = agent.GenerateWorkflow(
-            samples=list(taxonomy_input.AsSamples("sequences::assembly")),
+            samples=list(taxonomy_input.AsSamples("sequences::isolate_assembly")),
             resources=taxonomy_resources + [taxonomy_input],
             transforms=taxonomy_transforms,
             targets=targets,
@@ -160,7 +205,7 @@ class TestTaxonomyWorkflowExecution:
         targets.Add("taxonomy::metabuli")
 
         task = agent.GenerateWorkflow(
-            samples=list(taxonomy_input.AsSamples("sequences::assembly")),
+            samples=list(taxonomy_input.AsSamples("sequences::isolate_assembly")),
             resources=taxonomy_resources + [taxonomy_input],
             transforms=taxonomy_transforms,
             targets=targets,

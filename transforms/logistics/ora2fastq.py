@@ -7,7 +7,7 @@ r1      = model.AddRequirement(lib.GetType("sequences::forward_ora_reads"), pare
 r2      = model.AddRequirement(lib.GetType("sequences::reverse_ora_reads"), parents={pair})
 orad    = model.AddRequirement(lib.GetType("containers::orad.oci"))
 bbtools = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
-out     = model.AddProduct(lib.GetType("sequences::short_reads"))
+out     = model.AddProduct(lib.GetType("sequences::short_reads_pe"))
 
 def protocol(context: ExecutionContext):
     ir1 = context.Input(r1)
@@ -50,7 +50,7 @@ def protocol(context: ExecutionContext):
 TransformInstance(
     protocol=protocol,
     model=model,
-    group_by=r1,
+    group_by=pair,
     resources=Resources(
         cpus=4,
         memory=Size.GB(16),

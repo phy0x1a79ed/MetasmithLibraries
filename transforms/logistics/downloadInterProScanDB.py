@@ -4,7 +4,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
 img_ipr = model.AddRequirement(lib.GetType("containers::interproscan.oci"))
-data    = model.AddProduct(lib.GetType("annotation::interproscan_data"))
+data    = model.AddProduct(lib.GetType("ref::interproscan_data"))
 
 # InterProScan 5.67-99.0 data bundle
 IPRSCAN_DATA_URL = "https://ftp.ebi.ac.uk/pub/databases/interpro/iprscan/5/5.67-99.0/interproscan-5.67-99.0-64-bit.tar.gz"
@@ -17,18 +17,22 @@ def protocol(context: ExecutionContext):
         cmd=f"""
             wget -q {IPRSCAN_DATA_URL} -O interproscan-data.tar.gz
             mkdir -p {idata.container}
-            tar xzf interproscan-data.tar.gz -C {idata.container} --strip-components=1
+            tar xzf interproscan-data.tar.gz -C ipr_data --strip-components=1
         """,
     )
 
     # compile hmmer indexes
     context.ExecWithContainer(
         image=img_ipr,
-        binds=[(idata.external/"data", "/opt/interproscan/data")],
+        binds=[(context.external_cwd/"ipr_data/data", "/opt/interproscan/data")],
         cmd=f"""\
             python3 setup.py -f interproscan.properties --force
         """
     )
+
+    threads = context.params.get('cpus')
+    threads = "" if threads is None else f"-p {threads}"
+    context.LocalShell(f"mv ipr_data/data ./ && tar -I 'pigz {threads}' -cf {idata.local} ./data")
 
     return ExecutionResult(
         manifest=[{data: idata.local}],
@@ -41,7 +45,7 @@ TransformInstance(
     group_by=img_ipr,
     labels=["local"],
     resources=Resources(
-        cpus=1,
+        cpus=2,
         memory=Size.GB(8),
         duration=Duration(hours=8),
     ),

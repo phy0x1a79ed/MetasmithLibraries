@@ -5,6 +5,22 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ankh.oci:
+    properties:
+      Format: OCI
+      provides: ankh_embed
+  antismash.oci:
+    properties:
+      Format: OCI
+      provides: antismash
+  bakta.oci:
+    properties:
+      Format: OCI
+      provides: bakta
+  bam2fastx.oci:
+    properties:
+      Format: OCI
+      provides: bam2fastq
   bbtools.oci:
     properties:
       Format: OCI
@@ -24,6 +40,18 @@ types:
       provides:
       - blastn
       - makeblastdb
+  boltz.oci:
+    properties:
+      Format: OCI
+      provides: boltz
+  braker3.oci:
+    properties:
+      Format: OCI
+      provides: braker3
+  busco.oci:
+    properties:
+      Format: OCI
+      provides: busco
   checkm.oci:
     properties:
       Format: OCI
@@ -38,13 +66,35 @@ types:
   deepec.oci:
     properties:
       Format: OCI
-      provides: deepEC
+      provides: deepec
+  deeptfactor.oci:
+    properties:
+      Format: OCI
+      provides: deeptfactor
   diamond.oci:
     properties:
       Format: OCI
       provides:
       - diamond
+      - diamond/blastp
+      - diamond/linclust
       - diamond/makedb
+  dram.oci:
+    properties:
+      Format: OCI
+      provides: DRAM-v.py
+  eggnog-mapper.oci:
+    properties:
+      Format: OCI
+      provides: emapper.py
+  esmc.oci:
+    properties:
+      Format: OCI
+      provides: esmc_embed
+  esmfold.oci:
+    properties:
+      Format: OCI
+      provides: esmfold_predict
   fastani.oci:
     properties:
       Format: OCI
@@ -65,6 +115,10 @@ types:
     properties:
       Format: OCI
       provides: flye
+  foldseek.oci:
+    properties:
+      Format: OCI
+      provides: foldseek
   genomad.oci:
     properties:
       Format: OCI
@@ -73,6 +127,10 @@ types:
     properties:
       Format: OCI
       provides: gfatools
+  gffread.oci:
+    properties:
+      Format: OCI
+      provides: gffread
   gtdbtk.oci:
     properties:
       Format: OCI
@@ -103,6 +161,12 @@ types:
       provides:
       - jgi_summarize_bam_contig_depths
       - metabat2
+  metabolomics-python.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/cobra
+      - py/escher
   metabuli.oci:
     properties:
       Format: OCI
@@ -139,14 +203,30 @@ types:
     properties:
       Format: OCI
       provides: pprodigal
+  predictf.oci:
+    properties:
+      Format: OCI
+      provides: predictf
+  promotech.oci:
+    properties:
+      Format: OCI
+      provides: promotech
   proteinbert.oci:
     properties:
       Format: OCI
       provides: proteinbert
+  prott5.oci:
+    properties:
+      Format: OCI
+      provides: prott5_embed
   pulled_container:
     properties:
       atomic_description: pulled OCI container
       ext: log
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides: py/pydeseq2
   python_for_data_science.oci:
     properties:
       Format: OCI
@@ -168,10 +248,18 @@ types:
     properties:
       Format: OCI
       provides: qiime
+  salmon.oci:
+    properties:
+      Format: OCI
+      provides: salmon
   samtools.oci:
     properties:
       Format: OCI
       provides: samtools
+  saprot.oci:
+    properties:
+      Format: OCI
+      provides: saprot_embed
   semibin.oci:
     properties:
       Format: OCI
@@ -182,6 +270,10 @@ types:
       provides:
       - seqkit
       - seqkit/stat
+  skani.oci:
+    properties:
+      Format: OCI
+      provides: skani
   sra-tools.oci:
     properties:
       Format: OCI
@@ -189,6 +281,18 @@ types:
       - fasterq-dump
       - sratk/prefetch
       - sratk/vdb-validate
+  star.oci:
+    properties:
+      Format: OCI
+      provides: STAR
+  stringtie.oci:
+    properties:
+      Format: OCI
+      provides: stringtie
+  virsorter2.oci:
+    properties:
+      Format: OCI
+      provides: virsorter
   vsearch.oci:
     properties:
       Format: OCI

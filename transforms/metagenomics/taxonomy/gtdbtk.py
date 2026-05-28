@@ -5,8 +5,8 @@ import shutil
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::gtdbtk.oci"))
-ref         = model.AddRequirement(lib.GetType("taxonomy::gtdb"))
-asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
+ref         = model.AddRequirement(lib.GetType("ref::gtdb"))
+asm         = model.AddRequirement(lib.GetType("sequences::putative_genome"))
 tax         = model.AddProduct(lib.GetType("taxonomy::gtdbtk"))
 # raw         = model.AddProduct(lib.GetType("taxonomy::gtdbtk_raw"))
 
@@ -16,11 +16,11 @@ def protocol(context: ExecutionContext):
 
     genome_dir = Path("./assemblies")
     genome_dir.mkdir()
-    in2out = {}
+    in2out = {}  # asm_stem -> (tax_output_name, tax_output_handle)
     for item in context.AsBatch():
         iasm    = item.Input(asm)
         itax    = item.Output(tax)
-        in2out[iasm.local.stem] = itax.local.name # gtdb removes the file extension, so .stem
+        in2out[iasm.local.stem] = (itax.local.name, itax)  # gtdb removes the file extension, so .stem
         src = iasm.local
         dest = genome_dir/iasm.local.name
         Log.Info(f"registering genome [{src}] -> [{dest}]")
@@ -78,37 +78,29 @@ def protocol(context: ExecutionContext):
                 rows[k] = l, header
 
     # have output file creation order match input order, since paranoid
-    for _asm, _tax in in2out.items():
+    manifest = []
+    for _asm, (_tax_name, _tax_handle) in in2out.items():
         row, header = rows[_asm]
         if row[:-1] != "\n": row+="\n"
         if header[:-1] != "\n": header+="\n"
-        with open(_tax, "w") as out:
+        with open(_tax_name, "w") as out:
             out.write(header)
             out.write(row)
-
-    # todo: return trees as well
-    # out_tree = context.output_folder.joinpath(f"{sample}.tax.tree")
-    # file_candidates = os.listdir(classify_out) if classify_out.exists() else []
-    # file_candidates = [classify_out.joinpath(f) for f in file_candidates if (f.endswith(".tree") and "backbone" not in str(f))]
-    # with open(out_tree, "w") as out:
+        manifest.append({tax: _tax_handle.local})
 
     return ExecutionResult(
-        manifest=[
-            {
-                tax: itax.local,
-            },
-        ],
-        success=itax.local.exists(),
+        manifest=manifest,
+        success=len(manifest) > 0,
     )
 
 TransformInstance(
     protocol=protocol,
     model=model,
     group_by=asm,
-    batch_size=100,
+    batch_size=25,
     resources=Resources(
         cpus=2,
         memory=Size.GB(120), # r226 used 107 GB
-        duration=Duration(hours=4),
+        duration=Duration(hours=12),
     )
 )

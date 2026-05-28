@@ -1,7 +1,4 @@
 types:
-  metabuli_ref:
-    properties:
-      _: metabuli reference database
   metabuli:
     properties:
       _: metabuli per contig classifications
@@ -32,9 +29,6 @@ types:
     properties:
       _: checkm workspace
 
-  gtdb:
-    properties:
-      _: genome taxonomy database
   gtdbtk:
     properties:
       _: gtdbtk per contig classifications 

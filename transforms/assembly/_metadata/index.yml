@@ -17,7 +17,11 @@ manifest:
     type: transforms::transform
   hifi/miniasm.py:
     type: transforms::transform
+  hifi/pbBam2fastq.py:
+    type: transforms::transform
   megahit.py:
+    type: transforms::transform
+  select_chromosomal_contigs.py:
     type: transforms::transform
   seqkit_reads.py:
     type: transforms::transform
