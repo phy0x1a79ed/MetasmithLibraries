@@ -3,7 +3,6 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
-src     = model.AddRequirement(lib.GetType("amplicon::silva_source"))
 db      = model.AddProduct(lib.GetType("amplicon::silva_db"))
 
 SILVA_URL = "https://www.arb-silva.de/fileadmin/silva_databases/release_138.2/Exports/SILVA_138.2_SSURef_NR99_tax_silva.fasta.gz"
@@ -37,7 +36,7 @@ def protocol(context: ExecutionContext):
 TransformInstance(
     protocol=protocol,
     model=model,
-    group_by=src,
+    group_by=image,
     labels=["local"],
     resources=Resources(
         cpus=1,

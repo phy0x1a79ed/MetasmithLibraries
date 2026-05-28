@@ -5,24 +5,29 @@ ontology:
   version: '1.25'
 schema: v1
 types:
-  bin_fasta:
+  comebin_contig_to_bin_table:
     properties:
-      _: a single metagenomic bin FASTA file
-      Data: DNA sequence
-      Format: FASTA
-      content: metagenomic bin
-      ext: fa
-  bin_directory:
-    properties:
-      _: directory containing binned contig FASTA files
-      content: metagenomic bins
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: comebin
   contig_to_bin_table:
     properties:
-      _: contig to bin assignment table
+      _:
+      - contig to bin assignment table
       ext: tsv
-      content: bin assignments
-  semibin_environment:
+  metabat2_contig_to_bin_table:
     properties:
-      _: SemiBin habitat model name
-      arity: 1
-      ext: txt
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: metabat2
+  metagenome_sample:
+    properties:
+    - a metagenome sample identifier for binning
+  semibin2_contig_to_bin_table:
+    properties:
+      _:
+      - contig to bin assignment table
+      ext: tsv
+      method: semibin2

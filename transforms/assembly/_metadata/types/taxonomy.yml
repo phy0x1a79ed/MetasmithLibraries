@@ -18,9 +18,16 @@ types:
       _:
       - checkm quality stats
       ext: csv
-  gtdb:
+  genomad_plasmid_summary:
     properties:
-    - genome taxonomy database
+      _:
+      - genomad plasmid summary
+      ext: tsv
+  genomad_virus_summary:
+    properties:
+      _:
+      - genomad virus summary
+      ext: tsv
   gtdbtk:
     properties:
       _:
@@ -39,9 +46,6 @@ types:
       _:
       - metabuli krona report
       ext: html
-  metabuli_ref:
-    properties:
-    - metabuli reference database
   metabuli_report:
     properties:
       _:

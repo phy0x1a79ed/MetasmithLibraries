@@ -7,7 +7,11 @@ manifest:
     type: transforms::transform
   binning/semibin2.py:
     type: transforms::transform
+  prodigal.py:
+    type: transforms::transform
   taxonomy/fastani.py:
+    type: transforms::transform
+  taxonomy/genomad.py:
     type: transforms::transform
   taxonomy/gtdbtk.py:
     type: transforms::transform

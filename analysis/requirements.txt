@@ -1,9 +1,0 @@
-pandas
-numpy
-scipy
-matplotlib
-seaborn
-statsmodels
-intervaltree
-goatools
-gseapy

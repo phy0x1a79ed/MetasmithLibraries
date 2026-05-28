@@ -1,140 +1,140 @@
-# Functional Enrichment Analysis — *Porphyridium purpureum* Transcriptomics
+# MetasmithLibraries
 
-Differential expression + functional enrichment for *P. purpureum* grown in 3 media conditions (3 replicates each):
+Hallam Lab transform, data-type, and container library for the
+[Metasmith](https://github.com/hallamlab/metasmith) workflow engine.
 
-| Condition | Description |
-|-----------|-------------|
-| **POR-0** | Standard *Porphyridium* media (control) |
-| **POR-S** | *Spirulina* media formulation |
-| **POR-8** | Optimized media #8 — low NaNO₃, low NaCl, high trace metals (Co, Mn, Mo, Zn), high VitB12, high bicarbonate |
+Metasmith plans and executes data workflows by composing typed transforms.
+This repo is the registry of types, container images, and transform
+implementations that planner draws from.
 
-## Running
+## Contents
+
+```
+data_types/      # YAML type definitions (15 namespaces)
+resources/
+  containers/    # 62 OCI container references (.oci → docker:// URI)
+  lib/           # Reusable analysis scripts (clustering, plotting, etc.)
+transforms/      # Transform implementations grouped by domain
+  amplicon/              #  2 transforms
+  assembly/              # 13 transforms
+  functionalAnnotation/  # 27 transforms
+  logistics/             # 23 transforms (downloaders, format conversion)
+  metabolicModelling/    #  5 transforms
+  metagenomics/          #  9 transforms (+ binning/, taxonomy/)
+  pangenome/             #  2 transforms
+  responseSurface/       #  1 transform
+  transcriptomics/       # 19 transforms
+tests/           # Pytest workflow & E2E tests
+envs/            # Conda env for running tests outside Metasmith
+analysis/        # Downstream analysis code (not part of the library)
+main/            # Operator scripts (DAG rendering, planner probes, run launchers)
+```
+
+Data types (`data_types/*.yml`) cover: `alignment`, `amplicon`, `annotation`,
+`binning`, `clustering`, `containers`, `lib`, `media_optimization`,
+`metabolomics`, `ncbi`, `pangenome`, `ref`, `sequences`, `taxonomy`,
+`transcriptomics`.
+
+Transform domains include genome/metagenome **assembly** (flye, hifiasm-meta,
+megahit, metaspades, …), **binning** (metabat2, semibin2, comebin, checkm),
+**taxonomy** (gtdbtk, fastani, kraken2/bracken, sylph, …), **functional
+annotation** (eggnog-mapper, kofamscan, interproscan, antismash, bakta,
+dram, busco, diamond, deepec, …), **protein embeddings & structure**
+(esmfold, esm-c, prott5, ankh, saprot, foldseek), **transcriptomics**
+(star, salmon, stringtie, braker3, deseq2/pydeseq2), and **logistics**
+(weight/DB downloaders, SRA/assembly fetchers, read format conversion,
+sharding, container prefetch).
+
+## Building the library
+
+The build compiles every `data_types/*.yml`, every `resources/*/` directory,
+and every `transforms/*/` directory into the `_metadata/` indexes that
+Metasmith's planner loads at runtime.
 
 ```bash
-pip install -r analysis/requirements.txt
-python -m analysis.functional_enrichment
+./dev.sh -b
 ```
 
-All outputs go to `results/enrichment/`; figures to `results/enrichment/figures/`.
+The script delegates to `msm build all --types … --uniques … --transforms …`.
+It uses `msm` if it's on `PATH`; otherwise it falls back to
+`../Metasmith/dev.sh -r build all …`, so you need either:
 
-## Pipeline Summary
+- a Metasmith install with `msm` on `PATH` (matching the dev-branch CLI signature), or
+- a sibling checkout of [hallamlab/Metasmith](https://github.com/hallamlab/metasmith) plus a Python env satisfying `envs/base.yml` (and `envs/dev.yml` for tests).
 
-### 1. Gene ID Mapping
+After the build, `_metadata/` directories under `resources/` and
+`transforms/` reflect the current type graph. They're committed to the
+repo so consumers can pull the library without rebuilding.
 
-MSTRG (StringTie) gene IDs mapped to BRAKER3 gene IDs via genomic coordinate overlap using `intervaltree`, then joined to eggNOG annotations.
+### Adding a container
 
-| Metric | Count |
-|--------|-------|
-| MSTRG genes (StringTie) | 10,008 |
-| BRAKER3 genes | 8,182 |
-| Mapped (coordinate overlap) | 8,991 (89.8%) |
-| With eggNOG annotation | 6,972 |
+1. Add the type to `data_types/containers.yml` (`extends: container`,
+   declare what it `provides`).
+2. Create `resources/containers/<name>.oci` containing the registry URI
+   (e.g. `docker://quay.io/biocontainers/diamond:2.1.8--h43eeafb_0`).
+3. Rerun `./dev.sh -b`.
 
-**89.8% mapping rate** exceeds the 70% threshold. The 1,017 unmapped MSTRG genes are likely novel transcripts without BRAKER3 gene models (e.g., ncRNAs, UTR-only transcripts).
+The build fails if any `.oci` file lacks a matching type definition.
 
-### 2. GO Over-Representation Analysis (ORA)
+### Adding a transform
 
-Fisher's exact test with BH correction. Background: 3,259 genes with GO annotations.
+```python
+from metasmith.python_api import *
 
-**171 significant GO terms** across all comparisons (padj < 0.05).
+lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
+model = Transform()
+inp   = model.AddRequirement(lib.GetType("sequences::assembly"))
+out   = model.AddProduct(lib.GetType("annotation::eggnog_table"))
 
-Key downregulated pathways (both POR-S and POR-8 vs control):
-- **Ribosome / translation** — cytosolic ribosome (3.0-3.5x), structural constituent of ribosome, cytoplasmic translation. Strong signal in both treatments.
-- Organonitrogen compound biosynthesis, amide biosynthesis
+def protocol(context: ExecutionContext):
+    in_path  = context.Input(inp)
+    out_path = context.Output(out)
+    context.ExecWithContainer(
+        image=lib.GetResource("containers::eggnog-mapper.oci"),
+        cmd=f"emapper.py -i {in_path.container} -o {out_path.container}",
+    )
+    return ExecutionResult(manifest=[{out: out_path.local}], success=out_path.local.exists())
 
-Key upregulated pathways:
-- **Peroxisome / microbody** (4.3-4.5x enrichment) — upregulated in both POR-S and POR-8 vs control
-- Biological regulation, cell communication (POR-8)
-
-### 3. KEGG Pathway Enrichment
-
-Fisher's exact test with BH correction. Background: 2,946 genes with KEGG annotations.
-
-**44 significant KEGG pathways** across all comparisons.
-
-| Comparison | Top Pathway | Fold | padj |
-|------------|------------|------|------|
-| POR-8 vs POR-0 | Ribosome (ko03010) | 1.9x | 2.3e-04 |
-| POR-8 vs POR-0 (down) | Ribosome | 2.6x | 3.8e-08 |
-| POR-8 vs POR-0 (down) | Proteasome | 2.9x | 6.1e-03 |
-| POR-8 vs POR-0 | Carbon metabolism (ko01200) | 1.7x | 1.1e-02 |
-| POR-8 vs POR-S | Alcoholism (histone-related) | 8.8x | 6.5e-05 |
-
-### 4. GSEA (Preranked)
-
-Ranking: `sign(log2FC) × -log10(pvalue)`. 1,000 permutations.
-
-- POR-S vs POR-0: 214 GO sets, 34 KEGG, 5 COG categories (FDR < 0.25)
-- POR-8 vs POR-0: 192 GO sets, 29 KEGG, 4 COG categories
-- POR-8 vs POR-S: 0 GO, 0 KEGG, 5 COG (fewer DE genes = less power for GO/KEGG, but COG captures broad category shifts)
-
-### 5. COG Category Enrichment
-
-Background: 6,642 genes with COG annotations.
-
-Significant categories (padj < 0.05):
-
-| Category | Description | Enrichment pattern |
-|----------|-------------|-------------------|
-| **E** | Amino acid transport/metabolism | 1.5x enriched in POR-S DE genes |
-| **C** | Energy production/conversion | 1.3-1.4x enriched in both treatments |
-| **J** | Translation/ribosomal structure | 1.4x enriched in POR-S |
-| **O** | Post-translational modification | 1.2x in POR-S |
-| **P** | Inorganic ion transport (trace metals!) | Enriched in DE sets |
-| **L** | Replication/recombination/repair | 0.5-0.6x **depleted** in both |
-| **T** | Signal transduction | 0.7x depleted in POR-S |
-| **B** | Chromatin structure | 3.2x enriched in POR-8 vs POR-S |
-
-## Biological Interpretation
-
-### Consistent across both treatments (vs control):
-1. **Translation downregulation** — ribosomal genes massively downregulated. Both media shifts cause translational reprogramming, possibly a stress response reducing growth.
-2. **Peroxisome upregulation** — fatty acid β-oxidation, ROS detoxification. Consistent with metabolic stress.
-3. **Energy metabolism reshuffling** — COG category C enriched; carbon metabolism KEGG pathway significant.
-
-### POR-8 specific:
-- **Proteasome downregulation** — reduced protein turnover
-- **Carbon metabolism** enrichment aligns with the high bicarbonate in media #8
-- **Chromatin remodeling** (3.2x COG-B enrichment vs POR-S) — epigenetic response to the distinct nutrient profile
-
-### POR-S specific:
-- Stronger **amino acid metabolism** signal (COG-E, 1.5x) — may reflect nitrogen source differences between *Spirulina* and *Porphyridium* media
-
-## Challenges & Notes
-
-1. **Gene ID mapping** required coordinate overlap because StringTie (MSTRG.*) and BRAKER3 (g*) use independent gene models. No shared ID system exists between them. Reciprocal overlap with 0.5 threshold works well (89.8% mapping).
-
-2. **Obsolete GO terms** — eggNOG v2.1.12 assigns some obsolete GO terms (e.g., GO:0044445 "cytosolic part"). These appear as unnamed terms in results. They don't affect enrichment validity but cause `NaN` names in a few rows.
-
-3. **POR-8 vs POR-S has few DE genes** (253 with annotations) — ORA finds no significant GO terms. GSEA with COG categories still detects shifts (chromatin, translation) because COG categories are broad enough to capture signal from small gene sets.
-
-4. **KEGG "Alcoholism" and "Systemic lupus"** pathways in POR-8 vs POR-S are false biological leads — these are vertebrate disease pathways that share histone gene families. The real signal is histone/chromatin modification, consistent with the COG-B enrichment.
-
-5. **GO OBO download** requires HTTPS with proper headers (the purl.obolibrary.org redirect returns 403 to bare urllib). Fixed by using a release-specific URL.
-
-## Output Files
-
-```
-results/enrichment/
-├── gene_id_mapping.csv          # MSTRG <-> BRAKER3 mapping with annotations
-├── go_enrichment_*.csv          # GO ORA per comparison × direction
-├── kegg_enrichment_*.csv        # KEGG ORA per comparison × direction
-├── gsea_*.csv                   # Preranked GSEA results
-├── cog_enrichment.csv           # COG Fisher's exact test results
-├── cog_summary.csv              # COG × comparison summary table
-└── figures/
-    ├── mapping_stats.{pdf,png}
-    ├── go_dotplot_*.{pdf,png}
-    ├── kegg_barplot_*.{pdf,png}
-    ├── cog_grouped_bar.{pdf,png}
-    └── summary_heatmap.{pdf,png}
+TransformInstance(
+    protocol=protocol,
+    model=model,
+    group_by=inp,
+    resources=Resources(cpus=8, memory=Size.GB(32), duration=Duration(hours=12)),
+)
 ```
 
-## Dependencies
+See `transforms/_template.py` for the minimal skeleton.
 
+Every type referenced via `lib.GetType("namespace::type")` must exist in
+`data_types/<namespace>.yml` or the build fails.
+
+## Tests
+
+Tests use the fixtures defined in `tests/conftest.py` (`agent`,
+`base_resources`, `mlib`, `tmp_inputs`).
+
+```bash
+pytest tests/                                       # full suite
+pytest tests/test_binning_workflow.py -v            # one workflow
+pytest tests/ -m "not slow"                         # skip E2E
+./dev.sh --test-comebin                             # named E2E shortcut
 ```
-pandas, numpy, scipy, matplotlib, seaborn, statsmodels
-intervaltree    # coordinate overlap mapping
-goatools        # GO OBO parsing
-gseapy          # preranked GSEA
-```
+
+Workflow-planning tests call `agent.GenerateWorkflow(...)` and assert on
+the resulting plan. End-to-end tests additionally call `StageWorkflow()` /
+`RunWorkflow()` and wait for completion; they're marked `@pytest.mark.slow`
+and need a configured execution backend.
+
+## Layout conventions
+
+- `transforms/*/_metadata/` is build-generated — do not hand-edit.
+- `data_types/`, `resources/*/_metadata/index.yml` (for declaring containers),
+  and the transform `.py` files themselves are the hand-edited surface.
+- Disabled transforms live in `transforms/*/_disabled/` or are renamed
+  `<name>.py.disabled` so the build skips them.
+
+## Related repos
+
+- [hallamlab/metasmith](https://github.com/hallamlab/metasmith) — the planner / executor
+- This library is consumed by Metasmith agents at workflow-generation time;
+  it has no Python package of its own.

@@ -1,32 +1,57 @@
-# lib-transcriptomics
+# MetasmithLibraries — Development Notes
 
-## Archived Intermediates from eguEpdhP
+## Project structure
 
-All intermediates are now on Sockeye persistent arc storage at:
-**`/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/`**
+```
+data_types/          # YAML type definitions (sequences, containers, etc.)
+resources/           # Data instance libraries (container URIs, reference DBs)
+transforms/          # Transform implementations grouped by domain
+  logistics/         # Data retrieval & format conversion
+  assembly/          # Genome/metagenome assembly
+  metagenomics/      # Binning, taxonomy, etc.
+  functionalAnnotation/
+  amplicon/
+  pangenome/
+tests/               # Pytest-based workflow & E2E tests
+  test_data/         # Test datasets (ORA files, mock reads, assemblies)
+  conftest.py        # Shared fixtures: agent, base_resources, tmp_inputs, etc.
+```
 
-- `eguEpdhP-intermediates/assembly/` — genome assembly (22MB)
-- `eguEpdhP-intermediates/stringtie_gtfs/` — 9 StringTie GTFs (~2.2-2.8MB each)
-- `eguEpdhP-intermediates/orfs/` — pprodigal ORFs (7.6MB)
-- `eguEpdhP-intermediates/merged_bams/` — 2 merged BAMs (12GB + 20GB, cached from run 62Tq8B53)
-- `star_bams/` — 9 STAR BAMs (~4.4GB each)
+## Build system
 
-Local copies also at `~/projects/eguEpdhP-intermediates/` (no BAMs).
+- **Rebuild metadata:** `./dev.sh -b` (requires `msm` CLI from the `msm_env` conda environment)
+- Alternatively: `conda run -n msm_env msm build --types data_types --uniques resources/* --transforms transforms/*`
+- The build regenerates all `_metadata/` directories from source YAML + transform Python files
+- Every container resource file in `resources/containers/` **must** have a matching type definition in `data_types/containers.yml`, otherwise the build fails
+- Every type referenced via `lib.GetType("namespace::type")` in transforms must exist in the corresponding `data_types/*.yml`
 
-## Active Pipeline Run
+## Adding a new container
 
-- **Run ID:** `62Tq8B53` on Sockeye (2026-03-08, fixes: `mode='copy'`, BUSCO bind path)
-- **Script:** `tests/manual/run_euk_braker3_pipeline_sockeye.py`
-- **Sockeye path:** `/scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/`
-- **Steps:** downloadBuscoLineage, merge_bams, braker3, stringtie_merge, stringtie_quant, gffread_proteins, busco, eggnog_mapper, pydeseq2, stringtie_count_matrix
-- **Targets:** gene_count_table, diff_count_table, eggnog_results, busco_results, braker3_gff
-- **Fixes applied:** `slurm.nf` publish mode `rellink→copy`; `busco.py` bind path includes `lineages/eukaryota_odb10`
-- **Monitor:** `ssh sockeye 'squeue -u txyliu'` and `ssh sockeye 'tail -20 /scratch/st-shallam-1/pwy_group/metasmith/runs/62Tq8B53/_metasmith/logs.latest/nxf.log'`
+1. Add the type to `data_types/containers.yml` with `extends: container` and a `provides` list
+2. Create `resources/containers/<name>.oci` containing the container URI (e.g. `docker://quay.io/org/image:tag`)
+3. Run `./dev.sh -b` to rebuild metadata
 
-## Braker3 Container
+## Writing transforms
 
-Switched from `quay.io/biocontainers/braker3:3.0.8` (missing GeneMark) to `teambraker/braker3:v3.0.7.4` which bundles GeneMark-ETP with academic license. `latest` tag fails on Sockeye's apptainer 1.3.1 (OCI manifest bug fixed in 1.3.3+); `v3.0.7.4` uses the older manifest format and pulls successfully. Key env vars in the image:
-- `GENEMARK_PATH=/opt/ETP/bin`
-- `AUGUSTUS_CONFIG_PATH=/opt/Augustus/config/`
-- `AUGUSTUS_BIN_PATH=/opt/Augustus/bin/`
-- `AUGUSTUS_SCRIPTS_PATH=/opt/Augustus/scripts/`
+- Transforms are Python files using `from metasmith.python_api import *`
+- `TransformInstanceLibrary.ResolveParentLibrary(__file__)` loads types from the parent library's `_metadata/`
+- Use `model.AddRequirement()` for inputs, `model.AddProduct()` for outputs
+- For paired-end reads, use a grouping parent (e.g. `read_pair`) and set `parents={pair}` on both R1/R2 requirements
+- `group_by=` in `TransformInstance()` controls how inputs are matched/grouped
+- `context.ExecWithContainer(image=, cmd=)` runs commands inside the container
+- Container paths: `context.Input(x).container` (path inside container), `.local` (path on host), `.external` (path from outside container)
+
+## Writing tests
+
+- Tests use `conftest.py` fixtures: `agent`, `base_resources`, `mlib`, `tmp_inputs`
+- `tmp_inputs(["sequences.yml", ...])` creates a temporary `DataInstanceLibrary` with specified type libraries
+- Use `inputs.AddItem(path, type)` for files, `inputs.AddValue(name, dict, type)` for JSON values
+- Workflow generation tests: `agent.GenerateWorkflow(samples=, resources=, transforms=, targets=)`
+- E2E tests: additionally call `agent.StageWorkflow()`, `agent.RunWorkflow()`, then `wait_for_workflow()`
+- Mark E2E tests with `@pytest.mark.slow`
+- Run tests with: `conda run -n msm_env pytest tests/<file>.py -k "<pattern>" -v`
+
+## Conda environment
+
+- Use `msm_env` for running `msm build` and `pytest`
+- `conda run -n msm_env <command>` or `conda activate msm_env`

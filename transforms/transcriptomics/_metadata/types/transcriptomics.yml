@@ -17,8 +17,9 @@ types:
       ext: faa
   contamination_report:
     properties:
+      Format: TSV
       _:
-      - BLASTn report of organellar sequences found in chromosome assembly
+      - BLAST-based contamination check report
       ext: tsv
   count_table:
     properties:
@@ -56,23 +57,24 @@ types:
   organellar_bam:
     properties:
       _:
-      - RNA-seq reads aligned to organellar genome with minimap2
+      - RNA-seq reads aligned to organellar reference
       ext: bam
   organellar_gene_count_table:
     properties:
       _:
-      - Gene-level count matrix for organellar genes
-      - gene-level count matrix from StringTie
+      - organellar gene-level count matrix
       ext: csv
   organellar_gff:
     properties:
+      Format: GFF3
       _:
-      - Organellar gene annotations in GFF3 format from GenBank reference
+      - organellar gene annotation in GFF3 format
       ext: gff3
   organellar_reference:
     properties:
+      Format: FASTA
       _:
-      - Organellar genome FASTA extracted from GenBank reference
+      - organellar reference genome FASTA extracted from GenBank
       ext: fna
   salmon_index:
     properties:

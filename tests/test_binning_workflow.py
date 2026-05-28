@@ -64,7 +64,7 @@ class TestBinningWorkflowGeneration:
     ):
         """Verify workflow generation for MetaBAT2 binning."""
         targets = TargetBuilder()
-        targets.Add("binning::metabat2_bin_fasta")
+        targets.Add("sequences::metabat2_bin_fasta")
 
         task = agent.GenerateWorkflow(
             samples=list(binning_input.AsSamples("sequences::assembly")),
@@ -81,7 +81,7 @@ class TestBinningWorkflowGeneration:
     ):
         """Verify workflow generation for SemiBin2 binning."""
         targets = TargetBuilder()
-        targets.Add("binning::semibin2_bin_fasta")
+        targets.Add("sequences::semibin2_bin_fasta")
 
         task = agent.GenerateWorkflow(
             samples=list(binning_input.AsSamples("sequences::assembly")),
@@ -97,7 +97,7 @@ class TestBinningWorkflowGeneration:
     ):
         """Verify workflow generation for COMEBin binning."""
         targets = TargetBuilder()
-        targets.Add("binning::comebin_bin_fasta")
+        targets.Add("sequences::comebin_bin_fasta")
 
         task = agent.GenerateWorkflow(
             samples=list(binning_input.AsSamples("sequences::assembly")),
@@ -118,7 +118,7 @@ class TestBinningWorkflowExecution:
     ):
         """Full E2E test: stage, run MetaBAT2, verify bin outputs."""
         targets = TargetBuilder()
-        targets.Add("binning::metabat2_bin_fasta")
+        targets.Add("sequences::metabat2_bin_fasta")
         targets.Add("binning::metabat2_contig_to_bin_table")
 
         task = agent.GenerateWorkflow(
@@ -173,7 +173,7 @@ class TestBinningWorkflowExecution:
     ):
         """Full E2E test: stage, run SemiBin2, verify bin outputs."""
         targets = TargetBuilder()
-        targets.Add("binning::semibin2_bin_fasta")
+        targets.Add("sequences::semibin2_bin_fasta")
 
         task = agent.GenerateWorkflow(
             samples=list(binning_input.AsSamples("sequences::assembly")),
@@ -214,7 +214,7 @@ class TestBinningWorkflowExecution:
     ):
         """Full E2E test: stage, run COMEBin, verify bin outputs."""
         targets = TargetBuilder()
-        targets.Add("binning::comebin_bin_fasta")
+        targets.Add("sequences::comebin_bin_fasta")
         targets.Add("binning::comebin_contig_to_bin_table")
 
         task = agent.GenerateWorkflow(

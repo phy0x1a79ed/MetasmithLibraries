@@ -297,9 +297,9 @@ def kofam_db_input(mlib, test_data_dir):
     # Create library IN the kofam directory to use absolute paths
     lib_dir = kofam_dir / "_kofam.xgdb"
     inputs = DataInstanceLibrary(lib_dir)
-    inputs.AddTypeLibrary(mlib / "data_types" / "annotation.yml")
-    inputs.AddItem(kofam_dir / "profiles", "annotation::kofamscan_profiles")
-    inputs.AddItem(kofam_dir / "ko_list", "annotation::kofamscan_ko_list")
+    inputs.AddTypeLibrary(mlib / "data_types" / "ref.yml")
+    inputs.AddItem(kofam_dir / "profiles", "ref::kofamscan_profiles")
+    inputs.AddItem(kofam_dir / "ko_list", "ref::kofamscan_ko_list")
     inputs.Save()
     return inputs
 
@@ -314,8 +314,8 @@ def interproscan_data_input(mlib, test_data_dir):
     # Create library IN the interproscan_data directory to use absolute paths
     lib_dir = iprscan_dir / "_interproscan.xgdb"
     inputs = DataInstanceLibrary(lib_dir)
-    inputs.AddTypeLibrary(mlib / "data_types" / "annotation.yml")
-    inputs.AddItem(iprscan_dir, "annotation::interproscan_data")
+    inputs.AddTypeLibrary(mlib / "data_types" / "ref.yml")
+    inputs.AddItem(iprscan_dir, "ref::interproscan_data")
     inputs.Save()
     return inputs
 
@@ -361,7 +361,7 @@ def uniref50_db_input(mlib, test_data_dir):
     # Create library IN the uniref50 directory to use absolute paths
     lib_dir = uniref50_dir / "_uniref50.xgdb"
     inputs = DataInstanceLibrary(lib_dir)
-    inputs.AddTypeLibrary(mlib / "data_types" / "annotation.yml")
-    inputs.AddItem(dmnd_file, "annotation::uniref50_diamond_db")
+    inputs.AddTypeLibrary(mlib / "data_types" / "ref.yml")
+    inputs.AddItem(dmnd_file, "ref::uniref50_diamond_db")
     inputs.Save()
     return inputs

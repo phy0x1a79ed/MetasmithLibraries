@@ -65,5 +65,5 @@ TransformInstance(
         cpus=2,
         memory=Size.GB(32),
         duration=Duration(hours=12),
-    )
+    ),
 )

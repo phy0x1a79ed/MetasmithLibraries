@@ -42,29 +42,18 @@ logistics_transforms = [
 
 base_resources = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
 
-# Create input library with interproscan_source marker
+# Generate workflow
 import tempfile
 tmp_dir = Path(tempfile.mkdtemp())
-inputs_dir = tmp_dir / "interproscan_source_input.xgdb"
-inputs = DataInstanceLibrary(inputs_dir)
-inputs.AddTypeLibrary(MLIB / "data_types" / "annotation.yml")
-
-marker_file = tmp_dir / "interproscan_source.json"
-marker_file.write_text(json.dumps({"source": "ebi"}))
-inputs.AddItem(marker_file, "annotation::interproscan_source")
-inputs.LocalizeContents()
-inputs.Save()
-
-# Generate workflow
 targets = TargetBuilder()
-targets.Add("annotation::interproscan_data")
+targets.Add("ref::interproscan_data")
 
-samples = list(inputs.AsSamples("annotation::interproscan_source"))
+samples = [{}]
 print(f"Samples: {samples}")
 
 task = smith.GenerateWorkflow(
     samples=samples,
-    resources=base_resources + [inputs],
+    resources=base_resources,
     transforms=logistics_transforms,
     targets=targets,
 )
