@@ -22,7 +22,7 @@ def protocol(context: ExecutionContext):
         cmd = f"""\
             pprodigal \
                 {cpus_string} \
-                -C 10 \
+                -C 100 \
                 -p meta \
                 -i {iasm.container} \
                 -a {icds.container} \

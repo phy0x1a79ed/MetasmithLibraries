@@ -5,6 +5,18 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ankh_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - Ankh embedding vectors (base=768-dim, large=1536-dim)
+      ext: parquet
+  ankh_index:
+    properties:
+      Format: CSV
+      _:
+      - Ankh sequence index
+      ext: csv
   antismash_db:
     properties:
     - antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
@@ -38,6 +50,18 @@ types:
       _:
       - Bakta non-coding annotation summary table
       ext: tsv
+  boltz_index:
+    properties:
+      Format: CSV
+      _:
+      - Boltz-2 sequence index
+      ext: csv
+  boltz_pair_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - Boltz-2 pooled pair-representation embedding vectors
+      ext: parquet
   busco_full_table:
     properties:
       Format: TSV
@@ -66,6 +90,18 @@ types:
       Format: TSV
       _:
       - DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      ext: tsv
+  diamond_tcdb2_results:
+    properties:
+      Format: BLAST6
+      _:
+      - DIAMOND alignment to TCDB (batch 2)
+      ext: tsv
+  diamond_tcdb_results:
+    properties:
+      Format: BLAST6
+      _:
+      - DIAMOND alignment to TCDB (Transporter Classification Database)
       ext: tsv
   diamond_uniref50_results:
     properties:
@@ -101,6 +137,18 @@ types:
   eggnog_source:
     properties:
     - Marker for eggNOG database download
+  esm_c_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - ESM-C embedding vectors (300M=960-dim, 600M=1152-dim)
+      ext: parquet
+  esm_c_index:
+    properties:
+      Format: CSV
+      _:
+      - ESM-C sequence index
+      ext: csv
   interproscan_gff:
     properties:
       Format: GFF3
@@ -152,6 +200,24 @@ types:
       _:
       - PromoTech bacterial promoter predictions per assembly
       ext: tsv
+  protein_embedding_index:
+    properties:
+      Format: CSV
+      _:
+      - Sequence-id to row index mapping for a protein embedding parquet
+      ext: csv
+  protein_functional_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - Per-protein embedding vectors derived from sequence alone (functional/semantic)
+      ext: parquet
+  protein_structural_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - Per-protein embedding vectors that incorporate structural information
+      ext: parquet
   proteinbert_embeddings:
     properties:
       Format: Parquet
@@ -164,6 +230,35 @@ types:
       _:
       - ProteinBERT sequence index
       ext: csv
+  prott5_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - ProtT5-XL UniRef50 embedding vectors (1024-dim)
+      ext: parquet
+  prott5_index:
+    properties:
+      Format: CSV
+      _:
+      - ProtT5 sequence index
+      ext: csv
+  saprot_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - SaProt embedding vectors (1280-dim)
+      ext: parquet
+  saprot_index:
+    properties:
+      Format: CSV
+      _:
+      - SaProt sequence index
+      ext: csv
+  tcdb_diamond_db:
+    properties:
+      _:
+      - DIAMOND-formatted TCDB database
+      ext: dmnd
   uniref50_source:
     properties:
     - Marker for UniRef50 database download

@@ -5,6 +5,10 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ankh.oci:
+    properties:
+      Format: OCI
+      provides: ankh_embed
   antismash.oci:
     properties:
       Format: OCI
@@ -36,6 +40,10 @@ types:
       provides:
       - blastn
       - makeblastdb
+  boltz.oci:
+    properties:
+      Format: OCI
+      provides: boltz
   braker3.oci:
     properties:
       Format: OCI
@@ -79,6 +87,14 @@ types:
     properties:
       Format: OCI
       provides: emapper.py
+  esmc.oci:
+    properties:
+      Format: OCI
+      provides: esmc_embed
+  esmfold.oci:
+    properties:
+      Format: OCI
+      provides: esmfold_predict
   fastani.oci:
     properties:
       Format: OCI
@@ -99,6 +115,10 @@ types:
     properties:
       Format: OCI
       provides: flye
+  foldseek.oci:
+    properties:
+      Format: OCI
+      provides: foldseek
   genomad.oci:
     properties:
       Format: OCI
@@ -195,6 +215,10 @@ types:
     properties:
       Format: OCI
       provides: proteinbert
+  prott5.oci:
+    properties:
+      Format: OCI
+      provides: prott5_embed
   pulled_container:
     properties:
       atomic_description: pulled OCI container
@@ -232,6 +256,10 @@ types:
     properties:
       Format: OCI
       provides: samtools
+  saprot.oci:
+    properties:
+      Format: OCI
+      provides: saprot_embed
   semibin.oci:
     properties:
       Format: OCI

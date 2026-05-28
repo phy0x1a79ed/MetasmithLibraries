@@ -1,11 +1,25 @@
 manifest:
+  downloadAnkhWeights.py:
+    type: transforms::transform
   downloadAntiSmashDB.py:
+    type: transforms::transform
+  downloadBuscoLineage.py:
+    type: transforms::transform
+  downloadESMCWeights.py:
+    type: transforms::transform
+  downloadESMFoldWeights.py:
+    type: transforms::transform
+  downloadEggnogDB.py:
     type: transforms::transform
   downloadInterProScanDB.py:
     type: transforms::transform
   downloadKofamDB.py:
     type: transforms::transform
   downloadMetabuliDB.py:
+    type: transforms::transform
+  downloadProtT5XLWeights.py:
+    type: transforms::transform
+  downloadSaProtWeights.py:
     type: transforms::transform
   downloadSilvaDB.py:
     type: transforms::transform
@@ -28,5 +42,7 @@ manifest:
   ref_genomad.py:
     type: transforms::transform
   scatterNcbiAccession.py:
+    type: transforms::transform
+  shardFasta.py:
     type: transforms::transform
 schema: v1

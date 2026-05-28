@@ -288,3 +288,19 @@ types:
       _: PromoTech bacterial promoter predictions per assembly
       Format: TSV
       ext: tsv
+
+  # DIAMOND TCDB
+  tcdb_diamond_db:
+    properties:
+      _: DIAMOND-formatted TCDB database
+      ext: dmnd
+  diamond_tcdb_results:
+    properties:
+      _: DIAMOND alignment to TCDB (Transporter Classification Database)
+      Format: BLAST6
+      ext: tsv
+  diamond_tcdb2_results:
+    properties:
+      _: DIAMOND alignment to TCDB (batch 2)
+      Format: BLAST6
+      ext: tsv

@@ -110,6 +110,7 @@ def tmp_inputs(tmp_path, mlib):
             "amplicon.yml",
             "pangenome.yml",
             "ncbi.yml",
+            "transcriptomics.yml",
         ]
 
         if type_libs is None:
@@ -315,6 +316,36 @@ def interproscan_data_input(mlib, test_data_dir):
     inputs = DataInstanceLibrary(lib_dir)
     inputs.AddTypeLibrary(mlib / "data_types" / "ref.yml")
     inputs.AddItem(iprscan_dir, "ref::interproscan_data")
+    inputs.Save()
+    return inputs
+
+
+@pytest.fixture
+def bakta_db_input(mlib):
+    """Create input library with Bakta database using absolute path."""
+    bakta_dir = Path("/home/tony/agentic_workspace/data/cyanoverse/databases/bakta")
+    if not (bakta_dir / "db-light").exists():
+        pytest.skip("Bakta database not available")
+
+    lib_dir = bakta_dir / "_bakta.xgdb"
+    inputs = DataInstanceLibrary(lib_dir)
+    inputs.AddTypeLibrary(mlib / "data_types" / "annotation.yml")
+    inputs.AddItem(bakta_dir, "annotation::bakta_db")
+    inputs.Save()
+    return inputs
+
+
+@pytest.fixture
+def predictf_db_input(mlib):
+    """Create input library with PredicTF BacTFDB database using absolute path."""
+    bactfdb_dir = Path("/home/tony/agentic_workspace/main/cyanoverse/tasks/search-transcription-factors/tools/predictf/BacTFDB")
+    if not (bactfdb_dir / "database/v2/features.dmnd").exists():
+        pytest.skip("PredicTF BacTFDB not available")
+
+    lib_dir = bactfdb_dir / "_predictf.xgdb"
+    inputs = DataInstanceLibrary(lib_dir)
+    inputs.AddTypeLibrary(mlib / "data_types" / "annotation.yml")
+    inputs.AddItem(bactfdb_dir, "annotation::predictf_db")
     inputs.Save()
     return inputs
 

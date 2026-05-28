@@ -44,8 +44,8 @@ TransformInstance(
     model=model,
     group_by=pair,
     resources=Resources(
-        cpus=2,
-        memory=Size.GB(4),
+        cpus=16,
+        memory=Size.GB(8),
         duration=Duration(hours=3),
     )
 )

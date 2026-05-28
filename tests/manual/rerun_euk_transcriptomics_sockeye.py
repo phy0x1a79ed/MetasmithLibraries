@@ -1,15 +1,5 @@
 #!/usr/bin/env python
-"""Run the organellar transcriptomics pipeline on Sockeye via SLURM.
-
-Pipeline:
-  GenBank → genbank_to_reference → organellar_reference + organellar_gff
-  organellar_reference + read_pairs → minimap2_rnaseq_align → organellar_bam
-  organellar_bam + organellar_gff + experiment → organellar_count_matrix → organellar_gene_count_table
-  organellar_gene_count_table + experiment → deseq2 → deseq2_results
-  organellar_reference + assembly → blast_contamination_check → contamination_report
-
-Targets: organellar_gene_count_table, deseq2_results, contamination_report
-"""
+"""Re-run the euk transcriptomics pipeline on sockeye (skip generate/stage, just RunWorkflow)."""
 import sys
 import time
 sys.stdout.reconfigure(line_buffering=True)
@@ -19,16 +9,12 @@ from pathlib import Path
 from metasmith.python_api import (
     Agent, ContainerRuntime, Source, SshSource,
     DataInstanceLibrary, TransformInstanceLibrary,
-    TargetBuilder, Resources, Size,
+    TargetBuilder,
 )
 
-MLIB = Path(__file__).resolve().parent.parent
-SOCKEYE_RAW = Path("/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/porphyridium/Raw-transcriptome-data")
-SOCKEYE_ASSEMBLY = Path("/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/eguEpdhP-intermediates/assembly/1-1-1.f1CMorcneUoLGMna-O4PhHAkd.fna")
-SOCKEYE_BAM_CACHE = Path("/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/organellar_bams")
-
-# GenBank files for organellar genomes (on Sockeye arc storage)
-SOCKEYE_GENBANK = Path("/arc/project/st-shallam-1/pwy_group/data/porphyridium_purpureum/organellar_genbank")
+MLIB = Path(__file__).resolve().parent.parent.parent
+SOCKEYE_STAGING = Path("/scratch/st-shallam-1/pwy_group/staging/porphyridium")
+PORPHYRIDIUM_ACCESSION = "GCA_008690995.1"
 
 SAMPLES = {
     "POR-0-1": ("POR-0-1-090325_S59_L001_R1_001.fastq.gz", "POR-0-1-090325_S59_L001_R2_001.fastq.gz"),
@@ -43,16 +29,8 @@ SAMPLES = {
 }
 
 
-def find_genbank_files():
-    """Return GenBank file paths on Sockeye."""
-    return [
-        SOCKEYE_GENBANK / "NC_023133.1_chloroplast.gbk",
-        SOCKEYE_GENBANK / "MT483997.1_mitochondrion.gbk",
-    ]
-
-
 def main():
-    print("=== Setting up Sockeye agent ===")
+    print("=== Setting up sockeye agent ===")
     agent_home = SshSource(
         host="sockeye",
         path=Path("/scratch/st-shallam-1/pwy_group/metasmith"),
@@ -71,6 +49,7 @@ def main():
     base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
     t_transforms = [
         TransformInstanceLibrary.Load(MLIB / "transforms/transcriptomics"),
+        TransformInstanceLibrary.Load(MLIB / "transforms/logistics"),
     ]
 
     print("\n=== Creating input library ===")
@@ -78,29 +57,24 @@ def main():
     tmp = Path(tempfile.mkdtemp())
     inputs_dir = tmp / "inputs.xgdb"
     inputs = DataInstanceLibrary(inputs_dir)
-    for tl in ["sequences.yml", "transcriptomics.yml"]:
+    for tl in ["sequences.yml", "ncbi.yml", "transcriptomics.yml"]:
         inputs.AddTypeLibrary(MLIB / "data_types" / tl)
 
-    # Experiment
     experiment = inputs.AddValue(
         "porphyridium_experiment.txt",
         "porphyridium_transcriptomics",
         "transcriptomics::experiment",
     )
+    inputs.AddValue(
+        "porphyridium_accession.txt",
+        PORPHYRIDIUM_ACCESSION,
+        "ncbi::assembly_accession",
+        parents={experiment},
+    )
 
-    # GenBank files for organellar genomes (on Sockeye)
-    gbk_files = find_genbank_files()
-    for gbk_path in gbk_files:
-        print(f"  GenBank: {gbk_path.name}")
-        inputs.AddItem(gbk_path, "sequences::gbk")
-
-    # Chromosome assembly (on Sockeye)
-    inputs.AddItem(SOCKEYE_ASSEMBLY, "sequences::assembly")
-
-    # RNA-seq read pairs
     for sample_name, (r1_file, r2_file) in SAMPLES.items():
-        r1_path = SOCKEYE_RAW / r1_file
-        r2_path = SOCKEYE_RAW / r2_file
+        r1_path = SOCKEYE_STAGING / r1_file
+        r2_path = SOCKEYE_STAGING / r2_file
         pair = inputs.AddValue(
             f"{sample_name}_pair.txt", sample_name,
             "sequences::read_pair", parents={experiment},
@@ -112,9 +86,7 @@ def main():
 
     print("\n=== Generating workflow ===")
     targets = TargetBuilder()
-    targets.Add("transcriptomics::organellar_gene_count_table")
-    targets.Add("transcriptomics::deseq2_results")
-    targets.Add("transcriptomics::contamination_report")
+    targets.Add("transcriptomics::gene_count_table")
     task = smith.GenerateWorkflow(
         samples=list(inputs.AsSamples("transcriptomics::experiment")),
         resources=base_res + [inputs],
@@ -125,45 +97,33 @@ def main():
         print(f"FAILED: {task}")
         sys.exit(1)
     print(f"Plan has {len(task.plan.steps)} steps")
-    for step in task.plan.steps:
-        name = Path(step.transform._path).stem
-        prods = [i.dtype_name for g in step.produces for i in g]
-        print(f"  Step {step.order}: {name} -> {prods}")
 
-    # Render DAG
-    print("\n=== Rendering workflow DAG ===")
-    dag_dir = MLIB / "reports"
-    dag_dir.mkdir(parents=True, exist_ok=True)
-    try:
-        task.plan.RenderDAG(dag_dir / "organellar_workflow_dag.svg")
-        task.plan.RenderDAG(dag_dir / "organellar_workflow_dag.png")
-        print(f"DAG saved to {dag_dir}")
-    except Exception as e:
-        print(f"DAG rendering failed (non-fatal): {e}")
+    # Skip staging - already staged, just need to run with the patched Orchestrator
+    # The Orchestrator.groovy was already updated via scp directly
 
-    print("\n=== Staging workflow ===")
-    smith.StageWorkflow(task, on_exist="update", verify_external_paths=False)
-    print("Staged")
-
-    print("\n=== Running workflow (SLURM) ===")
+    print("\n=== Running workflow (SLURM, resume) ===")
     with open(MLIB / "secrets/slurm_account_sockeye") as f:
         SLURM_ACCOUNT = f.readline().strip()
 
     smith.RunWorkflow(
         task,
         config_file=smith.GetNxfConfigPresets()["slurm"],
-        params=dict(
-            slurmAccount=SLURM_ACCOUNT,
-            process=dict(scratch="false"),
-        ),
+        params=dict(slurmAccount=SLURM_ACCOUNT),
     )
     print("Workflow submitted to SLURM")
 
     print("\n=== Waiting for completion ===")
     results_path = smith.GetResultSource(task).GetPath()
     t0 = time.time()
-    timeout = 43200  # 12h
+    timeout = 86400  # 24h
     last_print = 0
+    # Clear previous _metadata if it exists from the failed run
+    import shutil
+    old_meta = results_path / "_metadata"
+    if old_meta.exists():
+        print(f"Clearing old _metadata at {old_meta}")
+        shutil.rmtree(old_meta)
+
     while not (results_path / "_metadata").exists():
         elapsed = time.time() - t0
         if elapsed > timeout:
@@ -183,23 +143,18 @@ def main():
         full_path = path if path.is_absolute() else results_path / path
         print(f"  {type_name}: {full_path} (exists={full_path.exists()})")
 
-    # Cache organellar BAMs to arc storage
-    print("\n=== Caching organellar BAMs ===")
-    import subprocess
-    bam_cache = SOCKEYE_BAM_CACHE
-    subprocess.run(
-        ["ssh", "sockeye", f"mkdir -p {bam_cache}"],
-        check=True,
-    )
     for path, type_name, endpoint in results.Iterate():
-        if type_name == "transcriptomics::organellar_bam":
+        if "gene_count_table" in type_name:
             full_path = path if path.is_absolute() else results_path / path
-            dest = bam_cache / full_path.name
-            print(f"  Caching {full_path.name} -> {dest}")
-            subprocess.run(
-                ["ssh", "sockeye", f"cp {full_path} {dest}"],
-                check=True,
-            )
+            if full_path.exists():
+                with open(full_path) as f:
+                    lines = f.readlines()
+                print(f"\nGene count table: {len(lines)} lines")
+                print(f"Header: {lines[0].strip()}")
+                if len(lines) > 1:
+                    print(f"First data row: {lines[1].strip()[:200]}")
+                if len(lines) > 2:
+                    print(f"Last data row: {lines[-1].strip()[:200]}")
 
     print("\nDone!")
 

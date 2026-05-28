@@ -1,9 +1,13 @@
 manifest:
   add_orfs_to_centroids.py:
     type: transforms::transform
+  ankh.py:
+    type: transforms::transform
   antismash.py:
     type: transforms::transform
   bakta_noncoding.py:
+    type: transforms::transform
+  busco.py:
     type: transforms::transform
   busco_full_table.py:
     type: transforms::transform
@@ -13,6 +17,10 @@ manifest:
     type: transforms::transform
   diamond_linclust.py:
     type: transforms::transform
+  diamond_tcdb.py:
+    type: transforms::transform
+  diamond_tcdb2.py:
+    type: transforms::transform
   diamond_uniref50.py:
     type: transforms::transform
   dram_annotate_genes.py:
@@ -21,17 +29,25 @@ manifest:
     type: transforms::transform
   eggnog_mapper.py:
     type: transforms::transform
+  esm_c.py:
+    type: transforms::transform
+  esmfold.py:
+    type: transforms::transform
+  foldseek_3di.py:
+    type: transforms::transform
   interproscan.py:
     type: transforms::transform
   kofamscan.py:
-    type: transforms::transform
-  pprodigal.py:
     type: transforms::transform
   predictf.py:
     type: transforms::transform
   promotech.py:
     type: transforms::transform
   proteinbert.py:
+    type: transforms::transform
+  prott5.py:
+    type: transforms::transform
+  saprot.py:
     type: transforms::transform
   virsorter2.py:
     type: transforms::transform

@@ -53,6 +53,12 @@ types:
       - a single metagenomic bin FASTA file
       ext: fna
       genome_scope: single
+  boltz_structures:
+    properties:
+      Format: mmCIF
+      _:
+      - Boltz-2 predicted structures (tar of mmCIF files)
+      ext: tar.gz
   chromosomal_contig:
     properties:
       Data: nucleic acid sequence
@@ -280,6 +286,14 @@ types:
       Format: FASTA
       content: open reading frames
       ext: faa
+  orfs_shard:
+    properties:
+      Data: protein sequence
+      Format: FASTA
+      _:
+      - Length-balanced shard of an ORF FASTA; fans out embedding transforms
+      content: open reading frames
+      ext: faa
   pacbio_hifi_bam:
     properties:
       Data: nucleic acid sequence
@@ -289,6 +303,12 @@ types:
       ext: bam
       parity: single
       read_length: long
+  predicted_structures:
+    properties:
+      Format: mmCIF
+      _:
+      - Predicted protein structures keyed by ORF id (tar of mmCIF files)
+      ext: tar.gz
   putative_genome:
     properties:
       Data: nucleic acid sequence
@@ -394,6 +414,12 @@ types:
       parity: single
       qc: none
       read_length: short
+  structure_3di_tokens:
+    properties:
+      Format: Parquet
+      _:
+      - Foldseek 3Di token strings per ORF (sequence_id -> 3di)
+      ext: parquet
   unpaired_read_half:
     properties:
       Data: nucleic acid sequence

@@ -5,9 +5,42 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ankh_base_weights:
+    properties:
+      _:
+      - Ankh-base weights (ElnaggarLab/ankh-base)
+      ext: tgz
+  ankh_large_weights:
+    properties:
+      _:
+      - Ankh-large weights (ElnaggarLab/ankh-large)
+      ext: tgz
   antismash:
     properties:
     - for antiSMASH
+  boltz2_weights:
+    properties:
+      _:
+      - Boltz-2 weights (boltz-community/boltz-2)
+      ext: tgz
+  boltz_msa_db:
+    properties:
+    - ColabFold MSA databases for Boltz-2 (~2 TB; unused stub)
+  esm_c_300m_weights:
+    properties:
+      _:
+      - ESM-C 300M weights (EvolutionaryScale/esmc-300m)
+      ext: tgz
+  esm_c_600m_weights:
+    properties:
+      _:
+      - ESM-C 600M weights (EvolutionaryScale/esmc-600m)
+      ext: tgz
+  esmfold_weights:
+    properties:
+      _:
+      - ESMFold v1 weights (facebook/esmfold_v1)
+      ext: tgz
   genomad:
     properties:
     - for geNomad
@@ -32,9 +65,22 @@ types:
   metabuli_ref:
     properties:
     - metabuli reference database
+  protein_model_weights:
+    properties:
+    - Weights bundle for a protein deep-learning model
+  prott5_xl_uniref50_weights:
+    properties:
+      _:
+      - ProtT5-XL UniRef50 encoder weights (Rostlab/prot_t5_xl_uniref50)
+      ext: tgz
   reference_data:
     properties:
     - reference database
+  saprot_650m_weights:
+    properties:
+      _:
+      - SaProt 650M AF2 weights (westlake-repl/SaProt_650M_AF2)
+      ext: tgz
   uniref50_diamond_db:
     properties:
       _:
