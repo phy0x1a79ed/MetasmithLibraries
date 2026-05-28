@@ -1,5 +1,10 @@
 types:
   # InterProScan
+  interproscan_results:
+    properties:
+      _: Parsed InterProScan protein matches
+      Format: CSV
+      ext: csv
   interproscan_json:
     properties:
       _: InterProScan annotations in JSON format
@@ -10,23 +15,130 @@ types:
       _: InterProScan annotations in GFF3 format
       Format: GFF3
       ext: gff3
+  interproscan_source:
+    properties:
+      _: Marker for InterProScan data location
 
   # KofamScan
   kofamscan_results:
     properties:
-      _: KEGG KO assignments from KofamScan
-      Format: TSV
-      ext: txt
+      _: Filtered KofamScan KO assignments
+      Format: CSV
+      ext: csv
+  kofamscan_source:
+    properties:
+      _: Marker for KofamScan database download
+
+  # Protein embedding parents
+  protein_functional_embeddings:
+    properties:
+      _: Per-protein embedding vectors derived from sequence alone (functional/semantic)
+      Format: Parquet
+      ext: parquet
+  protein_structural_embeddings:
+    properties:
+      _: Per-protein embedding vectors that incorporate structural information
+      Format: Parquet
+      ext: parquet
+  protein_embedding_index:
+    properties:
+      _: Sequence-id to row index mapping for a protein embedding parquet
+      Format: CSV
+      ext: csv
 
   # ProteinBERT
   proteinbert_embeddings:
+    extends:
+    - protein_functional_embeddings
     properties:
       _: ProteinBERT embedding vectors
       Format: Parquet
       ext: parquet
   proteinbert_index:
+    extends:
+    - protein_embedding_index
     properties:
       _: ProteinBERT sequence index
+      Format: CSV
+      ext: csv
+
+  # ProtT5-XL (Rostlab encoder-only embeddings)
+  prott5_embeddings:
+    extends:
+    - protein_functional_embeddings
+    properties:
+      _: ProtT5-XL UniRef50 embedding vectors (1024-dim)
+      Format: Parquet
+      ext: parquet
+  prott5_index:
+    extends:
+    - protein_embedding_index
+    properties:
+      _: ProtT5 sequence index
+      Format: CSV
+      ext: csv
+
+  # ESM-C (EvolutionaryScale Cambrian)
+  esm_c_embeddings:
+    extends:
+    - protein_functional_embeddings
+    properties:
+      _: ESM-C embedding vectors (300M=960-dim, 600M=1152-dim)
+      Format: Parquet
+      ext: parquet
+  esm_c_index:
+    extends:
+    - protein_embedding_index
+    properties:
+      _: ESM-C sequence index
+      Format: CSV
+      ext: csv
+
+  # Ankh
+  ankh_embeddings:
+    extends:
+    - protein_functional_embeddings
+    properties:
+      _: Ankh embedding vectors (base=768-dim, large=1536-dim)
+      Format: Parquet
+      ext: parquet
+  ankh_index:
+    extends:
+    - protein_embedding_index
+    properties:
+      _: Ankh sequence index
+      Format: CSV
+      ext: csv
+
+  # SaProt (structure-aware, requires 3Di tokens)
+  saprot_embeddings:
+    extends:
+    - protein_structural_embeddings
+    properties:
+      _: SaProt embedding vectors (1280-dim)
+      Format: Parquet
+      ext: parquet
+  saprot_index:
+    extends:
+    - protein_embedding_index
+    properties:
+      _: SaProt sequence index
+      Format: CSV
+      ext: csv
+
+  # Boltz-2 (structure predictor; pair/single rep extraction)
+  boltz_pair_embeddings:
+    extends:
+    - protein_structural_embeddings
+    properties:
+      _: Boltz-2 pooled pair-representation embedding vectors
+      Format: Parquet
+      ext: parquet
+  boltz_index:
+    extends:
+    - protein_embedding_index
+    properties:
+      _: Boltz-2 sequence index
       Format: CSV
       ext: csv
 
@@ -42,32 +154,153 @@ types:
       _: DIAMOND alignment to UniRef50
       Format: BLAST6
       ext: tsv
-
-  # Reference database types
-  uniref50_diamond_db:
-    properties:
-      _: DIAMOND-formatted UniRef50 database
-      ext: dmnd
   uniref50_source:
     properties:
       _: Marker for UniRef50 database download
 
-  # KofamScan databases
-  kofamscan_profiles:
+  # antiSMASH
+  antismash_json:
     properties:
-      _: KofamScan HMM profile directory containing .hmm files
-  kofamscan_ko_list:
+      _: antiSMASH JSON results per assembly
+      Format: JSON
+      ext: json
+  antismash_regions_gbk:
     properties:
-      _: KofamScan KO list file
-      ext: tsv
-  kofamscan_source:
+      _: antiSMASH GenBank region files (tar)
+      Format: GenBank
+      ext: tar.gz
+  antismash_db:
     properties:
-      _: Marker for KofamScan database download
+      _: antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
+  antismash_source:
+    properties:
+      _: Marker for antiSMASH database download
 
-  # InterProScan data
-  interproscan_data:
+  # BUSCO
+  busco_results:
     properties:
-      _: InterProScan data directory
-  interproscan_source:
+      _: BUSCO completeness assessment summary
+      Format: JSON
+      ext: json
+  busco_full_table:
     properties:
-      _: Marker for InterProScan data location
+      _: BUSCO full results table with per-sequence marker assignments
+      Format: TSV
+      ext: tsv
+  busco_lineage:
+    properties:
+      _: Pre-downloaded BUSCO lineage dataset directory
+  busco_source:
+    properties:
+      _: Marker for BUSCO lineage dataset specification
+
+  # Bakta
+  bakta_db:
+    properties:
+      _: Bakta light database directory
+  bakta_gff:
+    properties:
+      _: Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
+      Format: GFF3
+      ext: gff3
+  bakta_tsv:
+    properties:
+      _: Bakta non-coding annotation summary table
+      Format: TSV
+      ext: tsv
+
+  # DeepTFactor
+  deeptfactor_results:
+    properties:
+      _: DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      Format: TSV
+      ext: tsv
+
+  # PredicTF
+  predictf_db:
+    properties:
+      _: PredicTF database directory (deeparg-largerepo + model files)
+  predictf_results:
+    properties:
+      _: PredicTF high-confidence TF predictions with family classification
+      Format: TSV
+      ext: tsv
+  predictf_potential:
+    properties:
+      _: PredicTF lower-confidence potential TF predictions
+      Format: TSV
+      ext: tsv
+
+  # eggNOG-mapper
+  eggnog_data:
+    properties:
+      _: eggNOG-mapper database directory
+  eggnog_source:
+    properties:
+      _: Marker for eggNOG database download
+  eggnog_results:
+    properties:
+      _: eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
+      Format: TSV
+      ext: tsv
+
+  # VirSorter2
+  virsorter2_viral_sequences:
+    properties:
+      _: VirSorter2 identified viral sequences
+      Format: FASTA
+      ext: fa
+  virsorter2_scores:
+    properties:
+      _: VirSorter2 viral scores and metadata
+      ext: tsv
+  virsorter2_affi_contigs:
+    properties:
+      _: VirSorter2 gene affiliation table for DRAM-v
+      ext: tab
+  virsorter2_boundary:
+    properties:
+      _: VirSorter2 viral boundary positions
+      ext: tsv
+  virsorter2_db:
+    properties:
+      _: VirSorter2 reference database directory
+
+  # DRAM-v
+  dramv_annotations:
+    properties:
+      _: DRAM-v gene annotations for viral contigs
+      ext: tsv
+  dramv_distill:
+    properties:
+      _: DRAM-v distilled AMG summary and visualizations
+  dram_db:
+    properties:
+      _: DRAM database directory
+  dram_annotations:
+    properties:
+      _: DRAM gene annotations (dbCAN/KOfam/Pfam) TSV
+      ext: tsv
+
+  # PromoTech
+  promotech_predictions:
+    properties:
+      _: PromoTech bacterial promoter predictions per assembly
+      Format: TSV
+      ext: tsv
+
+  # DIAMOND TCDB
+  tcdb_diamond_db:
+    properties:
+      _: DIAMOND-formatted TCDB database
+      ext: dmnd
+  diamond_tcdb_results:
+    properties:
+      _: DIAMOND alignment to TCDB (Transporter Classification Database)
+      Format: BLAST6
+      ext: tsv
+  diamond_tcdb2_results:
+    properties:
+      _: DIAMOND alignment to TCDB (batch 2)
+      Format: BLAST6
+      ext: tsv

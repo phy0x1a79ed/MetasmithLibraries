@@ -8,22 +8,22 @@ MLIB = Path("/home/tony/workspace/tools/MetasmithLibraries")
 
 base_dir = Path("./cache")
 
-# agent_home = Source.FromLocal((base_dir/"local_home").resolve())
-# smith = Agent(
-#     home = agent_home,
-#     runtime=ContainerRuntime.APPTAINER,
-#     # runtime=ContainerRuntime.DOCKER,
-# )
-
-agent_home = SshSource(host="sockeye", path=Path("/scratch/st-shallam-1/pwy_group/metasmith")).AsSource()
+agent_home = Source.FromLocal((base_dir/"local_home").resolve())
 smith = Agent(
     home = agent_home,
     runtime=ContainerRuntime.APPTAINER,
-    setup_commands=[
-        'module load gcc/9.4.0',
-        'module load apptainer/1.3.1',
-    ]
+    # runtime=ContainerRuntime.DOCKER,
 )
+
+# agent_home = SshSource(host="sockeye", path=Path("/scratch/st-shallam-1/pwy_group/metasmith")).AsSource()
+# smith = Agent(
+#     home = agent_home,
+#     runtime=ContainerRuntime.APPTAINER,
+#     setup_commands=[
+#         'module load gcc/9.4.0',
+#         'module load apptainer/1.3.1',
+#     ]
+# )
 
 # agent_home = SshSource(host="fir", path=Path("/scratch/phyberos/metasmith")).AsSource()
 # smith = Agent(
@@ -47,13 +47,14 @@ logistics = TransformInstanceLibrary.Load(MLIB/f"transforms/logistics")
 targets = TargetBuilder()
 targets.Add("containers::pulled_container")
 
-WL = {Path(f"{n}.oci") for n in [
-    # "gtdbtk",
-    "fastani",
-]}
-samples = [x for x in containers.AsSamples("containers::container") if len(x._mask.intersection(WL))>0]
+# WL = {Path(f"{n}.oci") for n in [
+#     # "gtdbtk",
+#     "fastani",
+# ]}
+# samples = [x for x in containers.AsSamples("containers::container") if len(x._mask.intersection(WL))>0]
 task = smith.GenerateWorkflow(
-    samples=samples,
+    # samples=samples,
+    samples=containers.AsSamples("containers::container"),
     resources=[],
     transforms=[logistics],
     # targets=[inputs.GetType("sequences::gbk")]
@@ -77,10 +78,10 @@ smith.RunWorkflow(
     task,
     config_file=smith.GetNxfConfigPresets()["local"],
     params=params,
-    # resource_overrides={
-    #     "all": Resources(
-    #         memory=Size.GB(2),
-    #         cpus=Size.GB(2),
-    #     )   
-    # }
+    resource_overrides={
+        "all": Resources(
+            memory=Size.GB(2),
+            cpus=2,
+        )   
+    }
 )

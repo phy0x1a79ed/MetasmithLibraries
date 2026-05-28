@@ -7,7 +7,7 @@ model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::semibin.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
-bin_fasta   = model.AddProduct(lib.GetType("binning::semibin2_bin_fasta"))
+bin_fasta   = model.AddProduct(lib.GetType("sequences::semibin2_bin_fasta"))
 table       = model.AddProduct(lib.GetType("binning::semibin2_contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
@@ -23,6 +23,7 @@ def protocol(context: ExecutionContext):
     context.ExecWithContainer(
         image = image,
         cmd = f"""
+            export PATH=/opt/conda/bin:$PATH
             SemiBin2 single_easy_bin \
                 -i {iasm.container} \
                 -b {ibam.container} \

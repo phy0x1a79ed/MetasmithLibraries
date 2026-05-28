@@ -8,7 +8,15 @@ types:
     properties:
       ext: log
       atomic_description: pulled OCI container
-
+  # -------------------------------------------------
+  # format conversion
+  bam2fastx.oci:
+    extends: container
+    properties:
+      provides:
+      - bam2fastq
+  # -------------------------------------------------
+  # read qc
   fastp.oci:
     extends: container
     properties:
@@ -43,6 +51,8 @@ types:
       - seqkit
       - seqkit/stat
 
+  # -------------------------------------------------
+  # read mapping
   minimap2.oci:
     extends: container
     properties:
@@ -60,6 +70,8 @@ types:
       provides: 
       - samtools
 
+  # -------------------------------------------------
+  # assembly
   flye.oci:
     extends: container
     properties:
@@ -91,6 +103,8 @@ types:
       provides: 
       - gfatools
 
+  # -------------------------------------------------
+  # ncbi
   ncbi-datasets.oci:
     extends: container
     properties:
@@ -104,27 +118,29 @@ types:
       - sratk/prefetch
       - sratk/vdb-validate
 
+  # -------------------------------------------------
+  # taxonomy
   checkm.oci:
     extends: container
     properties:
       provides:
       - checkm
-  comebin.oci:
-    extends: container
-    properties:
-      provides:
-      - run_comebin.sh
-  semibin.oci:
-    extends: container
-    properties:
-      provides:
-      - SemiBin2
   metabat2.oci:
     extends: container
     properties:
       provides:
       - metabat2
       - jgi_summarize_bam_contig_depths
+  semibin.oci:
+    extends: container
+    properties:
+      provides:
+      - SemiBin2
+  comebin.oci:
+    extends: container
+    properties:
+      provides:
+      - run_comebin.sh
   metabuli.oci:
     extends: container
     properties:
@@ -138,34 +154,130 @@ types:
   fastani.oci:
     extends: container
     properties:
-      provides:
+      provides: 
       - fastani
+  genomad.oci:
+    extends: container
+    properties:
+      provides:
+        - genomad
+
+  # -------------------------------------------------
+  # proteins
+  pprodigal.oci:
+    extends: container
+    properties:
+      provides: 
+      - pprodigal
+  diamond.oci:
+    extends: container
+    properties:
+      provides:
+        - diamond
+        - diamond/makedb
+        - diamond/blastp
+        - diamond/linclust
+
+  # -------------------------------------------------
+  # pangenome
+  ppanggolin.oci:
+    extends: container
+    properties:
+      provides: 
+      - ppanggolin
+  # -------------------------------------------------
+  # functional annotation
+  antismash.oci:
+    extends: container
+    properties:
+      provides:
+        - antismash
+  busco.oci:
+    extends: container
+    properties:
+      provides:
+      - busco
+  bakta.oci:
+    extends: container
+    properties:
+      provides:
+      - bakta
+  deeptfactor.oci:
+    extends: container
+    properties:
+      provides:
+      - deeptfactor
+  predictf.oci:
+    extends: container
+    properties:
+      provides:
+      - predictf
+
+  # -------------------------------------------------
+  # transcriptomics
+  braker3.oci:
+    extends: container
+    properties:
+      provides:
+      - braker3
+  star.oci:
+    extends: container
+    properties:
+      provides:
+      - STAR
+  salmon.oci:
+    extends: container
+    properties:
+      provides:
+      - salmon
+  stringtie.oci:
+    extends: container
+    properties:
+      provides:
+      - stringtie
+  gffread.oci:
+    extends: container
+    properties:
+      provides:
+      - gffread
+  pydeseq2.oci:
+    extends: container
+    properties:
+      provides:
+      - py/pydeseq2
+
+  # -------------------------------------------------
+  # metabolomics
+  metabolomics-python.oci:
+    extends: container
+    properties:
+      provides:
+      - py/cobra
+      - py/escher
+
+  # -------------------------------------------------
+  # logistics
   blast.oci:
     extends: container
     properties:
       provides:
       - blastn
       - makeblastdb
-  vsearch.oci:
+  orad.oci:
     extends: container
     properties:
       provides:
-      - vsearch
-  qiime2.oci:
+      - orad
+  skani.oci:
     extends: container
     properties:
       provides:
-      - qiime
+      - skani
 
-  ppanggolin.oci:
-    extends: container
-    properties:
-      provides: 
-      - ppanggolin
   python_for_data_science.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - python=3.12
       - py/numpy
       - py/scipy
@@ -179,3 +291,93 @@ types:
       - py/biopython
       - py/jupyter
       - py/notebook
+  deepec.oci:
+    extends: container
+    properties:
+      provides:
+      - deepec
+  eggnog-mapper.oci:
+    extends: container
+    properties:
+      provides:
+      - emapper.py
+  interproscan.oci:
+    extends: container
+    properties:
+      provides:
+      - interproscan
+  kofamscan.oci:
+    extends: container
+    properties:
+      provides:
+      - kofamscan
+  proteinbert.oci:
+    extends: container
+    properties:
+      provides:
+      - proteinbert
+  virsorter2.oci:
+    extends: container
+    properties:
+      provides:
+      - virsorter
+  dram.oci:
+    extends: container
+    properties:
+      provides:
+      - DRAM-v.py
+  promotech.oci:
+    extends: container
+    properties:
+      provides:
+      - promotech
+  polars.oci:
+    extends: container
+    properties:
+      provides:
+      - py/polars
+  vsearch.oci:
+    extends: container
+    properties:
+      provides:
+      - vsearch
+  qiime2.oci:
+    extends: container
+    properties:
+      provides:
+      - qiime
+  prott5.oci:
+    extends: container
+    properties:
+      provides:
+      - prott5_embed
+  esmc.oci:
+    extends: container
+    properties:
+      provides:
+      - esmc_embed
+  ankh.oci:
+    extends: container
+    properties:
+      provides:
+      - ankh_embed
+  saprot.oci:
+    extends: container
+    properties:
+      provides:
+      - saprot_embed
+  esmfold.oci:
+    extends: container
+    properties:
+      provides:
+      - esmfold_predict
+  foldseek.oci:
+    extends: container
+    properties:
+      provides:
+      - foldseek
+  boltz.oci:
+    extends: container
+    properties:
+      provides:
+      - boltz

@@ -44,29 +44,18 @@ logistics_transforms = [
 
 base_resources = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
 
-# Create input library with uniref50_source marker
+# Generate workflow
 import tempfile
 tmp_dir = Path(tempfile.mkdtemp())
-inputs_dir = tmp_dir / "uniref50_source_input.xgdb"
-inputs = DataInstanceLibrary(inputs_dir)
-inputs.AddTypeLibrary(MLIB / "data_types" / "annotation.yml")
-
-marker_file = tmp_dir / "uniref50_source.json"
-marker_file.write_text(json.dumps({"source": "uniprot"}))
-inputs.AddItem(marker_file, "annotation::uniref50_source")
-inputs.LocalizeContents()
-inputs.Save()
-
-# Generate workflow
 targets = TargetBuilder()
-targets.Add("annotation::uniref50_diamond_db")
+targets.Add("ref::uniref50_diamond_db")
 
-samples = list(inputs.AsSamples("annotation::uniref50_source"))
+samples = [{}]
 print(f"Samples: {samples}")
 
 task = smith.GenerateWorkflow(
     samples=samples,
-    resources=base_resources + [inputs],
+    resources=base_resources,
     transforms=logistics_transforms,
     targets=targets,
 )

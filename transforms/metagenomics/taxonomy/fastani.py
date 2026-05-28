@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 pan     = model.AddRequirement(lib.GetType("pangenome::pangenome"))
-asm     = model.AddRequirement(lib.GetType("sequences::assembly"), parents={pan})
+asm     = model.AddRequirement(lib.GetType("sequences::putative_genome"), parents={pan})
 image   = model.AddRequirement(lib.GetType("containers::fastani.oci"))
 out     = model.AddProduct(lib.GetType("taxonomy::ani_table"))
 

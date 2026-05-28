@@ -7,7 +7,7 @@ model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::metabat2.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
-bin_fasta   = model.AddProduct(lib.GetType("binning::metabat2_bin_fasta"))
+bin_fasta   = model.AddProduct(lib.GetType("sequences::metabat2_bin_fasta"))
 table       = model.AddProduct(lib.GetType("binning::metabat2_contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):

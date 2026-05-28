@@ -51,10 +51,10 @@ case $1 in
     -b) # update std xgdbs
         $(which msm) && msm=msm || msm="$HERE/../Metasmith/dev.sh -r"
         echo $msm
-        $msm build \
-        --types $HERE/data_types \
-        --uniques $HERE/resources/* \
-        --transforms $HERE/transforms/*
+        args=(--types "$HERE/data_types")
+        for u in "$HERE"/resources/*; do args+=(--uniques "$u"); done
+        for t in "$HERE"/transforms/*; do args+=(--transforms "$t"); done
+        $msm build all "${args[@]}"
     ;;
     ###################################################
     # test

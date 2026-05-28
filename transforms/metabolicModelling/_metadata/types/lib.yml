@@ -3,17 +3,29 @@ ontology:
   name: EDAM
   strict: false
   version: '1.25'
-schema: 0.11.4
+schema: v1
 types:
-  figures:
+  extract_noncoding_chunks.py:
     properties:
-      src: figures
-      usage: library
+      src: extract_noncoding_chunks
+      usage: command line
   hierarchical_clustering.py:
     properties:
       src: hierarchical_clustering
       usage: library
+  local:
+    properties:
+      src: local
+      usage: library
+  merge_promotech_results.py:
+    properties:
+      src: merge_promotech_results
+      usage: command line
   pangenome_heatmap.py:
     properties:
       src: pangenome_heatmap
       usage: command line
+  response_surface.py:
+    properties:
+      src: response_surface
+      usage: library

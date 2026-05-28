@@ -2,8 +2,15 @@ types:
   assembly:
     properties:
       Format: FASTA
-      Data: DNA sequence
+      Data: nucleic acid sequence
       ext: fna
+      origin: assembler
+  putative_genome:
+    properties:
+      Format: FASTA
+      Data: nucleic acid sequence
+      ext: fna
+      genome_scope: single
   gbk:
     properties:
       Format: genbank file
@@ -12,18 +19,23 @@ types:
     properties:
       Format: gene feature format
       ext: gff
-  orfs:
-    properties:
-      Format: FASTA
-      Data: AA sequence
-      ext: faa
   reads:
+    properties:
+      _: DNA reads
+      qc: none
+      Format: FASTQ
+      Data: nucleic acid sequence
+      compression: gzip
+      ext: fq.gz
+      pair_state: complete
+  unpaired_read_half:
     properties:
       qc: none
       Format: FASTQ
-      Data: DNA read
+      Data: nucleic acid sequence
       compression: gzip
       ext: fq.gz
+      pair_state: half
   clean_reads:
     extends:
     - reads
@@ -56,7 +68,7 @@ types:
       atomic: a pair of read files
   forward_short_reads:
     extends:
-    - reads
+    - unpaired_read_half
     properties:
       parity: paired end
       direction: forward
@@ -65,14 +77,14 @@ types:
       compression: none
   zipped_forward_short_reads:
     extends:
-    - reads
+    - unpaired_read_half
     properties:
       parity: paired end
       direction: forward
       read_length: short
   reverse_short_reads:
     extends:
-    - reads
+    - unpaired_read_half
     properties:
       parity: paired end
       direction: reverse
@@ -82,11 +94,29 @@ types:
       compression: none
   zipped_reverse_short_reads:
     extends:
-    - reads
+    - unpaired_read_half
     properties:
       parity: paired end
       direction: reverse
       read_length: short
+  forward_ora_reads:
+    extends:
+    - unpaired_read_half
+    properties:
+      parity: paired end
+      direction: forward
+      read_length: short
+      ext: fastq.ora
+      compression: ora
+  reverse_ora_reads:
+    extends:
+    - unpaired_read_half
+    properties:
+      parity: paired end
+      direction: reverse
+      read_length: short
+      ext: fastq.ora
+      compression: ora
   clean_short_reads:
     extends:
     - clean_reads
@@ -125,6 +155,7 @@ types:
     extends:
     - clean_long_reads
     properties:
+      qc: read_depth_stratified
       coverage: 100x
   discarded_long_reads:
     extends:
@@ -132,6 +163,16 @@ types:
     properties:
       parity: single
       read_length: long
+# -----------------------------------------
+# pacbio
+  pacbio_hifi_bam:
+    properties:
+      _: PacBio HiFi reads in BAM format
+      Format: BAM
+      Data: nucleic acid sequence
+      read_length: long
+      parity: single
+      ext: bam
 # -----------------------------------------
 # reports
   read_metadata:
@@ -198,8 +239,15 @@ types:
   isolate_assembly:
     extends:
     - assembly
+    - putative_genome
     properties:
       subject: isolate
+  chromosomal_contig:
+    extends:
+    - putative_genome
+    properties:
+      _: curated single-chromosome contig from a long-read assembly
+      origin: long_read_pseudo_bin
   hifiasm_meta_assembly:
     extends:
     - assembly
@@ -210,8 +258,66 @@ types:
     - assembly
     properties:
       method: flye
+  megahit_assembly:
+    extends:
+    - assembly
+    properties:
+      method: megahit
   flye_raw_assembly:
     extends:
     - assembly
     properties:
       method: flye using raw reads
+# -----------------------------------------
+# metagenomic bins (putative single-genome FASTAs from a binner)
+  bin_fasta:
+    extends:
+    - putative_genome
+    properties:
+      _: a single metagenomic bin FASTA file
+  metabat2_bin_fasta:
+    extends:
+    - bin_fasta
+    properties:
+      method: metabat2
+  semibin2_bin_fasta:
+    extends:
+    - bin_fasta
+    properties:
+      method: semibin2
+  comebin_bin_fasta:
+    extends:
+    - bin_fasta
+    properties:
+      method: comebin
+# -----------------------------------------
+# protein
+  orfs:
+    properties:
+      Format: FASTA
+      Data: protein sequence
+      content: open reading frames
+      ext: faa
+  orfs_shard:
+    extends:
+    - orfs
+    properties:
+      _: Length-balanced shard of an ORF FASTA; fans out embedding transforms
+      ext: faa
+# -----------------------------------------
+# protein structures
+  predicted_structures:
+    properties:
+      _: Predicted protein structures keyed by ORF id (tar of mmCIF files)
+      Format: mmCIF
+      ext: tar.gz
+  structure_3di_tokens:
+    properties:
+      _: Foldseek 3Di token strings per ORF (sequence_id -> 3di)
+      Format: Parquet
+      ext: parquet
+  boltz_structures:
+    properties:
+      _: Boltz-2 predicted structures (tar of mmCIF files)
+      Format: mmCIF
+      ext: tar.gz

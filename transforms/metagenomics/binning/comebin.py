@@ -7,7 +7,7 @@ model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::comebin.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
-bin_fasta   = model.AddProduct(lib.GetType("binning::comebin_bin_fasta"))
+bin_fasta   = model.AddProduct(lib.GetType("sequences::comebin_bin_fasta"))
 table       = model.AddProduct(lib.GetType("binning::comebin_contig_to_bin_table"))
 
 def protocol(context: ExecutionContext):
@@ -18,13 +18,17 @@ def protocol(context: ExecutionContext):
     workdir = "comebin_out"
     bam_dir = "bam_input"
 
+    context.LocalShell(f"grep -c '^>' {iasm.local} > contig_count.txt")
+    contig_count = int(Path("contig_count.txt").read_text().strip())
+    batch_size = max(32, min(contig_count, 1024))
+
     context.ExecWithContainer(
         image = image,
         cmd = f"""
             mkdir -p {bam_dir}
             cp -L {ibam.container} {bam_dir}/
             mkdir -p {workdir}
-            run_comebin.sh -a {iasm.container} -o {workdir} -p {bam_dir} -t {threads}
+            run_comebin.sh -a {iasm.container} -o {workdir} -p {bam_dir} -t {threads} -b {batch_size}
         """
     )
 
@@ -52,8 +56,8 @@ TransformInstance(
     model=model,
     group_by=asm,
     resources=Resources(
-        cpus=8,
+        cpus=16,
         memory=Size.GB(32),
-        duration=Duration(hours=12),
+        duration=Duration(hours=48),
     )
 )

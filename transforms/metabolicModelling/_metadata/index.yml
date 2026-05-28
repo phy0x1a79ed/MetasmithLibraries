@@ -1,2 +1,10 @@
-manifest: {}
-schema: 0.11.4
+manifest:
+  differential_analysis.py:
+    type: transforms::transform
+  fba_constraint.py:
+    type: transforms::transform
+  jgi_loader.py:
+    type: transforms::transform
+  pathway_enrichment.py:
+    type: transforms::transform
+schema: v1
