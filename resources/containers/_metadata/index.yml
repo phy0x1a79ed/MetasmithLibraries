@@ -1,4 +1,6 @@
 manifest:
+  ankh.oci:
+    type: containers::ankh.oci
   antismash.oci:
     type: containers::antismash.oci
   bakta.oci:
@@ -19,12 +21,20 @@ manifest:
     type: containers::checkm.oci
   comebin.oci:
     type: containers::comebin.oci
+  deepec.oci:
+    type: containers::deepec.oci
   deeptfactor.oci:
     type: containers::deeptfactor.oci
   diamond.oci:
     type: containers::diamond.oci
   dram.oci:
     type: containers::dram.oci
+  eggnog-mapper.oci:
+    type: containers::eggnog-mapper.oci
+  esmc.oci:
+    type: containers::esmc.oci
+  esmfold.oci:
+    type: containers::esmfold.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
@@ -35,6 +45,8 @@ manifest:
     type: containers::filtlong.oci
   flye.oci:
     type: containers::flye.oci
+  foldseek.oci:
+    type: containers::foldseek.oci
   genomad.oci:
     type: containers::genomad.oci
   gfatools.oci:
@@ -47,6 +59,10 @@ manifest:
     type: containers::hifiasm-meta.oci
   hifiasm.oci:
     type: containers::hifiasm.oci
+  interproscan.oci:
+    type: containers::interproscan.oci
+  kofamscan.oci:
+    type: containers::kofamscan.oci
   megahit.oci:
     type: containers::megahit.oci
   metabat2.oci:
@@ -65,20 +81,32 @@ manifest:
     type: containers::ncbi-datasets.oci
   orad.oci:
     type: containers::orad.oci
+  polars.oci:
+    type: containers::polars.oci
   ppanggolin.oci:
     type: containers::ppanggolin.oci
   pprodigal.oci:
     type: containers::pprodigal.oci
   predictf.oci:
     type: containers::predictf.oci
+  promotech.oci:
+    type: containers::promotech.oci
+  proteinbert.oci:
+    type: containers::proteinbert.oci
+  prott5.oci:
+    type: containers::prott5.oci
   pydeseq2.oci:
     type: containers::pydeseq2.oci
   python_for_data_science.oci:
     type: containers::python_for_data_science.oci
+  qiime2.oci:
+    type: containers::qiime2.oci
   salmon.oci:
     type: containers::salmon.oci
   samtools.oci:
     type: containers::samtools.oci
+  saprot.oci:
+    type: containers::saprot.oci
   semibin.oci:
     type: containers::semibin.oci
   seqkit.oci:
@@ -91,4 +119,8 @@ manifest:
     type: containers::star.oci
   stringtie.oci:
     type: containers::stringtie.oci
+  virsorter2.oci:
+    type: containers::virsorter2.oci
+  vsearch.oci:
+    type: containers::vsearch.oci
 schema: v1

@@ -5,6 +5,10 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ankh.oci:
+    properties:
+      Format: OCI
+      provides: ankh_embed
   antismash.oci:
     properties:
       Format: OCI
@@ -13,6 +17,10 @@ types:
     properties:
       Format: OCI
       provides: bakta
+  bam2fastx.oci:
+    properties:
+      Format: OCI
+      provides: bam2fastq
   bbtools.oci:
     properties:
       Format: OCI
@@ -32,6 +40,10 @@ types:
       provides:
       - blastn
       - makeblastdb
+  boltz.oci:
+    properties:
+      Format: OCI
+      provides: boltz
   braker3.oci:
     properties:
       Format: OCI
@@ -43,23 +55,18 @@ types:
   checkm.oci:
     properties:
       Format: OCI
+      provides: checkm
   comebin.oci:
     properties:
       Format: OCI
       provides: run_comebin.sh
-  metabat2.oci:
-    properties:
-      Format: OCI
-      provides:
-      - jgi_summarize_bam_contig_depths
-      - metabat2
-  semibin.oci:
-    properties:
-      Format: OCI
-      provides: SemiBin2
   container:
     properties:
       Format: OCI
+  deepec.oci:
+    properties:
+      Format: OCI
+      provides: deepec
   deeptfactor.oci:
     properties:
       Format: OCI
@@ -72,6 +79,22 @@ types:
       - diamond/blastp
       - diamond/linclust
       - diamond/makedb
+  dram.oci:
+    properties:
+      Format: OCI
+      provides: DRAM-v.py
+  eggnog-mapper.oci:
+    properties:
+      Format: OCI
+      provides: emapper.py
+  esmc.oci:
+    properties:
+      Format: OCI
+      provides: esmc_embed
+  esmfold.oci:
+    properties:
+      Format: OCI
+      provides: esmfold_predict
   fastani.oci:
     properties:
       Format: OCI
@@ -92,6 +115,10 @@ types:
     properties:
       Format: OCI
       provides: flye
+  foldseek.oci:
+    properties:
+      Format: OCI
+      provides: foldseek
   genomad.oci:
     properties:
       Format: OCI
@@ -116,10 +143,24 @@ types:
     properties:
       Format: OCI
       provides: hifiasm
+  interproscan.oci:
+    properties:
+      Format: OCI
+      provides: interproscan
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: kofamscan
   megahit.oci:
     properties:
       Format: OCI
       provides: megahit
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - jgi_summarize_bam_contig_depths
+      - metabat2
   metabolomics-python.oci:
     properties:
       Format: OCI
@@ -150,6 +191,10 @@ types:
     properties:
       Format: OCI
       provides: orad
+  polars.oci:
+    properties:
+      Format: OCI
+      provides: py/polars
   ppanggolin.oci:
     properties:
       Format: OCI
@@ -162,6 +207,18 @@ types:
     properties:
       Format: OCI
       provides: predictf
+  promotech.oci:
+    properties:
+      Format: OCI
+      provides: promotech
+  proteinbert.oci:
+    properties:
+      Format: OCI
+      provides: proteinbert
+  prott5.oci:
+    properties:
+      Format: OCI
+      provides: prott5_embed
   pulled_container:
     properties:
       atomic_description: pulled OCI container
@@ -187,6 +244,10 @@ types:
       - py/xmltodict
       - py/yaml
       - python=3.12
+  qiime2.oci:
+    properties:
+      Format: OCI
+      provides: qiime
   salmon.oci:
     properties:
       Format: OCI
@@ -195,6 +256,14 @@ types:
     properties:
       Format: OCI
       provides: samtools
+  saprot.oci:
+    properties:
+      Format: OCI
+      provides: saprot_embed
+  semibin.oci:
+    properties:
+      Format: OCI
+      provides: SemiBin2
   seqkit.oci:
     properties:
       Format: OCI
@@ -220,3 +289,11 @@ types:
     properties:
       Format: OCI
       provides: stringtie
+  virsorter2.oci:
+    properties:
+      Format: OCI
+      provides: virsorter
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch

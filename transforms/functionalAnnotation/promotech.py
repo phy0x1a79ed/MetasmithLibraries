@@ -10,7 +10,7 @@ gff        = model.AddRequirement(lib.GetType("sequences::gff"))
 extractor  = model.AddRequirement(lib.GetType("lib::extract_noncoding_chunks.py"))
 merger     = model.AddRequirement(lib.GetType("lib::merge_promotech_results.py"))
 
-out_pred = model.AddProduct(lib.GetType("functional_annotation::promotech_predictions"))
+out_pred = model.AddProduct(lib.GetType("annotation::promotech_predictions"))
 
 
 def _resolve(path):

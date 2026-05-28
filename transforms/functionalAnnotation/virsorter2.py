@@ -5,11 +5,11 @@ model = Transform()
 
 image       = model.AddRequirement(lib.GetType("containers::virsorter2.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
-db          = model.AddRequirement(lib.GetType("functional_annotation::virsorter2_db"))
-out_seqs    = model.AddProduct(lib.GetType("functional_annotation::virsorter2_viral_sequences"))
-out_scores  = model.AddProduct(lib.GetType("functional_annotation::virsorter2_scores"))
-out_affi    = model.AddProduct(lib.GetType("functional_annotation::virsorter2_affi_contigs"))
-out_boundary = model.AddProduct(lib.GetType("functional_annotation::virsorter2_boundary"))
+db          = model.AddRequirement(lib.GetType("annotation::virsorter2_db"))
+out_seqs    = model.AddProduct(lib.GetType("annotation::virsorter2_viral_sequences"))
+out_scores  = model.AddProduct(lib.GetType("annotation::virsorter2_scores"))
+out_affi    = model.AddProduct(lib.GetType("annotation::virsorter2_affi_contigs"))
+out_boundary = model.AddProduct(lib.GetType("annotation::virsorter2_boundary"))
 
 def protocol(context: ExecutionContext):
     iasm = context.Input(asm)

@@ -8,9 +8,9 @@ model = Transform()
 
 image    = model.AddRequirement(lib.GetType("containers::bakta.oci"))
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
-db       = model.AddRequirement(lib.GetType("functional_annotation::bakta_db"))
-out_gff  = model.AddProduct(lib.GetType("functional_annotation::bakta_gff"))
-out_tsv  = model.AddProduct(lib.GetType("functional_annotation::bakta_tsv"))
+db       = model.AddRequirement(lib.GetType("annotation::bakta_db"))
+out_gff  = model.AddProduct(lib.GetType("annotation::bakta_gff"))
+out_tsv  = model.AddProduct(lib.GetType("annotation::bakta_tsv"))
 
 HELPER = Path(__file__).parent / "_piler_cr_to_gff3.py"
 

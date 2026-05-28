@@ -5,21 +5,6 @@ ontology:
   version: '1.25'
 schema: v1
 types:
-  bin_fasta:
-    properties:
-      Data: DNA sequence
-      Format: FASTA
-      _:
-      - a single metagenomic bin FASTA file
-      ext: fna
-  comebin_bin_fasta:
-    properties:
-      Data: DNA sequence
-      Format: FASTA
-      _:
-      - a single metagenomic bin FASTA file
-      ext: fna
-      method: comebin
   comebin_contig_to_bin_table:
     properties:
       _:
@@ -31,14 +16,6 @@ types:
       _:
       - contig to bin assignment table
       ext: tsv
-  metabat2_bin_fasta:
-    properties:
-      Data: DNA sequence
-      Format: FASTA
-      _:
-      - a single metagenomic bin FASTA file
-      ext: fna
-      method: metabat2
   metabat2_contig_to_bin_table:
     properties:
       _:
@@ -48,14 +25,6 @@ types:
   metagenome_sample:
     properties:
     - a metagenome sample identifier for binning
-  semibin2_bin_fasta:
-    properties:
-      Data: DNA sequence
-      Format: FASTA
-      _:
-      - a single metagenomic bin FASTA file
-      ext: fna
-      method: semibin2
   semibin2_contig_to_bin_table:
     properties:
       _:

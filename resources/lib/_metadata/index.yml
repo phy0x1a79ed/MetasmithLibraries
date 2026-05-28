@@ -1,8 +1,12 @@
 manifest:
+  extract_noncoding_chunks.py:
+    type: lib::extract_noncoding_chunks.py
   hierarchical_clustering.py:
     type: lib::hierarchical_clustering.py
   local:
     type: lib::local
+  merge_promotech_results.py:
+    type: lib::merge_promotech_results.py
   pangenome_heatmap.py:
     type: lib::pangenome_heatmap.py
   response_surface.py:

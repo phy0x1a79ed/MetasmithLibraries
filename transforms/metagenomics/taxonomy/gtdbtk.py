@@ -5,8 +5,8 @@ import shutil
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::gtdbtk.oci"))
-ref         = model.AddRequirement(lib.GetType("taxonomy::gtdb"))
-asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
+ref         = model.AddRequirement(lib.GetType("ref::gtdb"))
+asm         = model.AddRequirement(lib.GetType("sequences::putative_genome"))
 tax         = model.AddProduct(lib.GetType("taxonomy::gtdbtk"))
 # raw         = model.AddProduct(lib.GetType("taxonomy::gtdbtk_raw"))
 

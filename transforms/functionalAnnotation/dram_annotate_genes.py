@@ -4,9 +4,9 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 image = model.AddRequirement(lib.GetType("containers::dram.oci"))
-orfs  = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-db    = model.AddRequirement(lib.GetType("functional_annotation::dram_db"))
-out   = model.AddProduct(lib.GetType("functional_annotation::dram_annotations"))
+orfs  = model.AddRequirement(lib.GetType("sequences::orfs"))
+db    = model.AddRequirement(lib.GetType("annotation::dram_db"))
+out   = model.AddProduct(lib.GetType("annotation::dram_annotations"))
 
 
 def protocol(context: ExecutionContext):

@@ -4,7 +4,7 @@ lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::pprodigal.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
-cds         = model.AddProduct(lib.GetType("sequences::open_reading_frames"))
+cds         = model.AddProduct(lib.GetType("sequences::orfs"))
 gff         = model.AddProduct(lib.GetType("sequences::gff"))
 
 def protocol(context: ExecutionContext):
@@ -22,7 +22,7 @@ def protocol(context: ExecutionContext):
         cmd = f"""\
             pprodigal \
                 {cpus_string} \
-                -C 10 \
+                -C 100 \
                 -p meta \
                 -i {iasm.container} \
                 -a {icds.container} \

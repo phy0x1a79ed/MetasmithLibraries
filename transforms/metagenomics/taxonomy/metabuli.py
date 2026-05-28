@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
 image       = model.AddRequirement(lib.GetType("containers::metabuli.oci"))
-ref         = model.AddRequirement(lib.GetType("taxonomy::metabuli_ref"))
+ref         = model.AddRequirement(lib.GetType("ref::metabuli_ref"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 tax         = model.AddProduct(lib.GetType("taxonomy::metabuli"))
 rep         = model.AddProduct(lib.GetType("taxonomy::metabuli_report"))

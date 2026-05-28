@@ -1,333 +1,299 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
 types:
-  container:
+  ankh.oci:
     properties:
       Format: OCI
-  # proxy target for transform that prefetches containers
-  # for HPC platforms where compute nodes don't have internet access 
-  pulled_container:
+      provides: ankh_embed
+  antismash.oci:
     properties:
-      ext: log
-      atomic_description: pulled OCI container
-  # -------------------------------------------------
-  # format conversion
+      Format: OCI
+      provides: antismash
+  bakta.oci:
+    properties:
+      Format: OCI
+      provides: bakta
   bam2fastx.oci:
-    extends: container
     properties:
-      provides:
-      - bam2fastq
-  # -------------------------------------------------
-  # read qc
-  fastp.oci:
-    extends: container
-    properties:
-      provides: 
-      - fastp
-  fastqc.oci:
-    extends: container
-    properties:
-      provides: 
-      - fastqc
-  nanoplot.oci:
-    extends: container
-    properties:
-      provides: 
-      - nanoplot
-  filtlong.oci:
-    extends: container
-    properties:
-      provides: 
-      - filtlong
+      Format: OCI
+      provides: bam2fastq
   bbtools.oci:
-    extends: container
     properties:
-      provides: 
-      - bbtools/reformat.sh
+      Format: OCI
+      provides:
       - bbtools/bbduk.sh
       - bbtools/filterbyname.sh
-  seqkit.oci:
-    extends: container
-    properties:
-      provides: 
-      - seqkit
-      - seqkit/stat
-
-  # -------------------------------------------------
-  # read mapping
-  minimap2.oci:
-    extends: container
-    properties:
-      provides: 
-      - minimap2
+      - bbtools/reformat.sh
   bedtools.oci:
-    extends: container
     properties:
-      provides: 
+      Format: OCI
+      provides:
       - bedtools
       - bedtools/genomecov
-  samtools.oci:
-    extends: container
-    properties:
-      provides: 
-      - samtools
-
-  # -------------------------------------------------
-  # assembly
-  flye.oci:
-    extends: container
-    properties:
-      provides: 
-      - flye
-  megahit.oci:
-    extends: container
-    properties:
-      provides: 
-      - megahit
-  miniasm.oci:
-    extends: container
-    properties:
-      provides: 
-      - miniasm
-  hifiasm-meta.oci:
-    extends: container
-    properties:
-      provides: 
-      - hifiasm-meta
-  hifiasm.oci:
-    extends: container
-    properties:
-      provides: 
-      - hifiasm
-  gfatools.oci:
-    extends: container
-    properties:
-      provides: 
-      - gfatools
-
-  # -------------------------------------------------
-  # ncbi
-  ncbi-datasets.oci:
-    extends: container
-    properties:
-      provides: 
-      - ncbi-datasets
-  sra-tools.oci:
-    extends: container
-    properties:
-      provides: 
-      - fasterq-dump
-      - sratk/prefetch
-      - sratk/vdb-validate
-
-  # -------------------------------------------------
-  # taxonomy
-  checkm.oci:
-    extends: container
-    properties:
-      provides:
-      - checkm
-  metabat2.oci:
-    extends: container
-    properties:
-      provides:
-      - metabat2
-      - jgi_summarize_bam_contig_depths
-  semibin.oci:
-    extends: container
-    properties:
-      provides:
-      - SemiBin2
-  comebin.oci:
-    extends: container
-    properties:
-      provides:
-      - run_comebin.sh
-  metabuli.oci:
-    extends: container
-    properties:
-      provides: 
-      - metabuli
-  gtdbtk.oci:
-    extends: container
-    properties:
-      provides: 
-      - gtdbtk
-  fastani.oci:
-    extends: container
-    properties:
-      provides: 
-      - fastani
-  genomad.oci:
-    extends: container
-    properties:
-      provides:
-        - genomad
-
-  # -------------------------------------------------
-  # proteins
-  pprodigal.oci:
-    extends: container
-    properties:
-      provides: 
-      - pprodigal
-  diamond.oci:
-    extends: container
-    properties:
-      provides:
-        - diamond
-        - diamond/makedb
-        - diamond/blastp
-        - diamond/linclust
-
-  # -------------------------------------------------
-  # pangenome
-  ppanggolin.oci:
-    extends: container
-    properties:
-      provides: 
-      - ppanggolin
-  # -------------------------------------------------
-  # functional annotation
-  antismash.oci:
-    extends: container
-    properties:
-      provides:
-        - antismash
-  busco.oci:
-    extends: container
-    properties:
-      provides:
-      - busco
-  bakta.oci:
-    extends: container
-    properties:
-      provides:
-      - bakta
-  deeptfactor.oci:
-    extends: container
-    properties:
-      provides:
-      - deeptfactor
-  predictf.oci:
-    extends: container
-    properties:
-      provides:
-      - predictf
-
-  # -------------------------------------------------
-  # transcriptomics
-  braker3.oci:
-    extends: container
-    properties:
-      provides:
-      - braker3
-  star.oci:
-    extends: container
-    properties:
-      provides:
-      - STAR
-  salmon.oci:
-    extends: container
-    properties:
-      provides:
-      - salmon
-  stringtie.oci:
-    extends: container
-    properties:
-      provides:
-      - stringtie
-  gffread.oci:
-    extends: container
-    properties:
-      provides:
-      - gffread
-  pydeseq2.oci:
-    extends: container
-    properties:
-      provides:
-      - py/pydeseq2
-
-  # -------------------------------------------------
-  # metabolomics
-  metabolomics-python.oci:
-    extends: container
-    properties:
-      provides:
-      - py/cobra
-      - py/escher
-
-  # -------------------------------------------------
-  # logistics
   blast.oci:
-    extends: container
     properties:
+      Format: OCI
       provides:
       - blastn
       - makeblastdb
+  boltz.oci:
+    properties:
+      Format: OCI
+      provides: boltz
+  braker3.oci:
+    properties:
+      Format: OCI
+      provides: braker3
+  busco.oci:
+    properties:
+      Format: OCI
+      provides: busco
+  checkm.oci:
+    properties:
+      Format: OCI
+      provides: checkm
+  comebin.oci:
+    properties:
+      Format: OCI
+      provides: run_comebin.sh
+  container:
+    properties:
+      Format: OCI
+  deepec.oci:
+    properties:
+      Format: OCI
+      provides: deepec
+  deeptfactor.oci:
+    properties:
+      Format: OCI
+      provides: deeptfactor
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides:
+      - diamond
+      - diamond/blastp
+      - diamond/linclust
+      - diamond/makedb
+  dram.oci:
+    properties:
+      Format: OCI
+      provides: DRAM-v.py
+  eggnog-mapper.oci:
+    properties:
+      Format: OCI
+      provides: emapper.py
+  esmc.oci:
+    properties:
+      Format: OCI
+      provides: esmc_embed
+  esmfold.oci:
+    properties:
+      Format: OCI
+      provides: esmfold_predict
+  fastani.oci:
+    properties:
+      Format: OCI
+      provides: fastani
+  fastp.oci:
+    properties:
+      Format: OCI
+      provides: fastp
+  fastqc.oci:
+    properties:
+      Format: OCI
+      provides: fastqc
+  filtlong.oci:
+    properties:
+      Format: OCI
+      provides: filtlong
+  flye.oci:
+    properties:
+      Format: OCI
+      provides: flye
+  foldseek.oci:
+    properties:
+      Format: OCI
+      provides: foldseek
+  genomad.oci:
+    properties:
+      Format: OCI
+      provides: genomad
+  gfatools.oci:
+    properties:
+      Format: OCI
+      provides: gfatools
+  gffread.oci:
+    properties:
+      Format: OCI
+      provides: gffread
+  gtdbtk.oci:
+    properties:
+      Format: OCI
+      provides: gtdbtk
+  hifiasm-meta.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm-meta
+  hifiasm.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm
+  interproscan.oci:
+    properties:
+      Format: OCI
+      provides: interproscan
+  kofamscan.oci:
+    properties:
+      Format: OCI
+      provides: kofamscan
+  megahit.oci:
+    properties:
+      Format: OCI
+      provides: megahit
+  metabat2.oci:
+    properties:
+      Format: OCI
+      provides:
+      - jgi_summarize_bam_contig_depths
+      - metabat2
+  metabolomics-python.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/cobra
+      - py/escher
+  metabuli.oci:
+    properties:
+      Format: OCI
+      provides: metabuli
+  miniasm.oci:
+    properties:
+      Format: OCI
+      provides: miniasm
+  minimap2.oci:
+    properties:
+      Format: OCI
+      provides: minimap2
+  nanoplot.oci:
+    properties:
+      Format: OCI
+      provides: nanoplot
+  ncbi-datasets.oci:
+    properties:
+      Format: OCI
+      provides: ncbi-datasets
   orad.oci:
-    extends: container
     properties:
-      provides:
-      - orad
-  skani.oci:
-    extends: container
+      Format: OCI
+      provides: orad
+  polars.oci:
     properties:
-      provides:
-      - skani
-
+      Format: OCI
+      provides: py/polars
+  ppanggolin.oci:
+    properties:
+      Format: OCI
+      provides: ppanggolin
+  pprodigal.oci:
+    properties:
+      Format: OCI
+      provides: pprodigal
+  predictf.oci:
+    properties:
+      Format: OCI
+      provides: predictf
+  promotech.oci:
+    properties:
+      Format: OCI
+      provides: promotech
+  proteinbert.oci:
+    properties:
+      Format: OCI
+      provides: proteinbert
+  prott5.oci:
+    properties:
+      Format: OCI
+      provides: prott5_embed
+  pulled_container:
+    properties:
+      atomic_description: pulled OCI container
+      ext: log
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides: py/pydeseq2
   python_for_data_science.oci:
-    extends: container
     properties:
+      Format: OCI
       provides:
-      - python=3.12
-      - py/numpy
-      - py/scipy
-      - py/pandas
-      - py/numba
-      - py/yaml
-      - py/requests
-      - py/xmltodict
-      - py/plotly
-      - py/matplotlib
       - py/biopython
       - py/jupyter
+      - py/matplotlib
       - py/notebook
-  deepec.oci:
-    extends: container
+      - py/numba
+      - py/numpy
+      - py/pandas
+      - py/plotly
+      - py/requests
+      - py/scipy
+      - py/xmltodict
+      - py/yaml
+      - python=3.12
+  qiime2.oci:
     properties:
-      provides:
-      - deepec
-  eggnog-mapper.oci:
-    extends: container
+      Format: OCI
+      provides: qiime
+  salmon.oci:
     properties:
-      provides:
-      - emapper.py
-  interproscan.oci:
-    extends: container
+      Format: OCI
+      provides: salmon
+  samtools.oci:
     properties:
-      provides:
-      - interproscan
-  kofamscan.oci:
-    extends: container
+      Format: OCI
+      provides: samtools
+  saprot.oci:
     properties:
-      provides:
-      - kofamscan
-  proteinbert.oci:
-    extends: container
+      Format: OCI
+      provides: saprot_embed
+  semibin.oci:
     properties:
+      Format: OCI
+      provides: SemiBin2
+  seqkit.oci:
+    properties:
+      Format: OCI
       provides:
-      - proteinbert
+      - seqkit
+      - seqkit/stat
+  skani.oci:
+    properties:
+      Format: OCI
+      provides: skani
+  sra-tools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - fasterq-dump
+      - sratk/prefetch
+      - sratk/vdb-validate
+  star.oci:
+    properties:
+      Format: OCI
+      provides: STAR
+  stringtie.oci:
+    properties:
+      Format: OCI
+      provides: stringtie
   virsorter2.oci:
-    extends: container
     properties:
-      provides:
-      - virsorter
-  dram.oci:
-    extends: container
+      Format: OCI
+      provides: virsorter
+  vsearch.oci:
     properties:
-      provides:
-      - DRAM-v.py
-  promotech.oci:
-    extends: container
-    properties:
-      provides:
-      - promotech
+      Format: OCI
+      provides: vsearch

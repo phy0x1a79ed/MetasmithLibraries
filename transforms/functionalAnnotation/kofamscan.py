@@ -1,13 +1,33 @@
 from metasmith.python_api import *
+from pathlib import Path
 
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 image    = model.AddRequirement(lib.GetType("containers::kofamscan.oci"))
-orfs     = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-profiles = model.AddRequirement(lib.GetType("functional_annotation::kofamscan_profiles"))
-ko_list  = model.AddRequirement(lib.GetType("functional_annotation::kofamscan_ko_list"))
-out_results = model.AddProduct(lib.GetType("functional_annotation::kofamscan_results"))
+orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
+profiles = model.AddRequirement(lib.GetType("ref::kofamscan_profiles"))
+ko_list  = model.AddRequirement(lib.GetType("ref::kofamscan_ko_list"))
+out_results = model.AddProduct(lib.GetType("annotation::kofamscan_results"))
+
+
+def parse_kofamscan(input_path, output_path):
+    header = "gene_name,KO,thrshld,score,E-value,best\n"
+    with open(input_path, 'r') as infile, open(output_path, 'w') as outfile:
+        outfile.write(header)
+        for line in infile:
+            if line.startswith('#') or not line.strip():
+                continue
+            stripped = line.strip()
+            is_best = "*" if stripped.startswith("*") else ""
+            parts = stripped.lstrip('* ').split()
+            if len(parts) >= 5:
+                gene, ko, thr, score, evalue = parts[:5]
+                try:
+                    if float(score) >= float(thr):
+                        outfile.write(f"{gene},{ko},{thr},{score},{evalue},{is_best}\n")
+                except ValueError:
+                    outfile.write(f"{gene},{ko},{thr},{score},{evalue},{is_best}\n")
 
 
 def protocol(context: ExecutionContext):
@@ -16,13 +36,17 @@ def protocol(context: ExecutionContext):
     iko_list = context.Input(ko_list)
     iout = context.Output(out_results)
 
-    threads = context.params.get("cpus", 8)
+    cpus = context.params.get("cpus")
+    cpus_string = "" if cpus is None else f"--cpu={cpus}"
 
-    # Run KofamScan with external database references
+    # Extract profiles archive locally
+    context.LocalShell(f"pigz -dc {iprofiles.local} | tar xf -")
+
+    # Run KofamScan with extracted database references
     context.ExecWithContainer(
         image=image,
         binds=[
-            (iprofiles.external, "/profiles"),
+            (context.external_cwd/"profiles", "/profiles"),
             (iko_list.external.parent, "/ko"),
         ],
         cmd=f"""
@@ -30,7 +54,7 @@ def protocol(context: ExecutionContext):
                 -o kofam_results.txt \
                 --profile=/profiles \
                 --ko-list=/ko/{iko_list.external.name} \
-                --cpu={threads} \
+                {cpus_string} \
                 --e-value=0.01 \
                 --format=detail \
                 --no-report-unannotated \
@@ -38,8 +62,8 @@ def protocol(context: ExecutionContext):
         """,
     )
 
-    # Copy output
-    context.LocalShell(f"cp kofam_results.txt {iout.local}")
+    # Parse and filter results into CSV
+    parse_kofamscan("kofam_results.txt", str(iout.local))
 
     return ExecutionResult(
         manifest=[

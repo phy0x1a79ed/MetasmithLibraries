@@ -10,8 +10,8 @@ image    = model.AddRequirement(lib.GetType("containers::antismash.oci"))
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
 db       = model.AddRequirement(lib.GetType("ref::antismash"))
 
-out_json = model.AddProduct(lib.GetType("functional_annotation::antismash_json"))
-out_gbk  = model.AddProduct(lib.GetType("functional_annotation::antismash_regions_gbk"))
+out_json = model.AddProduct(lib.GetType("annotation::antismash_json"))
+out_gbk  = model.AddProduct(lib.GetType("annotation::antismash_regions_gbk"))
 
 
 MIN_CONTIG_LENGTH = 1000

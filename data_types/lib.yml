@@ -15,4 +15,12 @@ types:
     properties:
       src: pangenome_heatmap
       usage: command line
+  extract_noncoding_chunks.py:
+    properties:
+      src: extract_noncoding_chunks
+      usage: command line
+  merge_promotech_results.py:
+    properties:
+      src: merge_promotech_results
+      usage: command line
  

@@ -5,8 +5,8 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 image = model.AddRequirement(lib.GetType("containers::deepec.oci"))
-orfs = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-out_predictions = model.AddProduct(lib.GetType("functional_annotation::deepec_predictions"))
+orfs = model.AddRequirement(lib.GetType("sequences::orfs"))
+out_predictions = model.AddProduct(lib.GetType("annotation::deepec_predictions"))
 
 
 def protocol(context: ExecutionContext):

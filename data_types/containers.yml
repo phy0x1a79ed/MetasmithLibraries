@@ -336,3 +336,48 @@ types:
     properties:
       provides:
       - py/polars
+  vsearch.oci:
+    extends: container
+    properties:
+      provides:
+      - vsearch
+  qiime2.oci:
+    extends: container
+    properties:
+      provides:
+      - qiime
+  prott5.oci:
+    extends: container
+    properties:
+      provides:
+      - prott5_embed
+  esmc.oci:
+    extends: container
+    properties:
+      provides:
+      - esmc_embed
+  ankh.oci:
+    extends: container
+    properties:
+      provides:
+      - ankh_embed
+  saprot.oci:
+    extends: container
+    properties:
+      provides:
+      - saprot_embed
+  esmfold.oci:
+    extends: container
+    properties:
+      provides:
+      - esmfold_predict
+  foldseek.oci:
+    extends: container
+    properties:
+      provides:
+      - foldseek
+  boltz.oci:
+    extends: container
+    properties:
+      provides:
+      - boltz

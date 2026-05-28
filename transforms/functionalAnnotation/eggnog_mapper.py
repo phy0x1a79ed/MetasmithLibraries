@@ -5,9 +5,9 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 image    = model.AddRequirement(lib.GetType("containers::eggnog-mapper.oci"))
-orfs     = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-data_dir = model.AddRequirement(lib.GetType("functional_annotation::eggnog_data"))
-out      = model.AddProduct(lib.GetType("functional_annotation::eggnog_results"))
+orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
+data_dir = model.AddRequirement(lib.GetType("annotation::eggnog_data"))
+out      = model.AddProduct(lib.GetType("annotation::eggnog_results"))
 
 def protocol(context: ExecutionContext):
     iorfs = context.Input(orfs)

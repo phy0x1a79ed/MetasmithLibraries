@@ -4,10 +4,10 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 image        = model.AddRequirement(lib.GetType("containers::predictf.oci"))
-orfs         = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-db           = model.AddRequirement(lib.GetType("functional_annotation::predictf_db"))
-out_tf       = model.AddProduct(lib.GetType("functional_annotation::predictf_results"))
-out_potential = model.AddProduct(lib.GetType("functional_annotation::predictf_potential"))
+orfs         = model.AddRequirement(lib.GetType("sequences::orfs"))
+db           = model.AddRequirement(lib.GetType("annotation::predictf_db"))
+out_tf       = model.AddProduct(lib.GetType("annotation::predictf_results"))
+out_potential = model.AddProduct(lib.GetType("annotation::predictf_potential"))
 
 
 def protocol(context: ExecutionContext):

@@ -108,7 +108,7 @@ test_cases = [
     (
         "assembly -> open_reading_frames",
         lambda: make_inputs("sequences", "sequences.yml", "sequences::assembly"),
-        "sequences::open_reading_frames",
+        "sequences::orfs",
         "sequences::assembly",
     ),
     # assembly -> ORF prediction -> diamond linclust -> augmented centroids
@@ -129,7 +129,7 @@ test_cases = [
     (
         "assembly -> antismash_json",
         lambda: make_inputs("sequences", "sequences.yml", "sequences::assembly"),
-        "functional_annotation::antismash_json",
+        "annotation::antismash_json",
         "sequences::assembly",
     ),
     # assembly -> genomad (metagenomics taxonomy)

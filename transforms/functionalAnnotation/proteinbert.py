@@ -6,9 +6,9 @@ model = Transform()
 
 image_pbert = model.AddRequirement(lib.GetType("containers::proteinbert.oci"))
 image_polars = model.AddRequirement(lib.GetType("containers::polars.oci"))
-orfs = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-out_embeddings = model.AddProduct(lib.GetType("functional_annotation::proteinbert_embeddings"))
-out_index = model.AddProduct(lib.GetType("functional_annotation::proteinbert_index"))
+orfs = model.AddRequirement(lib.GetType("sequences::orfs"))
+out_embeddings = model.AddProduct(lib.GetType("annotation::proteinbert_embeddings"))
+out_index = model.AddProduct(lib.GetType("annotation::proteinbert_index"))
 
 
 def protocol(context: ExecutionContext):

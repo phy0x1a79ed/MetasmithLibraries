@@ -5,11 +5,11 @@ model = Transform()
 
 image       = model.AddRequirement(lib.GetType("containers::dram.oci"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
-vs2_seqs    = model.AddRequirement(lib.GetType("functional_annotation::virsorter2_viral_sequences"), parents={asm})
-vs2_affi    = model.AddRequirement(lib.GetType("functional_annotation::virsorter2_affi_contigs"), parents={asm})
-db          = model.AddRequirement(lib.GetType("functional_annotation::dram_db"))
-out_annot   = model.AddProduct(lib.GetType("functional_annotation::dramv_annotations"))
-out_distill = model.AddProduct(lib.GetType("functional_annotation::dramv_distill"))
+vs2_seqs    = model.AddRequirement(lib.GetType("annotation::virsorter2_viral_sequences"), parents={asm})
+vs2_affi    = model.AddRequirement(lib.GetType("annotation::virsorter2_affi_contigs"), parents={asm})
+db          = model.AddRequirement(lib.GetType("annotation::dram_db"))
+out_annot   = model.AddProduct(lib.GetType("annotation::dramv_annotations"))
+out_distill = model.AddProduct(lib.GetType("annotation::dramv_distill"))
 
 def protocol(context: ExecutionContext):
     ivs2_seqs = context.Input(vs2_seqs)

@@ -1,200 +1,203 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
 types:
-  # antiSMASH
+  antismash_db:
+    properties:
+    - antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
   antismash_json:
     properties:
-      _: antiSMASH JSON results per assembly
       Format: JSON
+      _:
+      - antiSMASH JSON results per assembly
       ext: json
   antismash_regions_gbk:
     properties:
-      _: antiSMASH GenBank region files (tar)
       Format: GenBank
+      _:
+      - antiSMASH GenBank region files (tar)
       ext: tar.gz
-
-  # antiSMASH database
-  antismash_db:
-    properties:
-      _: antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
   antismash_source:
     properties:
-      _: Marker for antiSMASH database download
-
-  # BUSCO
-  busco_results:
-    properties:
-      _: BUSCO completeness assessment summary
-      Format: JSON
-      ext: json
-  busco_full_table:
-    properties:
-      _: BUSCO full results table with per-sequence marker assignments
-      Format: TSV
-      ext: tsv
-  busco_lineage:
-    properties:
-      _: Pre-downloaded BUSCO lineage dataset directory
-  busco_source:
-    properties:
-      _: Marker for BUSCO lineage dataset specification
-
-  # Bakta
+    - Marker for antiSMASH database download
   bakta_db:
     properties:
-      _: Bakta light database directory
+    - Bakta light database directory
   bakta_gff:
     properties:
-      _: Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
       Format: GFF3
+      _:
+      - Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
       ext: gff3
   bakta_tsv:
     properties:
-      _: Bakta non-coding annotation summary table
       Format: TSV
+      _:
+      - Bakta non-coding annotation summary table
       ext: tsv
-
-  # DeepTFactor
-  deeptfactor_results:
+  busco_full_table:
     properties:
-      _: DeepTFactor TF predictions (binary TF/non-TF with probability score)
       Format: TSV
+      _:
+      - BUSCO full results table with per-sequence marker assignments
       ext: tsv
-
-  # PredicTF
-  predictf_db:
+  busco_lineage:
     properties:
-      _: PredicTF database directory (deeparg-largerepo + model files)
-  predictf_results:
+    - Pre-downloaded BUSCO lineage dataset directory
+  busco_results:
     properties:
-      _: PredicTF high-confidence TF predictions with family classification
-      Format: TSV
-      ext: tsv
-  predictf_potential:
-    properties:
-      _: PredicTF lower-confidence potential TF predictions
-      Format: TSV
-      ext: tsv
-
-  # InterProScan
-  interproscan_json:
-    properties:
-      _: InterProScan annotations in JSON format
       Format: JSON
+      _:
+      - BUSCO completeness assessment summary
       ext: json
-  interproscan_gff:
+  busco_source:
     properties:
-      _: InterProScan annotations in GFF3 format
-      Format: GFF3
-      ext: gff3
-  interproscan_data:
-    properties:
-      _: InterProScan data directory
-  interproscan_source:
-    properties:
-      _: Marker for InterProScan data location
-
-  # KofamScan
-  kofamscan_results:
-    properties:
-      _: KEGG KO assignments from KofamScan
-      Format: TSV
-      ext: txt
-  kofamscan_profiles:
-    properties:
-      _: KofamScan HMM profile directory containing .hmm files
-  kofamscan_ko_list:
-    properties:
-      _: KofamScan KO list file
-      ext: tsv
-  kofamscan_source:
-    properties:
-      _: Marker for KofamScan database download
-
-  # eggNOG-mapper
-  eggnog_data:
-    properties:
-      _: eggNOG-mapper database directory
-  eggnog_source:
-    properties:
-      _: Marker for eggNOG database download
-  eggnog_results:
-    properties:
-      _: eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
-      Format: TSV
-      ext: tsv
-
-  # DeepEC
+    - Marker for BUSCO lineage dataset specification
   deepec_predictions:
     properties:
-      _: DeepEC EC number predictions
+      _:
+      - DeepEC EC number predictions
       ext: tsv
-
-  # DIAMOND UniRef50
+  deeptfactor_results:
+    properties:
+      Format: TSV
+      _:
+      - DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      ext: tsv
   diamond_uniref50_results:
     properties:
-      _: DIAMOND alignment to UniRef50
       Format: BLAST6
+      _:
+      - DIAMOND alignment to UniRef50
       ext: tsv
-  uniref50_diamond_db:
+  dram_annotations:
     properties:
-      _: DIAMOND-formatted UniRef50 database
-      ext: dmnd
-  uniref50_source:
-    properties:
-      _: Marker for UniRef50 database download
-
-  # ProteinBERT
-  proteinbert_embeddings:
-    properties:
-      _: ProteinBERT embedding vectors
-      Format: Parquet
-      ext: parquet
-  proteinbert_index:
-    properties:
-      _: ProteinBERT sequence index
-      Format: CSV
-      ext: csv
-
-  # VirSorter2
-  virsorter2_viral_sequences:
-    properties:
-      _: VirSorter2 identified viral sequences
-      Format: FASTA
-      ext: fa
-  virsorter2_scores:
-    properties:
-      _: VirSorter2 viral scores and metadata
+      _:
+      - DRAM gene annotations (dbCAN/KOfam/Pfam) TSV
       ext: tsv
-  virsorter2_affi_contigs:
+  dram_db:
     properties:
-      _: VirSorter2 gene affiliation table for DRAM-v
-      ext: tab
-  virsorter2_boundary:
-    properties:
-      _: VirSorter2 viral boundary positions
-      ext: tsv
-  virsorter2_db:
-    properties:
-      _: VirSorter2 reference database directory
-
-  # DRAM-v
+    - DRAM database directory
   dramv_annotations:
     properties:
-      _: DRAM-v gene annotations for viral contigs
+      _:
+      - DRAM-v gene annotations for viral contigs
       ext: tsv
   dramv_distill:
     properties:
-      _: DRAM-v distilled AMG summary and visualizations
-  dram_db:
+    - DRAM-v distilled AMG summary and visualizations
+  eggnog_data:
     properties:
-      _: DRAM database directory
-  dram_annotations:
+    - eggNOG-mapper database directory
+  eggnog_results:
     properties:
-      _: DRAM gene annotations (dbCAN/KOfam/Pfam) TSV
+      Format: TSV
+      _:
+      - eggNOG-mapper functional annotations (GO, KEGG, Pfam, COG)
       ext: tsv
-
-  # PromoTech
+  eggnog_source:
+    properties:
+    - Marker for eggNOG database download
+  interproscan_data:
+    properties:
+    - InterProScan data directory
+  interproscan_gff:
+    properties:
+      Format: GFF3
+      _:
+      - InterProScan annotations in GFF3 format
+      ext: gff3
+  interproscan_json:
+    properties:
+      Format: JSON
+      _:
+      - InterProScan annotations in JSON format
+      ext: json
+  interproscan_source:
+    properties:
+    - Marker for InterProScan data location
+  kofamscan_ko_list:
+    properties:
+      _:
+      - KofamScan KO list file
+      ext: tsv
+  kofamscan_profiles:
+    properties:
+    - KofamScan HMM profile directory containing .hmm files
+  kofamscan_results:
+    properties:
+      Format: TSV
+      _:
+      - KEGG KO assignments from KofamScan
+      ext: txt
+  kofamscan_source:
+    properties:
+    - Marker for KofamScan database download
+  predictf_db:
+    properties:
+    - PredicTF database directory (deeparg-largerepo + model files)
+  predictf_potential:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF lower-confidence potential TF predictions
+      ext: tsv
+  predictf_results:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF high-confidence TF predictions with family classification
+      ext: tsv
   promotech_predictions:
     properties:
-      _: PromoTech bacterial promoter predictions per assembly
       Format: TSV
+      _:
+      - PromoTech bacterial promoter predictions per assembly
       ext: tsv
+  proteinbert_embeddings:
+    properties:
+      Format: Parquet
+      _:
+      - ProteinBERT embedding vectors
+      ext: parquet
+  proteinbert_index:
+    properties:
+      Format: CSV
+      _:
+      - ProteinBERT sequence index
+      ext: csv
+  uniref50_diamond_db:
+    properties:
+      _:
+      - DIAMOND-formatted UniRef50 database
+      ext: dmnd
+  uniref50_source:
+    properties:
+    - Marker for UniRef50 database download
+  virsorter2_affi_contigs:
+    properties:
+      _:
+      - VirSorter2 gene affiliation table for DRAM-v
+      ext: tab
+  virsorter2_boundary:
+    properties:
+      _:
+      - VirSorter2 viral boundary positions
+      ext: tsv
+  virsorter2_db:
+    properties:
+    - VirSorter2 reference database directory
+  virsorter2_scores:
+    properties:
+      _:
+      - VirSorter2 viral scores and metadata
+      ext: tsv
+  virsorter2_viral_sequences:
+    properties:
+      Format: FASTA
+      _:
+      - VirSorter2 identified viral sequences
+      ext: fa

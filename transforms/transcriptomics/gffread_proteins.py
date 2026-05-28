@@ -6,7 +6,7 @@ exp   = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 gtf   = model.AddRequirement(lib.GetType("transcriptomics::braker3_gff"), parents={exp})
 asm   = model.AddRequirement(lib.GetType("sequences::assembly"), parents={exp})
 image = model.AddRequirement(lib.GetType("containers::gffread.oci"))
-out   = model.AddProduct(lib.GetType("sequences::open_reading_frames"))
+out   = model.AddProduct(lib.GetType("sequences::orfs"))
 
 def protocol(context: ExecutionContext):
     igtf = context.Input(gtf)

@@ -4,9 +4,9 @@ from metasmith.python_api import *
 lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model    = Transform()
 image    = model.AddRequirement(lib.GetType("containers::busco.oci"))
-orfs     = model.AddRequirement(lib.GetType("sequences::open_reading_frames"))
-lineage  = model.AddRequirement(lib.GetType("functional_annotation::busco_lineage"))
-out      = model.AddProduct(lib.GetType("functional_annotation::busco_full_table"))
+orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
+lineage  = model.AddRequirement(lib.GetType("annotation::busco_lineage"))
+out      = model.AddProduct(lib.GetType("annotation::busco_full_table"))
 
 def protocol(context: ExecutionContext):
     iorfs    = context.Input(orfs)

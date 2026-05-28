@@ -21,7 +21,7 @@ manifest:
     type: transforms::transform
   megahit.py:
     type: transforms::transform
-  reads_to_assembly_bam.py:
+  select_chromosomal_contigs.py:
     type: transforms::transform
   seqkit_reads.py:
     type: transforms::transform
