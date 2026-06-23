@@ -207,3 +207,7 @@ types:
     properties:
       Format: OCI
       provides: stringtie
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch

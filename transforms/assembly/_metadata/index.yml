@@ -1,7 +1,11 @@
 manifest:
   assembly_stats.py:
     type: transforms::transform
+  background_filter.py:
+    type: transforms::transform
   bbduk.py:
+    type: transforms::transform
+  filter_contigs_by_length.py:
     type: transforms::transform
   filtlong.py:
     type: transforms::transform

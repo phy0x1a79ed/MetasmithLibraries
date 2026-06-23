@@ -16,6 +16,7 @@ from metasmith.python_api import (
 
 DOMAINS = [
     "assembly",
+    "fosmids",
     "functionalAnnotation",
     "logistics",
     "metabolicModelling",

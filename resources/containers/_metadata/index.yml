@@ -81,4 +81,6 @@ manifest:
     type: containers::star.oci
   stringtie.oci:
     type: containers::stringtie.oci
+  vsearch.oci:
+    type: containers::vsearch.oci
 schema: v1

@@ -43,6 +43,13 @@ types:
       - fraction_reads_mapped
       - length
       - number_of_contigs
+  background_genome:
+    properties:
+      Data: host genome reference
+      Format: FASTA
+      _:
+      - host/background reference for read filtering
+      ext: fna
   clean_long_reads:
     properties:
       Data: nucleic acid sequence
@@ -95,6 +102,12 @@ types:
       parity: single
       qc: filtered
       read_length: short
+  discarded_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      ext: fna
+      filter: discarded by length+dedupe
   discarded_long_reads:
     properties:
       Data: nucleic acid sequence
@@ -185,12 +198,29 @@ types:
       Format: FASTA
       ext: fna
       method: hifiasm-meta
+  host_filtered_short_reads:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTQ
+      _:
+      - DNA reads
+      compression: gzip
+      ext: fq.gz
+      filter: host-removed
+      qc: filtered
+      read_length: short
   isolate_assembly:
     properties:
       Data: nucleic acid sequence
       Format: FASTA
       ext: fna
       subject: isolate
+  length_filtered_assembly:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      ext: fna
+      filter: length+dedupe
   long_reads:
     properties:
       Data: nucleic acid sequence

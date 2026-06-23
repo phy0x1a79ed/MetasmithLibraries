@@ -1,0 +1,69 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  end_sequences_forward:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid forward end-sequences (fasta records keyed by insert_id)
+      direction: forward
+      ext: fna
+  end_sequences_reverse:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid reverse end-sequences (fasta records keyed by insert_id)
+      direction: reverse
+      ext: fna
+  end_sequences_table:
+    properties:
+      Format: JSON
+      _:
+      - fosmid ends manifest (insert_ids + ends_facing flag)
+      ext: json
+      fields:
+      - ends_facing
+      - insert_ids
+  pool_size_estimate:
+    properties:
+      Format: JSON
+      _:
+      - fosmid pool size estimate
+      ext: json
+      fields:
+      - size
+      - size_with_singletons
+  scaffold_report:
+    properties:
+      Format: CSV
+      _:
+      - fosmid scaffold mapping report
+      ext: csv
+      fields:
+      - assemblers
+      - contig_id
+      - id
+      - mapping_quality
+      - original_id
+      - paired
+      - resolved_length
+  scaffolds:
+    properties:
+      Data: fosmid scaffold
+      Format: FASTA
+      _:
+      - end-aware scaffolded fosmid inserts
+      ext: fna
+  vector_backbone:
+    properties:
+      Data: vector backbone reference
+      Format: FASTA
+      _:
+      - fosmid vector backbone reference fasta
+      ext: fna

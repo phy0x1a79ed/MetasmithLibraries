@@ -1,0 +1,56 @@
+types:
+  end_sequences_forward:
+    properties:
+      _: fosmid forward end-sequences (fasta records keyed by insert_id)
+      Format: FASTA
+      Data: fosmid end sequence
+      direction: forward
+      ext: fna
+  end_sequences_reverse:
+    properties:
+      _: fosmid reverse end-sequences (fasta records keyed by insert_id)
+      Format: FASTA
+      Data: fosmid end sequence
+      direction: reverse
+      ext: fna
+  end_sequences_table:
+    properties:
+      _: fosmid ends manifest (insert_ids + ends_facing flag)
+      Format: JSON
+      fields:
+      - insert_ids
+      - ends_facing
+      ext: json
+  vector_backbone:
+    properties:
+      _: fosmid vector backbone reference fasta
+      Format: FASTA
+      Data: vector backbone reference
+      ext: fna
+  scaffolds:
+    properties:
+      _: end-aware scaffolded fosmid inserts
+      Format: FASTA
+      Data: fosmid scaffold
+      ext: fna
+  scaffold_report:
+    properties:
+      _: fosmid scaffold mapping report
+      Format: CSV
+      fields:
+      - id
+      - mapping_quality
+      - paired
+      - resolved_length
+      - assemblers
+      - contig_id
+      - original_id
+      ext: csv
+  pool_size_estimate:
+    properties:
+      _: fosmid pool size estimate
+      Format: JSON
+      fields:
+      - size
+      - size_with_singletons
+      ext: json

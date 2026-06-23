@@ -1,0 +1,6 @@
+manifest:
+  estimate_pool_size.py:
+    type: transforms::transform
+  scaffold.py:
+    type: transforms::transform
+schema: v1

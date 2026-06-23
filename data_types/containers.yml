@@ -40,9 +40,14 @@ types:
   seqkit.oci:
     extends: container
     properties:
-      provides: 
+      provides:
       - seqkit
       - seqkit/stat
+  vsearch.oci:
+    extends: container
+    properties:
+      provides:
+      - vsearch
 
   # -------------------------------------------------
   # read mapping

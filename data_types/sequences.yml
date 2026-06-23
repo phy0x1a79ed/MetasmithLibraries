@@ -239,3 +239,26 @@ types:
       Data: protein sequence
       content: open reading frames
       ext: faa
+# -----------------------------------------
+# host filtering / length filtering
+  background_genome:
+    properties:
+      _: host/background reference for read filtering
+      Format: FASTA
+      Data: host genome reference
+      ext: fna
+  host_filtered_short_reads:
+    extends:
+    - clean_short_reads
+    properties:
+      filter: host-removed
+  length_filtered_assembly:
+    extends:
+    - assembly
+    properties:
+      filter: length+dedupe
+  discarded_contigs:
+    extends:
+    - assembly
+    properties:
+      filter: discarded by length+dedupe
