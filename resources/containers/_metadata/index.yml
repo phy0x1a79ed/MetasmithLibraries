@@ -43,6 +43,8 @@ manifest:
     type: containers::hifiasm.oci
   megahit.oci:
     type: containers::megahit.oci
+  metabolic.env.yml:
+    type: containers::metabolic.env.yml
   metabolomics-python.oci:
     type: containers::metabolomics-python.oci
   metabuli.oci:

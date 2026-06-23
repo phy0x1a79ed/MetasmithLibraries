@@ -1,0 +1,66 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  base_graphs:
+    properties:
+      Data: networkx bipartite pickles
+      _:
+      - element-weighted host base bipartite graphs (C/N/S/P)
+      content: directory of base_{C,N,S,P}.pkl
+  element_bipartite:
+    properties:
+      Data: networkx bipartite pickles
+      _:
+      - MetaNetX universe element bipartite graphs (C/N/S/P, atom-count edges)
+      content: directory of mnx_bipartite_{C,N,S,P}.pkl
+  fosmid_addition_weights:
+    properties:
+      Data: pickle of contig -> mnxr -> E
+      _:
+      - per-fosmid per-reaction evidence-weighted conductance additions
+      content: fosmid_addition_weights.pkl
+  fosmid_bipartite_graph:
+    properties:
+      Data: networkx bipartite pickles
+      _:
+      - per-fosmid element-weighted bipartite metabolic graphs (base + additions)
+      content: directory of fosmid_graph_{C,N,S,P}.pkl
+  metabolic_axes:
+    properties:
+      Format: JSON
+      _:
+      - curated metabolic axes (source/sink metabolite pairs per element)
+      ext: json
+  reaction_evidence:
+    properties:
+      Format: PARQUET
+      _:
+      - per-ORF metabolic reaction evidence (MNXR nominations)
+      ext: parquet
+      fields:
+      - channel
+      - intermediate_id
+      - mnxr
+      - orf
+      - raw_score
+      - source
+  reaction_evidence_weights:
+    properties:
+      Format: PARQUET
+      _:
+      - per-reaction evidence weight (E_full, E_dlec)
+      ext: parquet
+      fields:
+      - E_dlec
+      - E_full
+      - mnxr
+      - source
+  reaction_reference_db:
+    properties:
+      _:
+      - DIAMOND reaction DB (.dmnd) + subject_id->MNXR bridge (bridge.tsv)
+      content: directory with reactions.dmnd and bridge.tsv

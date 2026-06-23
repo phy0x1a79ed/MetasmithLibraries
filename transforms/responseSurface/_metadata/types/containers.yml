@@ -107,6 +107,15 @@ types:
     properties:
       Format: OCI
       provides: megahit
+  metabolic.env.yml:
+    properties:
+      Format: OCI
+      provides:
+      - py/biopython
+      - py/networkx
+      - py/pandas
+      - py/pyarrow
+      - py/scipy
   metabolomics-python.oci:
     properties:
       Format: OCI
