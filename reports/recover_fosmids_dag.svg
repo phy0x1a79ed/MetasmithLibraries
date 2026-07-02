@@ -27,41 +27,41 @@
 <path fill="none" stroke="black" d="M542.21,-796.65C524.83,-787.07 500.26,-773.52 479.3,-761.97"/>
 <polygon fill="black" stroke="black" points="481.12,-758.97 470.67,-757.21 477.74,-765.1 481.12,-758.97"/>
 </g>
-<!-- sequences::clean_short_reads -->
-<g id="node3" class="node">
-<title>sequences::clean_short_reads</title>
-<polygon fill="none" stroke="black" points="842.5,-684 642.75,-684 642.75,-648 842.5,-648 842.5,-684"/>
-<text xml:space="preserve" text-anchor="middle" x="742.62" y="-660.58" font-family="Arial" font-size="14.00">sequences::clean_short_reads</text>
-</g>
-<!-- given&#45;&gt;sequences::clean_short_reads -->
-<g id="edge2" class="edge">
-<title>given&#45;&gt;sequences::clean_short_reads</title>
-<path fill="none" stroke="black" d="M582.67,-794.6C613.06,-770.36 674.78,-721.12 712.04,-691.4"/>
-<polygon fill="black" stroke="black" points="714.13,-694.21 719.77,-685.24 709.77,-688.74 714.13,-694.21"/>
-</g>
 <!-- sequences::assembly -->
-<g id="node4" class="node">
+<g id="node3" class="node">
 <title>sequences::assembly</title>
 <polygon fill="none" stroke="black" points="624.88,-684 478.38,-684 478.38,-648 624.88,-648 624.88,-684"/>
 <text xml:space="preserve" text-anchor="middle" x="551.62" y="-660.58" font-family="Arial" font-size="14.00">sequences::assembly</text>
 </g>
 <!-- given&#45;&gt;sequences::assembly -->
-<g id="edge4" class="edge">
+<g id="edge2" class="edge">
 <title>given&#45;&gt;sequences::assembly</title>
 <path fill="none" stroke="black" d="M563.03,-791.59C560.84,-767.61 556.86,-724.14 554.23,-695.42"/>
 <polygon fill="black" stroke="black" points="557.73,-695.26 553.33,-685.62 550.76,-695.9 557.73,-695.26"/>
 </g>
-<!-- fosmids::recovery_experiment&#45;&gt;sequences::clean_short_reads -->
-<g id="edge1" class="edge">
-<title>fosmids::recovery_experiment&#45;&gt;sequences::clean_short_reads</title>
-<path fill="none" stroke="black" d="M513.8,-719.52C556.83,-709.64 610.77,-697.26 655.47,-687"/>
-<polygon fill="black" stroke="black" points="656.19,-690.43 665.15,-684.78 654.62,-683.61 656.19,-690.43"/>
+<!-- sequences::clean_short_reads -->
+<g id="node4" class="node">
+<title>sequences::clean_short_reads</title>
+<polygon fill="none" stroke="black" points="842.5,-684 642.75,-684 642.75,-648 842.5,-648 842.5,-684"/>
+<text xml:space="preserve" text-anchor="middle" x="742.62" y="-660.58" font-family="Arial" font-size="14.00">sequences::clean_short_reads</text>
+</g>
+<!-- given&#45;&gt;sequences::clean_short_reads -->
+<g id="edge4" class="edge">
+<title>given&#45;&gt;sequences::clean_short_reads</title>
+<path fill="none" stroke="black" d="M582.67,-794.6C613.06,-770.36 674.78,-721.12 712.04,-691.4"/>
+<polygon fill="black" stroke="black" points="714.13,-694.21 719.77,-685.24 709.77,-688.74 714.13,-694.21"/>
 </g>
 <!-- fosmids::recovery_experiment&#45;&gt;sequences::assembly -->
-<g id="edge3" class="edge">
+<g id="edge1" class="edge">
 <title>fosmids::recovery_experiment&#45;&gt;sequences::assembly</title>
 <path fill="none" stroke="black" d="M466.1,-719.52C480.63,-710.6 498.48,-699.63 514.12,-690.03"/>
 <polygon fill="black" stroke="black" points="515.53,-693.27 522.23,-685.05 511.87,-687.3 515.53,-693.27"/>
+</g>
+<!-- fosmids::recovery_experiment&#45;&gt;sequences::clean_short_reads -->
+<g id="edge3" class="edge">
+<title>fosmids::recovery_experiment&#45;&gt;sequences::clean_short_reads</title>
+<path fill="none" stroke="black" d="M513.8,-719.52C556.83,-709.64 610.77,-697.26 655.47,-687"/>
+<polygon fill="black" stroke="black" points="656.19,-690.43 665.15,-684.78 654.62,-683.61 656.19,-690.43"/>
 </g>
 <!-- 1 cluster_contigs -->
 <g id="node5" class="node">
@@ -111,17 +111,17 @@
 <path fill="none" stroke="black" d="M338.57,-734.94C277.98,-730.02 200.66,-716.96 139.62,-684 91.77,-658.16 55.62,-649.39 55.62,-595 55.62,-595 55.62,-595 55.62,-305 55.62,-260.68 70.98,-248.95 100.62,-216 111.85,-203.53 126.65,-192.78 140.58,-184.28"/>
 <polygon fill="black" stroke="black" points="142.32,-187.32 149.21,-179.26 138.8,-181.27 142.32,-187.32"/>
 </g>
-<!-- sequences::clean_short_reads&#45;&gt;2 pool_coverage -->
-<g id="edge12" class="edge">
-<title>sequences::clean_short_reads&#45;&gt;2 pool_coverage</title>
-<path fill="none" stroke="black" d="M725.59,-647.52C693.79,-615.63 622.21,-547.35 551.62,-504 529.26,-490.26 502.69,-478.45 479.82,-469.48"/>
-<polygon fill="black" stroke="black" points="481.27,-466.29 470.67,-465.98 478.76,-472.83 481.27,-466.29"/>
-</g>
 <!-- sequences::assembly&#45;&gt;1 cluster_contigs -->
 <g id="edge7" class="edge">
 <title>sequences::assembly&#45;&gt;1 cluster_contigs</title>
 <path fill="none" stroke="black" d="M516.91,-647.52C497.87,-637.93 474.14,-625.98 454.13,-615.9"/>
 <polygon fill="black" stroke="black" points="455.91,-612.88 445.41,-611.51 452.76,-619.13 455.91,-612.88"/>
+</g>
+<!-- sequences::clean_short_reads&#45;&gt;2 pool_coverage -->
+<g id="edge12" class="edge">
+<title>sequences::clean_short_reads&#45;&gt;2 pool_coverage</title>
+<path fill="none" stroke="black" d="M725.59,-647.52C693.79,-615.63 622.21,-547.35 551.62,-504 529.26,-490.26 502.69,-478.45 479.82,-469.48"/>
+<polygon fill="black" stroke="black" points="481.27,-466.29 470.67,-465.98 478.76,-472.83 481.27,-466.29"/>
 </g>
 <!-- fosmids::clustered_contigs -->
 <g id="node6" class="node">
@@ -232,13 +232,13 @@
 <text xml:space="preserve" text-anchor="middle" x="182.62" y="-12.57" font-family="Arial" font-size="14.00">target</text>
 </g>
 <!-- fosmids::putative_inserts&#45;&gt;target -->
-<g id="edge23" class="edge">
+<g id="edge24" class="edge">
 <title>fosmids::putative_inserts&#45;&gt;target</title>
 <path fill="none" stroke="black" d="M107.6,-71.52C121.55,-61.75 139.01,-49.53 153.57,-39.34"/>
 <polygon fill="black" stroke="black" points="155.23,-42.45 161.41,-33.85 151.21,-36.71 155.23,-42.45"/>
 </g>
 <!-- fosmids::putative_insert_report&#45;&gt;target -->
-<g id="edge24" class="edge">
+<g id="edge23" class="edge">
 <title>fosmids::putative_insert_report&#45;&gt;target</title>
 <path fill="none" stroke="black" d="M258.4,-71.52C244.21,-61.68 226.44,-49.37 211.67,-39.13"/>
 <polygon fill="black" stroke="black" points="213.93,-36.44 203.71,-33.62 209.94,-42.19 213.93,-36.44"/>
