@@ -5,6 +5,28 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  cluster_membership:
+    properties:
+      Format: CSV
+      _:
+      - cluster membership of the clustered contigs (one row per input contig)
+      ext: csv
+      fields:
+      - assembler
+      - centroid
+      - cluster
+      - length
+      - member
+      - source_pool
+  clustered_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - representative (deduped) contig set from all-vs-all clustering of the per-pool
+        assemblies
+      content: clustered representative contigs
+      ext: fna
   end_sequences_forward:
     properties:
       Data: fosmid end sequence
@@ -30,6 +52,15 @@ types:
       fields:
       - ends_facing
       - insert_ids
+  pool_coverage_profiles:
+    properties:
+      Data: per-bp depth arrays keyed by contig then pool
+      Format: pickle (gzip)
+      _:
+      - per-contig x per-pool per-bp read-depth arrays over the clustered contigs;
+        keyed on the original clustered contig ids and never mutated downstream (split/trim
+        slice it by header interval)
+      ext: pkl.gz
   pool_size_estimate:
     properties:
       Format: JSON
@@ -39,6 +70,34 @@ types:
       fields:
       - size
       - size_with_singletons
+  putative_insert_report:
+    properties:
+      Format: CSV
+      _:
+      - per-insert provenance + length-band report for the recovered putative fosmids
+      ext: csv
+      fields:
+      - action
+      - band
+      - end
+      - insert_id
+      - length
+      - pool_basis
+      - source
+      - start
+  putative_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - final putative fosmid inserts after coverage trimming; same header-baked provenance
+        convention (intervals updated by any trim), length-banded to the lambda window
+      content: putative fosmid inserts
+      ext: fna
+  recovery_experiment:
+    properties:
+      logistics: to group the pooled assemblies + reads of one fosmid-recovery run
+        (single grouping node; all inputs and intermediates descend from it)
   scaffold_report:
     properties:
       Format: CSV
@@ -59,6 +118,15 @@ types:
       Format: FASTA
       _:
       - end-aware scaffolded fosmid inserts
+      ext: fna
+  split_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - contigs after chimera splitting; interval provenance baked into each FASTA
+        header (source=<clustered_id> start= end= action=)
+      content: chimera-split contigs with header-baked provenance
       ext: fna
   vector_backbone:
     properties:

@@ -54,3 +54,61 @@ types:
       - size
       - size_with_singletons
       ext: json
+# -----------------------------------------
+# putative-insert recovery (cluster -> coverage -> chimera-split -> trim)
+  recovery_experiment:
+    properties:
+      logistics: to group the pooled assemblies + reads of one fosmid-recovery run (single grouping node; all inputs and intermediates descend from it)
+  clustered_contigs:
+    properties:
+      _: representative (deduped) contig set from all-vs-all clustering of the per-pool assemblies
+      Format: FASTA
+      Data: nucleic acid sequence
+      content: clustered representative contigs
+      ext: fna
+  cluster_membership:
+    properties:
+      _: cluster membership of the clustered contigs (one row per input contig)
+      Format: CSV
+      fields:
+      - cluster
+      - centroid
+      - member
+      - assembler
+      - source_pool
+      - length
+      ext: csv
+  pool_coverage_profiles:
+    properties:
+      _: per-contig x per-pool per-bp read-depth arrays over the clustered contigs; keyed on the original clustered contig ids and never mutated downstream (split/trim slice it by header interval)
+      Format: pickle (gzip)
+      Data: per-bp depth arrays keyed by contig then pool
+      ext: pkl.gz
+  split_contigs:
+    properties:
+      _: contigs after chimera splitting; interval provenance baked into each FASTA header (source=<clustered_id> start= end= action=)
+      Format: FASTA
+      Data: nucleic acid sequence
+      content: chimera-split contigs with header-baked provenance
+      ext: fna
+  putative_inserts:
+    properties:
+      _: final putative fosmid inserts after coverage trimming; same header-baked provenance convention (intervals updated by any trim), length-banded to the lambda window
+      Format: FASTA
+      Data: nucleic acid sequence
+      content: putative fosmid inserts
+      ext: fna
+  putative_insert_report:
+    properties:
+      _: per-insert provenance + length-band report for the recovered putative fosmids
+      Format: CSV
+      fields:
+      - insert_id
+      - source
+      - action
+      - start
+      - end
+      - length
+      - pool_basis
+      - band
+      ext: csv

@@ -1,5 +1,13 @@
 manifest:
+  chimera_split.py:
+    type: transforms::transform
+  cluster_contigs.py:
+    type: transforms::transform
+  coverage_trim.py:
+    type: transforms::transform
   estimate_pool_size.py:
+    type: transforms::transform
+  pool_coverage.py:
     type: transforms::transform
   scaffold.py:
     type: transforms::transform
