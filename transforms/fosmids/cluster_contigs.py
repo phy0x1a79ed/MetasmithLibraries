@@ -3,9 +3,10 @@
 Ports scadc `resolve_inserts/cluster.ipynb`: pool every assembly's long contigs
 (>= min_contig_len), run an all-vs-all blastn, build a contiguous-pident
 (nident/qlen) similarity matrix, and agglomeratively cluster (complete linkage,
-distance_threshold = 1 - identity_threshold).  Clustering is done *within each
-assembler group* and the representatives are unioned -- this reproduces the scadc
-"191 contigs" set (a spades_meta contig and its megahit_default twin each survive).
+distance_threshold = 1 - identity_threshold).  Clustering is done **across all
+assemblers together** so near-identical spades/megahit twins of the same clone
+collapse into one representative (cross-assembler dedup); `cluster_membership.csv`
+records which input contig (and its assembler/pool) fell into each cluster.
 
 Aggregation: a single `fosmids::recovery_experiment` node groups the whole run;
 every assembly is parented to it, so `group_by=exp` makes ONE clustering job see
@@ -161,14 +162,8 @@ def cluster_group(labels):
             member2centroid[mm] = best
     return member2centroid
 
-# group by assembler, cluster each independently, union
-by_asm = {{}}
-for k, mv in meta.items():
-    by_asm.setdefault(mv["assembler"], []).append(k)
-
-member2centroid = {{}}
-for assembler, labels in by_asm.items():
-    member2centroid.update(cluster_group(labels))
+# cluster ALL contigs together (across assemblers) so spades/megahit twins merge
+member2centroid = cluster_group(list(meta.keys()))
 
 representatives = sorted(set(member2centroid.values()))
 with open(ofa, "w") as out:
@@ -186,7 +181,7 @@ for member, centroid in sorted(member2centroid.items()):
 pd.DataFrame(rows, columns=["cluster", "centroid", "member", "assembler",
                             "source_pool", "length"]).to_csv(omem, index=False)
 print(f"representatives={{len(representatives)}} from {{len(meta)}} contigs "
-      f"({{len(by_asm)}} assembler groups)")
+      f"(cross-assembler clustering)")
 """)
     context.ExecWithContainer(
         image=img_pyds,
