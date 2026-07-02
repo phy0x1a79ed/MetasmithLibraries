@@ -7,8 +7,12 @@ manifest:
     type: transforms::transform
   estimate_pool_size.py:
     type: transforms::transform
+  insert_read_mapping.py:
+    type: transforms::transform
   pool_coverage.py:
     type: transforms::transform
   scaffold.py:
+    type: transforms::transform
+  select_reference_inserts.py:
     type: transforms::transform
 schema: v1

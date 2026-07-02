@@ -52,6 +52,23 @@ types:
       fields:
       - ends_facing
       - insert_ids
+  insert_coverage:
+    properties:
+      Format: CSV
+      _:
+      - read-mapping coverage summary of the pooled reads against the reference inserts;
+        one row per (insert_id, pool) plus an "all"-pool aggregate, with depth/breadth
+        stats
+      ext: csv
+      fields:
+      - breadth_1x
+      - breadth_5x
+      - insert_id
+      - length
+      - mapped_bp
+      - mean_depth
+      - median_depth
+      - pool
   pool_coverage_profiles:
     properties:
       Data: per-bp depth arrays keyed by contig then pool
@@ -98,6 +115,17 @@ types:
     properties:
       logistics: to group the pooled assemblies + reads of one fosmid-recovery run
         (single grouping node; all inputs and intermediates descend from it)
+  reference_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - the canonical fosmid reference set -- putative inserts filtered to length
+        >= min_insert_length (default 29 kb, the phage-packaging/lambda-window cutoff);
+        the FASTA every downstream analysis (read-mapping, annotation, ECSPr) runs
+        on
+      content: reference fosmid inserts (length-filtered)
+      ext: fna
   scaffold_report:
     properties:
       Format: CSV

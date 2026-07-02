@@ -98,6 +98,27 @@ types:
       Data: nucleic acid sequence
       content: putative fosmid inserts
       ext: fna
+  reference_inserts:
+    properties:
+      _: the canonical fosmid reference set -- putative inserts filtered to length >= min_insert_length (default 29 kb, the phage-packaging/lambda-window cutoff); the FASTA every downstream analysis (read-mapping, annotation, ECSPr) runs on
+      Format: FASTA
+      Data: nucleic acid sequence
+      content: reference fosmid inserts (length-filtered)
+      ext: fna
+  insert_coverage:
+    properties:
+      _: read-mapping coverage summary of the pooled reads against the reference inserts; one row per (insert_id, pool) plus an "all"-pool aggregate, with depth/breadth stats
+      Format: CSV
+      fields:
+      - insert_id
+      - pool
+      - length
+      - mapped_bp
+      - mean_depth
+      - median_depth
+      - breadth_1x
+      - breadth_5x
+      ext: csv
   putative_insert_report:
     properties:
       _: per-insert provenance + length-band report for the recovered putative fosmids

@@ -1,0 +1,91 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  bedtools.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides: bedtools
+  conda_env:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+  diamond.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides: diamond
+  ecspr.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides:
+      - py/networkx
+      - py/numpy
+      - py/pandas
+      - py/pyarrow
+      - py/scikit-learn
+      - py/scipy
+      - python
+  kofamscan.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides:
+      - exec_annotation
+      - hmmsearch
+  minimap2.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides: minimap2
+  ml.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides:
+      - py/esm
+      - py/torch
+      - py/transformers
+      - python
+  prodigal.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides: prodigal
+  samtools.condaenv:
+    properties:
+      Format: text
+      _:
+      - a conda/mamba environment reference -- the resource file's CONTENT is the
+        env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      ext: condaenv
+      provides: samtools

@@ -1,0 +1,151 @@
+types:
+# =====================================================================
+# ECSPr (Effective Conductance with Stoichiometry-aware PRoblem)
+# element-resolved metabolic-reaction-network solve + ablation + significance
+# over the fosmid inserts. Numeric core: resources/lib/ecspr_*.py.
+# Multi-element artifacts (base graphs, bipartite graphs, catalog) are
+# DIRECTORIES, matching the lib CLIs' --base-dir/--bipartite-dir/--out dirs.
+# =====================================================================
+
+# ---- reused REFERENCE artifacts (staged inputs; never recomputed) ----
+  metanetx_reac_prop:
+    properties:
+      _: MetaNetX reaction properties table (reac_prop.tsv; #-commented header, cols mnx_id/equation/reference/classifs/is_balanced/is_transport)
+      Format: TSV
+      ext: tsv
+  metanetx_chem_prop:
+    properties:
+      _: MetaNetX chemical/metabolite properties table (chem_prop.tsv; element formulas per metabolite)
+      Format: TSV
+      ext: tsv
+  mnx_bipartite:
+    properties:
+      _: DIRECTORY of per-element metabolite<->reaction bipartite graphs (mnx_bipartite_{C,N,S,P}.pkl) with element atom-count edge weights w_X; reused for addition-map construction and base-graph building
+  biomass_axes:
+    properties:
+      _: biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X) maps to source/sink metabolite hubs
+      Format: JSON
+      ext: json
+  frozen_null:
+    properties:
+      _: DIRECTORY of FROZEN reused metagenome null draws for BOTH lanes ({reff,ieff}_null_canonical_N{21,34,56}.tsv); reused verbatim, never recomputed (only the metaG null may be reused)
+
+# ---- evidence weights + reaction catalog (produced) ----
+  evidence_weights:
+    properties:
+      _: per-(source,orf,mnxr) belief-conservation evidence weights (E_full/E_dlec/n_orf) from nomination allocation; = reaction_redundancy, consumed by base-graphs + catalog
+      Format: parquet
+      ext: parquet
+  reaction_catalog:
+    properties:
+      _: DIRECTORY holding the five reaction-catalog parquets (reactions, metabolites, rxn_edges, orf_reactions, reaction_redundancy) synthesized from MetaNetX + the evidence table
+
+# ---- addition weights (per-fosmid element evidence maps) ----
+  addition_weights:
+    properties:
+      _: "per-fosmid addition map pickle (contig -> mnxr -> E) derived from the evidence weights; the reactions injected onto the host base graph"
+      Format: pickle
+      ext: pkl
+
+# ---- host base graphs (produced by base-graphs; consumed by solve/ablation) ----
+  base_graphs:
+    properties:
+      _: DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl) plus axes_testable.json (per-element list of solvable axis ids); the SMW base
+
+# ---- ECSPr solve outputs (produced) ----
+  reff_axes_report:
+    properties:
+      _: per-(fosmid, element, axis) observed effective-resistance delta_reff solve report
+      Format: TSV
+      fields:
+      - element
+      - axis_id
+      - source_hub
+      - sink_hub
+      - fosmid
+      - null
+      - iter
+      - delta_reff
+      - r_base
+      - r_aug
+      - n_added_rxns
+      ext: tsv
+  ieff_axes_report:
+    properties:
+      _: per-(fosmid, element, axis) observed effective-conductance delta_ieff solve report (1/r_aug - 1/r_base)
+      Format: TSV
+      fields:
+      - element
+      - axis_id
+      - source_hub
+      - sink_hub
+      - fosmid
+      - null
+      - iter
+      - delta_ieff
+      - g_base
+      - g_aug
+      - n_added_rxns
+      ext: tsv
+
+# ---- significance (empirical-CCDF vs reused null; produced) ----
+  reff_significance:
+    properties:
+      _: effective-resistance significance vs the reused frozen null (empirical-CCDF p, BH-q within element x style, size-matched N)
+      Format: TSV
+      fields:
+      - fosmid
+      - element
+      - axis_id
+      - matched_N
+      - null
+      - delta_obs
+      - p
+      - n_bg
+      - p_floor
+      - at_floor
+      - q
+      - survives
+      ext: tsv
+  ieff_significance:
+    properties:
+      _: effective-conductance significance vs the reused frozen null (empirical-CCDF p, BH-q within element x style, size-matched N)
+      Format: TSV
+      fields:
+      - fosmid
+      - element
+      - axis_id
+      - matched_N
+      - null
+      - delta_obs
+      - p
+      - n_bg
+      - p_floor
+      - at_floor
+      - q
+      - survives
+      ext: tsv
+
+# ---- ablation (LOO + gene-solo, both metrics; produced) ----
+  ablation_importance:
+    properties:
+      _: per-(fosmid, axis, orf) gene-ablation importance -- full/LOO/gene-solo for BOTH delta_reff and delta_ieff
+      Format: TSV
+      fields:
+      - element
+      - axis_id
+      - source_hub
+      - sink_hub
+      - fosmid
+      - orf
+      - r_base
+      - delta_reff_full
+      - delta_reff_loo
+      - importance
+      - delta_ieff_full
+      - delta_ieff_loo
+      - importance_ieff
+      - delta_reff_solo
+      - delta_ieff_solo
+      - n_rxn_orf
+      ext: tsv

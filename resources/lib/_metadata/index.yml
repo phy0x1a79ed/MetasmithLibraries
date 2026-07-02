@@ -1,4 +1,18 @@
 manifest:
+  ecspr_ablation.py:
+    type: lib::ecspr_ablation.py
+  ecspr_catalog.py:
+    type: lib::ecspr_catalog.py
+  ecspr_network.py:
+    type: lib::ecspr_network.py
+  ecspr_significance.py:
+    type: lib::ecspr_significance.py
+  ecspr_solver.py:
+    type: lib::ecspr_solver.py
+  fabfos_embed_transfer.py:
+    type: lib::fabfos_embed_transfer.py
+  fabfos_evidence.py:
+    type: lib::fabfos_evidence.py
   hierarchical_clustering.py:
     type: lib::hierarchical_clustering.py
   local:

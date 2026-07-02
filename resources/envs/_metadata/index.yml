@@ -1,0 +1,18 @@
+manifest:
+  bedtools.condaenv:
+    type: envs::bedtools.condaenv
+  diamond.condaenv:
+    type: envs::diamond.condaenv
+  ecspr.condaenv:
+    type: envs::ecspr.condaenv
+  kofamscan.condaenv:
+    type: envs::kofamscan.condaenv
+  minimap2.condaenv:
+    type: envs::minimap2.condaenv
+  ml.condaenv:
+    type: envs::ml.condaenv
+  prodigal.condaenv:
+    type: envs::prodigal.condaenv
+  samtools.condaenv:
+    type: envs::samtools.condaenv
+schema: v1

@@ -1,0 +1,61 @@
+types:
+  conda_env:
+    properties:
+      _: a conda/mamba environment reference -- the resource file's CONTENT is the env name, consumed under Runtime.MAMBA as `mamba run -n <content>` (see resources/envs/*.condaenv)
+      Format: text
+      ext: condaenv
+  # --- read mapping / coverage (fabfos-mapping) ---
+  minimap2.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - minimap2
+  samtools.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - samtools
+  bedtools.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - bedtools
+  # --- ORF calling + homology (fabfos-annot) ---
+  prodigal.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - prodigal
+  diamond.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - diamond
+  # --- KOfam HMM lane (fabfos-kofam) ---
+  kofamscan.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - exec_annotation
+      - hmmsearch
+  # --- ECSPr numeric core + evidence compiler + catalog (fabfos-ecspr) ---
+  ecspr.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - python
+      - py/numpy
+      - py/pandas
+      - py/scipy
+      - py/scikit-learn
+      - py/networkx
+      - py/pyarrow
+  # --- deep-learning EC + embeddings lanes (fabfos-ml; GPU) ---
+  ml.condaenv:
+    extends: conda_env
+    properties:
+      provides:
+      - python
+      - py/torch
+      - py/transformers
+      - py/esm

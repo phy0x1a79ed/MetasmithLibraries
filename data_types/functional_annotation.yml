@@ -73,3 +73,110 @@ types:
       _: PredicTF lower-confidence potential TF predictions
       Format: TSV
       ext: tsv
+
+  # =====================================================================
+  # ECSPr 4-lane evidence (fresh annotation of the fosmid ORFs)
+  # =====================================================================
+
+  # ---- MNXR bridges (reference tables mapping annotations -> MetaNetX reactions) ----
+  ko_to_mnxr:
+    properties:
+      _: KO -> MNXR bridge (lane 1 kofam projection); tab-separated ko, mnxr
+      Format: TSV
+      ext: tsv
+  ec_to_mnxr:
+    properties:
+      _: EC (level-4) -> MNXR bridge built from MetaNetX reac_prop classifs (lane 2 dl_ec / deepec projection)
+      Format: TSV
+      ext: tsv
+  uniprot_to_mnxr:
+    properties:
+      _: UniProt accession -> MNXR bridge via Rhea (rhea2uniprot); lane 3 UniRef-DIAMOND projection
+      Format: parquet
+      ext: parquet
+
+  # ---- per-lane raw annotator outputs (fosmid ORFs) ----
+  kofam_hits:
+    properties:
+      _: kofamscan KO assignments for the fosmid ORFs (lane 1)
+      Format: TSV
+      ext: tsv
+  deepec_hits:
+    properties:
+      _: DeepEC EC predictions for the fosmid ORFs (lane 2 comparison)
+      Format: TSV
+      ext: tsv
+  dlec_pred:
+    properties:
+      _: canonical deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the fosmid ORFs, level-4, score>=0.3 (lane 2 canonical)
+      Format: parquet
+      ext: parquet
+  uniref_hits:
+    properties:
+      _: DIAMOND blastp hits of the fosmid ORFs vs UniRef50 (blast6) (lane 3)
+      Format: TSV
+      ext: tsv
+  protein_embeddings:
+    properties:
+      _: per-ORF protein embeddings (ProteinBERT primary; ESM-C 600M optional) for the fosmid ORFs (lane 4 input)
+      Format: numpy
+      ext: npy
+  embed_transfer:
+    properties:
+      _: lane 4 embedding-transfer kNN EC assignments (nearest labelled neighbours in embedding space; ProteinBERT floor 0.20 admitted)
+      Format: parquet
+      ext: parquet
+
+  # ---- unified evidence table (compiler output; ECSPr input) ----
+  evidence_table:
+    properties:
+      _: unified per-ORF reaction-nomination evidence table (8-col schema source/orf/channel/mnxr/intermediate_id/intermediate_name/raw_score/projection_via) folding the four lanes; the canonical dl_ec table; ECSPr consumes this
+      Format: parquet
+      ext: parquet
+
+  # =====================================================================
+  # Reference DBs / model weights for the fresh annotator lanes
+  # (staged inputs; heavy external artifacts -- see the driver's GATES note)
+  # =====================================================================
+  kofam_profiles:
+    properties:
+      _: DIRECTORY of KOfam HMM profile files (profiles/*.hmm) for kofamscan lane 1
+  kofam_ko_list:
+    properties:
+      _: KOfam ko_list threshold table (per-KO score cutoffs) for kofamscan lane 1
+      Format: TSV
+      ext: tsv
+  uniref50_dmnd:
+    properties:
+      _: DIAMOND-indexed UniRef50 protein database (.dmnd, ~24GB) for lane 3 blastp
+      Format: diamond
+      ext: dmnd
+  dlec_model:
+    properties:
+      _: DIRECTORY of EZpred / ESM-C 600M EC-head model weights for the dl_ec lane 2 (canonical EC channel)
+  proteinbert_model:
+    properties:
+      _: DIRECTORY of ProteinBERT model weights for lane 4 embeddings (primary embedding backbone)
+  esmc_model:
+    properties:
+      _: DIRECTORY of ESM-C 600M model weights for lane 4 embeddings (optional/comparison backbone)
+  reference_label_pool:
+    properties:
+      _: DIRECTORY holding the labelled reference embedding pool (metag+epi300+fosmid ORF embeddings + orf_index + projector weights) for lane-4 embed-transfer kNN; reused reference (NOT the metaG null)
+
+  # ---- reference tables for the MNXR bridges ----
+  metanetx_reac_xref:
+    properties:
+      _: MetaNetX reaction cross-reference table (reac_xref.tsv; rhea:/kegg:/etc -> MNXR) for the uniprot bridge
+      Format: TSV
+      ext: tsv
+  rhea2uniprot:
+    properties:
+      _: Rhea -> UniProt (SwissProt/reviewed) mapping (rhea2uniprot.tsv) for the uniprot bridge
+      Format: TSV
+      ext: tsv
+  rhea2uniprot_trembl:
+    properties:
+      _: Rhea -> UniProt (TrEMBL/unreviewed) mapping (rhea2uniprot_trembl.tsv.gz) for the uniprot bridge
+      Format: TSV
+      ext: tsv.gz

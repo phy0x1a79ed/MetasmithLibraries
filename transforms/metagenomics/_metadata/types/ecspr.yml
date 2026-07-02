@@ -1,0 +1,162 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  ablation_importance:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, axis, orf) gene-ablation importance -- full/LOO/gene-solo for
+        BOTH delta_reff and delta_ieff
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_ieff_full
+      - delta_ieff_loo
+      - delta_ieff_solo
+      - delta_reff_full
+      - delta_reff_loo
+      - delta_reff_solo
+      - element
+      - fosmid
+      - importance
+      - importance_ieff
+      - n_rxn_orf
+      - orf
+      - r_base
+      - sink_hub
+      - source_hub
+  addition_weights:
+    properties:
+      Format: pickle
+      _:
+      - per-fosmid addition map pickle (contig -> mnxr -> E) derived from the evidence
+        weights; the reactions injected onto the host base graph
+      ext: pkl
+  base_graphs:
+    properties:
+    - DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl)
+      plus axes_testable.json (per-element list of solvable axis ids); the SMW base
+  biomass_axes:
+    properties:
+      Format: JSON
+      _:
+      - biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X)
+        maps to source/sink metabolite hubs
+      ext: json
+  evidence_weights:
+    properties:
+      Format: parquet
+      _:
+      - per-(source,orf,mnxr) belief-conservation evidence weights (E_full/E_dlec/n_orf)
+        from nomination allocation; = reaction_redundancy, consumed by base-graphs
+        + catalog
+      ext: parquet
+  frozen_null:
+    properties:
+    - DIRECTORY of FROZEN reused metagenome null draws for BOTH lanes ({reff,ieff}_null_canonical_N{21,34,56}.tsv);
+      reused verbatim, never recomputed (only the metaG null may be reused)
+  ieff_axes_report:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, element, axis) observed effective-conductance delta_ieff solve
+        report (1/r_aug - 1/r_base)
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_ieff
+      - element
+      - fosmid
+      - g_aug
+      - g_base
+      - iter
+      - n_added_rxns
+      - sink_hub
+      - source_hub
+      - null
+  ieff_significance:
+    properties:
+      Format: TSV
+      _:
+      - effective-conductance significance vs the reused frozen null (empirical-CCDF
+        p, BH-q within element x style, size-matched N)
+      ext: tsv
+      fields:
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - fosmid
+      - matched_N
+      - n_bg
+      - p
+      - p_floor
+      - q
+      - survives
+      - null
+  metanetx_chem_prop:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX chemical/metabolite properties table (chem_prop.tsv; element formulas
+        per metabolite)
+      ext: tsv
+  metanetx_reac_prop:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction properties table (reac_prop.tsv;
+      ext: tsv
+  mnx_bipartite:
+    properties:
+    - DIRECTORY of per-element metabolite<->reaction bipartite graphs (mnx_bipartite_{C,N,S,P}.pkl)
+      with element atom-count edge weights w_X; reused for addition-map construction
+      and base-graph building
+  reaction_catalog:
+    properties:
+    - DIRECTORY holding the five reaction-catalog parquets (reactions, metabolites,
+      rxn_edges, orf_reactions, reaction_redundancy) synthesized from MetaNetX + the
+      evidence table
+  reff_axes_report:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, element, axis) observed effective-resistance delta_reff solve
+        report
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_reff
+      - element
+      - fosmid
+      - iter
+      - n_added_rxns
+      - r_aug
+      - r_base
+      - sink_hub
+      - source_hub
+      - null
+  reff_significance:
+    properties:
+      Format: TSV
+      _:
+      - effective-resistance significance vs the reused frozen null (empirical-CCDF
+        p, BH-q within element x style, size-matched N)
+      ext: tsv
+      fields:
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - fosmid
+      - matched_N
+      - n_bg
+      - p
+      - p_floor
+      - q
+      - survives
+      - null

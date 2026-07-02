@@ -15,4 +15,31 @@ types:
     properties:
       src: pangenome_heatmap
       usage: command line
- 
+  ecspr_solver.py:
+    properties:
+      src: ecspr_solver
+      usage: library
+  ecspr_network.py:
+    properties:
+      src: ecspr_network
+      usage: command line
+  ecspr_catalog.py:
+    properties:
+      src: ecspr_catalog
+      usage: command line
+  ecspr_ablation.py:
+    properties:
+      src: ecspr_ablation
+      usage: command line
+  ecspr_significance.py:
+    properties:
+      src: ecspr_significance
+      usage: command line
+  fabfos_evidence.py:
+    properties:
+      src: fabfos_evidence
+      usage: command line
+  fabfos_embed_transfer.py:
+    properties:
+      src: fabfos_embed_transfer
+      usage: command line

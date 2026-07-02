@@ -56,11 +56,81 @@ types:
   busco_source:
     properties:
     - Marker for BUSCO lineage dataset specification
+  deepec_hits:
+    properties:
+      Format: TSV
+      _:
+      - DeepEC EC predictions for the fosmid ORFs (lane 2 comparison)
+      ext: tsv
   deeptfactor_results:
     properties:
       Format: TSV
       _:
       - DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      ext: tsv
+  dlec_model:
+    properties:
+    - DIRECTORY of EZpred / ESM-C 600M EC-head model weights for the dl_ec lane 2
+      (canonical EC channel)
+  dlec_pred:
+    properties:
+      Format: parquet
+      _:
+      - canonical deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the
+        fosmid ORFs, level-4, score>=0.3 (lane 2 canonical)
+      ext: parquet
+  ec_to_mnxr:
+    properties:
+      Format: TSV
+      _:
+      - EC (level-4) -> MNXR bridge built from MetaNetX reac_prop classifs (lane 2
+        dl_ec / deepec projection)
+      ext: tsv
+  embed_transfer:
+    properties:
+      Format: parquet
+      _:
+      - lane 4 embedding-transfer kNN EC assignments (nearest labelled neighbours
+        in embedding space; ProteinBERT floor 0.20 admitted)
+      ext: parquet
+  esmc_model:
+    properties:
+    - DIRECTORY of ESM-C 600M model weights for lane 4 embeddings (optional/comparison
+      backbone)
+  evidence_table:
+    properties:
+      Format: parquet
+      _:
+      - unified per-ORF reaction-nomination evidence table (8-col schema source/orf/channel/mnxr/intermediate_id/intermediate_name/raw_score/projection_via)
+        folding the four lanes; the canonical dl_ec table; ECSPr consumes this
+      ext: parquet
+  ko_to_mnxr:
+    properties:
+      Format: TSV
+      _:
+      - KO -> MNXR bridge (lane 1 kofam projection); tab-separated ko, mnxr
+      ext: tsv
+  kofam_hits:
+    properties:
+      Format: TSV
+      _:
+      - kofamscan KO assignments for the fosmid ORFs (lane 1)
+      ext: tsv
+  kofam_ko_list:
+    properties:
+      Format: TSV
+      _:
+      - KOfam ko_list threshold table (per-KO score cutoffs) for kofamscan lane 1
+      ext: tsv
+  kofam_profiles:
+    properties:
+    - DIRECTORY of KOfam HMM profile files (profiles/*.hmm) for kofamscan lane 1
+  metanetx_reac_xref:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction cross-reference table (reac_xref.tsv; rhea:/kegg:/etc ->
+        MNXR) for the uniprot bridge
       ext: tsv
   predictf_db:
     properties:
@@ -76,4 +146,53 @@ types:
       Format: TSV
       _:
       - PredicTF high-confidence TF predictions with family classification
+      ext: tsv
+  protein_embeddings:
+    properties:
+      Format: numpy
+      _:
+      - per-ORF protein embeddings (ProteinBERT primary; ESM-C 600M optional) for
+        the fosmid ORFs (lane 4 input)
+      ext: npy
+  proteinbert_model:
+    properties:
+    - DIRECTORY of ProteinBERT model weights for lane 4 embeddings (primary embedding
+      backbone)
+  reference_label_pool:
+    properties:
+    - DIRECTORY holding the labelled reference embedding pool (metag+epi300+fosmid
+      ORF embeddings + orf_index + projector weights) for lane-4 embed-transfer kNN;
+      reused reference (NOT the metaG null)
+  rhea2uniprot:
+    properties:
+      Format: TSV
+      _:
+      - Rhea -> UniProt (SwissProt/reviewed) mapping (rhea2uniprot.tsv) for the uniprot
+        bridge
+      ext: tsv
+  rhea2uniprot_trembl:
+    properties:
+      Format: TSV
+      _:
+      - Rhea -> UniProt (TrEMBL/unreviewed) mapping (rhea2uniprot_trembl.tsv.gz) for
+        the uniprot bridge
+      ext: tsv.gz
+  uniprot_to_mnxr:
+    properties:
+      Format: parquet
+      _:
+      - UniProt accession -> MNXR bridge via Rhea (rhea2uniprot); lane 3 UniRef-DIAMOND
+        projection
+      ext: parquet
+  uniref50_dmnd:
+    properties:
+      Format: diamond
+      _:
+      - DIAMOND-indexed UniRef50 protein database (.dmnd, ~24GB) for lane 3 blastp
+      ext: dmnd
+  uniref_hits:
+    properties:
+      Format: TSV
+      _:
+      - DIAMOND blastp hits of the fosmid ORFs vs UniRef50 (blast6) (lane 3)
       ext: tsv
