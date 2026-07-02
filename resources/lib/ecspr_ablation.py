@@ -164,7 +164,7 @@ def run(args):
             base = pickle.load(f)
         t = time.time()
         ctx = SMWGraphContext(base, device=args.device,
-                              dtype=("float32" if args.device != "cpu" else "float64"),
+                              dtype=args.dtype,
                               edge_weight_key=wk)
         base_nodes = set(ctx.nodes)
         G_X = en.load_bipartite(Path(args.bipartite_dir) / f"mnx_bipartite_{X}.pkl", X)
@@ -224,6 +224,8 @@ def parse_args():
     ap.add_argument("--out", required=True)
     ap.add_argument("--elements", nargs="+", default=ELEMENTS)
     ap.add_argument("--device", default="cpu")
+    ap.add_argument("--dtype", default="float64", choices=["float64", "float32"],
+                    help="solve precision; float64 keeps parity, works on H100 GPU")
     ap.add_argument("--batch-size", type=int, default=128)
     ap.add_argument("--fosmids", nargs="+", default=None)
     ap.add_argument("--smoke", action="store_true")

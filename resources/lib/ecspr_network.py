@@ -226,7 +226,7 @@ def cmd_solve(args):
             base = pickle.load(fh)
         t = time.time()
         ctx = SMWGraphContext(base, device=args.device,
-                              dtype=("float32" if args.device != "cpu" else "float64"),
+                              dtype=getattr(args, "dtype", "float64"),
                               edge_weight_key=wk)
         base_nodes = set(ctx.nodes)
         G_X = load_bipartite(Path(args.bipartite_dir) / f"mnx_bipartite_{X}.pkl", X)
@@ -296,6 +296,8 @@ def parse_args():
     p.add_argument("--out-reff", required=True); p.add_argument("--out-ieff", required=True)
     p.add_argument("--elements", nargs="+", default=ELEMENTS)
     p.add_argument("--device", default="cpu"); p.add_argument("--smoke", action="store_true")
+    p.add_argument("--dtype", default="float64", choices=["float64", "float32"],
+                   help="solve precision; float64 keeps parity and runs on H100 GPU")
 
     p = sub.add_parser("derive-ieff"); p.set_defaults(fn=cmd_derive_ieff)
     p.add_argument("--reff", required=True); p.add_argument("--out", required=True)
