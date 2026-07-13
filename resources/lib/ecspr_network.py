@@ -207,6 +207,135 @@ def cmd_base_graphs(args):
         (out_dir / "axes_testable.json").write_text(json.dumps(testable, indent=1))
 
 
+# =====================================================================
+# Direct-GEM base graphs (Network A) -- crosswalk + induce, uniform E=1.0
+#   Ports scadc validation 59_build_crosswalk.py + 60_build_netA_base.py.
+# =====================================================================
+
+def _load_reac_xref(reac_xref: Path):
+    """reac_xref.tsv -> (bigg.reaction -> MNXR, kegg.reaction -> MNXR) first-wins."""
+    bigg2m, kegg2m = {}, {}
+    with open(reac_xref) as fh:
+        for ln in fh:
+            if ln.startswith("#"):
+                continue
+            p = ln.rstrip("\n").split("\t")
+            if len(p) < 2 or not p[1].startswith("MNXR"):
+                continue
+            if p[0].startswith("bigg.reaction:"):
+                bigg2m.setdefault(p[0].split(":", 1)[1], p[1])
+            elif p[0].startswith("kegg.reaction:"):
+                kegg2m.setdefault(p[0].split(":", 1)[1], p[1])
+    return bigg2m, kegg2m
+
+
+def _universe_sets(bipartite_dir: Path, elements):
+    """Per-universe: (MNXR carrying a w_X>0 edge on ANY element, all MNXR rxn nodes)."""
+    wedge, nodes = set(), set()
+    for X in elements:
+        G = load_bipartite(bipartite_dir / f"mnx_bipartite_{X}.pkl", X)
+        for n in G.nodes:
+            if n[0] != "rxn":
+                continue
+            nodes.add(n[1])
+            if G.degree(n) > 0:          # load_bipartite already dropped w_X<=0 edges
+                wedge.add(n[1])
+    return wedge, nodes
+
+
+def gem_crosswalk(model_json: Path, reac_xref: Path, bipartite_dir: Path, elements):
+    """GEM reaction -> ONE canonical CURRENT-MNXR, preferring an atom-mapped
+    (w_X>0) universe candidate, then source priority bigg > kegg > embedded.
+    Returns (DataFrame[rxn_id, mnxr, source, in_universe], stats dict)."""
+    import cobra                                   # lazy: only the GEM path needs it
+    bigg2m, kegg2m = _load_reac_xref(reac_xref)
+    wedge, nodes = _universe_sets(bipartite_dir, elements)
+
+    def as_list(v):
+        return [] if not v else (v if isinstance(v, list) else [v])
+
+    m = cobra.io.load_json_model(str(model_json))
+    rows, n_wedge, n_node, n_gap, n_unresolved = [], 0, 0, 0, 0
+    for r in m.reactions:
+        ann = r.annotation or {}
+        cands = []                                  # (priority, source, mnxr)
+        if r.id in bigg2m:
+            cands.append((0, "bigg", bigg2m[r.id]))
+        for kk in as_list(ann.get("kegg.reaction")):
+            if kk in kegg2m:
+                cands.append((1, "kegg", kegg2m[kk]))
+        for xx in as_list(ann.get("metanetx.reaction")):
+            cands.append((2, "embedded", xx))
+        if not cands:
+            n_unresolved += 1
+            continue
+        wc = [c for c in cands if c[2] in wedge]
+        nc = [c for c in cands if c[2] in nodes]
+        pick = min(wc or nc or cands, key=lambda c: c[0])
+        in_uni = pick[2] in wedge
+        rows.append(dict(rxn_id=r.id, mnxr=pick[2], source=pick[1], in_universe=in_uni))
+        n_wedge += in_uni
+        n_node += (not in_uni) and (pick[2] in nodes)
+        n_gap += (not in_uni) and (pick[2] not in nodes)
+    df = pd.DataFrame(rows).drop_duplicates("rxn_id")
+    stats = dict(n_reactions=len(m.reactions), n_resolved=len(df), n_unresolved=n_unresolved,
+                 n_wedge=n_wedge, n_node=n_node, n_gap=n_gap)
+    return df, stats
+
+
+def cmd_gem_base_graphs(args):
+    """Network A base: induce the atom-mapped universe on the GEM reactome with
+    uniform conductance E=1.0 (w_X = pure universe atom-transit count). Reuse-only
+    AAM: every GEM MNXR with a w_X>0 universe edge is a base node; MNXR absent from
+    the universe are the AAM gap (reported, not mapped here)."""
+    elements = args.elements
+    bip = Path(args.bipartite_dir)
+    xw, stats = gem_crosswalk(Path(args.model), Path(args.reac_xref), bip, elements)
+    mnxrs = set(xw.mnxr.dropna().unique())
+    e_uniform = {r: 1.0 for r in mnxrs}
+    axes = json.loads(Path(args.axes).read_text()) if args.axes else {}
+    out_dir = Path(args.out_dir); out_dir.mkdir(parents=True, exist_ok=True)
+    xw.to_parquet(out_dir / "gem_rxn_to_mnxr.parquet", index=False)
+
+    testable, union_present = {}, set()
+    rep = [f"# Network A (direct GEM) base -- {Path(args.model).stem}\n",
+           f"- crosswalk: {stats['n_resolved']}/{stats['n_reactions']} reactions -> "
+           f"{len(mnxrs)} unique MNXR (unresolved {stats['n_unresolved']}); uniform E=1.0",
+           f"- atom-mapped in universe (base-usable): {stats['n_wedge']}; "
+           f"universe-node-but-stripped: {stats['n_node']}; absent (AAM gap): {stats['n_gap']}\n",
+           "| element | nodes | edges | LCC met | MNXR reused | axes testable |",
+           "|---|---|---|---|---|---|"]
+    for X in elements:
+        G_X = load_bipartite(bip / f"mnx_bipartite_{X}.pkl", X)
+        base, base_mets = build_base_graph(X, mnxrs, e_uniform, G_X)
+        present = {n[1] for n in base.nodes if n[0] == "rxn"}
+        union_present |= present
+        with open(out_dir / f"base_{X}.pkl", "wb") as fh:
+            pickle.dump(base, fh, protocol=pickle.HIGHEST_PROTOCOL)
+        n_ax = 0
+        if axes:
+            axX = {k: v for k, v in axes.items() if k.endswith(f"__{X}")}
+            testable[X] = [k for k, a in axX.items()
+                           if a["source"][0] in base_mets and a["sink"][0] in base_mets]
+            n_ax = len(axX)
+        rep.append(f"| {X} | {base.number_of_nodes():,} | {base.number_of_edges():,} | "
+                   f"{len(base_mets):,} | {len(present):,} | "
+                   f"{len(testable.get(X, []))}/{n_ax} |")
+        print(f"[gem-base-graphs] base_{X}: {base.number_of_nodes():,} nodes / "
+              f"{base.number_of_edges():,} edges; LCC met {len(base_mets):,}; "
+              f"MNXR reused {len(present):,}"
+              + (f"; testable {len(testable[X])}/{n_ax}" if axes else ""), flush=True)
+    if axes:
+        (out_dir / "axes_testable.json").write_text(json.dumps(testable, indent=1))
+    gap = sorted(mnxrs - union_present)
+    rep.append(f"\n**AAM reuse:** {len(union_present)}/{len(mnxrs)} MNXR atom-mapped in the "
+               f"universe (reused, no new mapping). **AAM gap:** {len(gap)} MNXR with no w_X>0 "
+               f"edge on any element (transport/exchange/polymer or unmapped).\n")
+    (out_dir / "netA_coverage.md").write_text("\n".join(rep) + "\n")
+    print(f"[gem-base-graphs] AAM reuse {len(union_present)}/{len(mnxrs)}; gap {len(gap)} "
+          f"-> {out_dir}")
+
+
 def _write_tsv(path, cols, rows):
     with open(path, "w", buffering=1) as fh:
         fh.write("\t".join(cols) + "\n")
@@ -285,6 +414,13 @@ def parse_args():
 
     p = sub.add_parser("base-graphs"); p.set_defaults(fn=cmd_base_graphs)
     p.add_argument("--evidence", required=True); p.add_argument("--weights", required=True)
+    p.add_argument("--bipartite-dir", required=True); p.add_argument("--axes", default=None)
+    p.add_argument("--out-dir", required=True)
+    p.add_argument("--elements", nargs="+", default=ELEMENTS)
+
+    p = sub.add_parser("gem-base-graphs"); p.set_defaults(fn=cmd_gem_base_graphs)
+    p.add_argument("--model", required=True, help="curated GEM JSON (iML1515 / iECDH10B)")
+    p.add_argument("--reac-xref", required=True, help="MetaNetX reac_xref.tsv (current)")
     p.add_argument("--bipartite-dir", required=True); p.add_argument("--axes", default=None)
     p.add_argument("--out-dir", required=True)
     p.add_argument("--elements", nargs="+", default=ELEMENTS)

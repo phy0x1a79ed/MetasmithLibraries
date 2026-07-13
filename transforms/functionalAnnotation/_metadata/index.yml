@@ -11,6 +11,8 @@ manifest:
     type: transforms::transform
   busco_full_table.py:
     type: transforms::transform
+  clean_lane.py:
+    type: transforms::transform
   compile_evidence.py:
     type: transforms::transform
   deeptfactor.py:

@@ -194,6 +194,11 @@ types:
     properties:
       provides:
       - predictf
+  clean.oci:
+    extends: container
+    properties:
+      provides:
+      - clean
 
   # -------------------------------------------------
   # transcriptomics

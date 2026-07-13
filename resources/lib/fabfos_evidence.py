@@ -28,6 +28,7 @@ on disk); it recomputes NOTHING that must be reused (the metaG null lives elsewh
 from __future__ import annotations
 
 import argparse
+import csv
 import re
 from pathlib import Path
 
@@ -38,10 +39,17 @@ SCHEMA_COLS = [
     "intermediate_id", "intermediate_name", "raw_score", "projection_via",
 ]
 
-# EZpred `dl_ec` lane keeps level-4 ECs whose softmax score clears this floor.
+# CLEAN `clean_ec` lane (canonical EC channel) keeps level-4 ECs whose contrastive
+# clean_score clears this F1-optimal floor. CLEAN never abstains, so the floor (not a
+# per-ORF top-1) is what gates the lane -- see memory project_scadc_clean_noabstention.
+CLEAN_SCORE_FLOOR = 0.01
+# EZpred `dl_ec` lane (optional comparison channel) keeps level-4 ECs clearing this floor.
 DL_EC_SCORE_FLOOR = 0.3
 # embed-transfer lane keeps pbert_transfer calls whose kNN vote fraction clears this.
 EMBED_SCORE_FLOOR = 0.2
+
+# level-4 EC number, e.g. 1.2.3.4 (partial ECs like 1.2.3.- are dropped).
+_L4_EC_RE = r"^\d+\.\d+\.\d+\.\d+$"
 
 
 # =====================================================================
@@ -131,6 +139,35 @@ def read_kofam(path, source: str, ko_to_mnxr: pd.DataFrame) -> pd.DataFrame:
     df["channel"] = "kofam"
     df["intermediate_id"] = df["ko"]
     df["projection_via"] = "kegg.reaction"
+    return df[SCHEMA_COLS]
+
+
+def read_clean(path, source: str, ec_to_mnxr: pd.DataFrame) -> pd.DataFrame:
+    """Load CLEAN EC predictions (canonical EC channel), project EC -> MNXR.
+
+    3-col TSV: `Query ID`, `Predicted EC number`, `clean_score`. Keeps level-4 ECs
+    (x.x.x.x) clearing CLEAN_SCORE_FLOOR; clean_score carries the contrastive
+    confidence as raw_score. CLEAN never abstains (stamps an EC on ~every ORF), so
+    the score floor -- not a per-ORF top-1 -- is what makes the lane discriminative.
+    QUOTE_NONE parses stray-quote / RefSeq-header-leak rows literally; the level-4
+    EC regex then drops that junk. Replaces `dl_ec` as the canonical EC lane.
+    """
+    if path is None or not Path(path).exists():
+        return pd.DataFrame(columns=SCHEMA_COLS)
+    df = pd.read_csv(path, sep="\t", quoting=csv.QUOTE_NONE, dtype=str)
+    df.columns = [c.strip() for c in df.columns]
+    df = df.rename(columns={"Query ID": "orf", "Predicted EC number": "ec_number",
+                            "clean_score": "raw_score"})
+    df["raw_score"] = pd.to_numeric(df["raw_score"], errors="coerce")
+    df = df[df["raw_score"] >= CLEAN_SCORE_FLOOR]
+    df = df[df["ec_number"].astype(str).str.match(_L4_EC_RE, na=False)]
+    df = df.merge(ec_to_mnxr, left_on="ec_number", right_on="ec", how="inner")
+    df["source"] = source
+    df["channel"] = "clean_ec"
+    df["intermediate_id"] = df["ec_number"]
+    df["intermediate_name"] = ""
+    df["orf"] = df["orf"].str.replace(r"-(\d+)$", r"_\1", regex=True)
+    df["projection_via"] = "ec"
     return df[SCHEMA_COLS]
 
 
@@ -266,7 +303,7 @@ def build_uniprot_bridge(reac_xref: Path, rhea_swiss: Path, rhea_trembl: Path, o
 # compile  (port of 11_build_evidence_table_dlec.py, single-source capable)
 # =====================================================================
 
-def compile_evidence(source, kofam, dl_ec, uniref50, embed,
+def compile_evidence(source, kofam, clean, dl_ec, uniref50, embed,
                      ko_to_mnxr_path, ec_to_mnxr_path, uniprot_to_mnxr_path, out):
     print("[compile] loading bridges...", flush=True)
     ko_to_mnxr = load_ko_to_mnxr(ko_to_mnxr_path) if ko_to_mnxr_path else pd.DataFrame(columns=["ko", "mnxr"])
@@ -282,8 +319,11 @@ def compile_evidence(source, kofam, dl_ec, uniref50, embed,
         print("[compile] uniprot_to_mnxr absent -> uniref50 lane skipped", flush=True)
         uniprot_to_mnxr = pd.DataFrame(columns=["uniprot_accession", "dr_source", "mnxr"])
 
+    # CLEAN is the canonical EC channel; dl_ec is retained as an optional comparison
+    # lane. Both project EC -> MNXR through the same ec_to_mnxr bridge.
     lanes = [
         ("kofam", read_kofam, kofam, ko_to_mnxr),
+        ("clean", read_clean, clean, ec_to_mnxr),
         ("dl_ec", read_dl_ec, dl_ec, ec_to_mnxr),
         ("uniref50", read_uniref50, uniref50, uniprot_to_mnxr),
         ("embed", read_embed_transfer, embed, None),
@@ -324,7 +364,10 @@ def main():
     c = sub.add_parser("compile", help="fold lanes -> evidence_table.parquet")
     c.add_argument("--source", default="fosmid")
     c.add_argument("--kofam", type=Path, default=None)
-    c.add_argument("--dl-ec", type=Path, default=None)
+    c.add_argument("--clean", type=Path, default=None,
+                   help="CLEAN EC predictions (canonical EC lane)")
+    c.add_argument("--dl-ec", type=Path, default=None,
+                   help="EZpred EC predictions (optional comparison lane)")
     c.add_argument("--uniref50", type=Path, default=None)
     c.add_argument("--embed", type=Path, default=None)
     c.add_argument("--ko-to-mnxr", type=Path, default=None)
@@ -341,7 +384,7 @@ def main():
         df.to_csv(a.out, sep="\t", index=False)
         print(f"[bridge] wrote {len(df):,} ec->mnxr rows ({df['ec'].nunique():,} ECs) -> {a.out}", flush=True)
     elif a.cmd == "compile":
-        compile_evidence(a.source, a.kofam, a.dl_ec, a.uniref50, a.embed,
+        compile_evidence(a.source, a.kofam, a.clean, a.dl_ec, a.uniref50, a.embed,
                          a.ko_to_mnxr, a.ec_to_mnxr, a.uniprot_to_mnxr, a.out)
 
 

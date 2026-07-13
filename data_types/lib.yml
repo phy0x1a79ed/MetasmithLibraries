@@ -43,3 +43,11 @@ types:
     properties:
       src: fabfos_embed_transfer
       usage: command line
+  ecspr_community.py:
+    properties:
+      src: ecspr_community
+      usage: command line
+  ecspr_transporters.py:
+    properties:
+      src: ecspr_transporters
+      usage: library

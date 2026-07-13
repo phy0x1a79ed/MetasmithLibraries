@@ -47,6 +47,14 @@ types:
       - biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X)
         maps to source/sink metabolite hubs
       ext: json
+  curated_gem:
+    properties:
+      Format: JSON
+      _:
+      - curated genome-scale metabolic model (COBRA JSON; iML1515 / iECDH10B) for
+        the direct-GEM Network A base -- crosswalked to current MNXR and induced on
+        the atom-mapped universe with uniform E=1.0
+      ext: json
   evidence_weights:
     properties:
       Format: parquet
@@ -110,6 +118,13 @@ types:
       Format: TSV
       _:
       - MetaNetX reaction properties table (reac_prop.tsv;
+      ext: tsv
+  metanetx_reac_xref:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction cross-reference table (reac_xref.tsv; bigg.reaction / kegg.reaction
+        xrefs -> current MNXR) for the direct-GEM crosswalk
       ext: tsv
   mnx_bipartite:
     properties:

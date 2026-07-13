@@ -26,6 +26,16 @@ types:
       _: biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X) maps to source/sink metabolite hubs
       Format: JSON
       ext: json
+  curated_gem:
+    properties:
+      _: curated genome-scale metabolic model (COBRA JSON; iML1515 / iECDH10B) for the direct-GEM Network A base -- crosswalked to current MNXR and induced on the atom-mapped universe with uniform E=1.0
+      Format: JSON
+      ext: json
+  metanetx_reac_xref:
+    properties:
+      _: MetaNetX reaction cross-reference table (reac_xref.tsv; bigg.reaction / kegg.reaction xrefs -> current MNXR) for the direct-GEM crosswalk
+      Format: TSV
+      ext: tsv
   frozen_null:
     properties:
       _: DIRECTORY of FROZEN reused metagenome null draws for BOTH lanes ({reff,ieff}_null_canonical_N{21,34,56}.tsv); reused verbatim, never recomputed (only the metaG null may be reused)

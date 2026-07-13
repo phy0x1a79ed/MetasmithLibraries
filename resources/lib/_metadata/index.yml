@@ -3,12 +3,16 @@ manifest:
     type: lib::ecspr_ablation.py
   ecspr_catalog.py:
     type: lib::ecspr_catalog.py
+  ecspr_community.py:
+    type: lib::ecspr_community.py
   ecspr_network.py:
     type: lib::ecspr_network.py
   ecspr_significance.py:
     type: lib::ecspr_significance.py
   ecspr_solver.py:
     type: lib::ecspr_solver.py
+  ecspr_transporters.py:
+    type: lib::ecspr_transporters.py
   fabfos_embed_transfer.py:
     type: lib::fabfos_embed_transfer.py
   fabfos_evidence.py:

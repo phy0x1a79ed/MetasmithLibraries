@@ -9,23 +9,32 @@ containers), **serially** (nextflow local executor, queueSize=1). DAG:
     + fosmids::reference_inserts (the canonical 132 fasta)
         -> orfcall_inserts -> sequences::open_reading_frames (+ gff)
     open_reading_frames -> kofam_lane   -> kofam_hits   (GATED: KOfam HMM DB + fabfos-kofam)
-                        -> dl_ec_lane   -> dlec_pred    (GATED: EZpred/ESM-C weights + fabfos-ml + GPU)
+                        -> clean_lane   -> clean_pred    (GATED: clean.oci baked ESM-1b + GPU)
                         -> uniref_lane  -> uniref_hits  (GATED: UniRef50 .dmnd 24GB + fabfos-annot)
                         -> proteinbert_embed -> protein_embeddings (GATED: ProteinBERT + fabfos-ml)
     reac_prop  -> build_ec_bridge      -> ec_to_mnxr
     reac_xref + rhea2uniprot{,_trembl} -> build_uniprot_bridge -> uniprot_to_mnxr
-    kofam_hits + dlec_pred + uniref_hits + {ko,ec,uniprot}_to_mnxr
-        -> compile_evidence -> evidence_table
+    kofam_hits + clean_pred + uniref_hits + {ko,ec,uniprot}_to_mnxr
+        -> compile_evidence -> evidence_table          (CLEAN is the canonical EC lane;
+                                                        dl_ec_lane->dlec_pred is optional)
     evidence_table -> evidence_weights -> reaction_catalog / addition_weights
-    evidence_weights + mnx_bipartite + biomass_axes -> base_graphs
+    evidence_weights + mnx_bipartite + biomass_axes -> base_graphs      (Network B: annotation)
     addition_weights + base_graphs + mnx_bipartite + biomass_axes -> solve -> reff/ieff reports
     reports + open_reading_frames + frozen_null -> significance -> reff/ieff_significance
     ... + addition_weights -> ablation -> ablation_importance
 
+  Dual-network: `ecspr::base_graphs` has TWO producers. `base_graphs.py` builds the
+  annotation-derived Network B (above); `gem_base_graphs.py` builds the direct-GEM
+  Network A (curated_gem + reac_xref -> crosswalk + universe induce, uniform E=1.0).
+  The planner selects Network A only when a `ecspr::curated_gem` input is staged;
+  this driver stages the fosmid annotation path (Network B) by default.
+
 Reuse policy: ONLY the frozen metagenome null (ecspr::frozen_null) and the
 reference tables (MetaNetX, Rhea, ko_to_mnxr bridge, mnx_bipartite, biomass_axes)
 are reused. The fosmid annotations are produced FRESH by the gated annotator lanes
--- scadc's precomputed fosmid annotations are NOT reused for the deliverable.
+-- scadc's precomputed fosmid annotations are NOT reused for the deliverable. The
+CLEAN lane is container-based (clean.oci, apptainer) -- a fresh CLEAN run needs the
+apptainer runtime for that step, unlike the mamba-native kofam/uniref lanes.
 
 Usage:
   python run_fabfos_e2e.py --generate   # plan + render the full DAG (no staging, no run)

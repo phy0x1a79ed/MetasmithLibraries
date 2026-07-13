@@ -106,9 +106,14 @@ types:
       _: DeepEC EC predictions for the fosmid ORFs (lane 2 comparison)
       Format: TSV
       ext: tsv
+  clean_pred:
+    properties:
+      _: canonical CLEAN contrastive EC predictions for the fosmid ORFs (3-col TSV Query ID/Predicted EC number/clean_score); level-4, clean_score>=0.01 floor applied downstream (lane 2 canonical EC channel)
+      Format: TSV
+      ext: tsv
   dlec_pred:
     properties:
-      _: canonical deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the fosmid ORFs, level-4, score>=0.3 (lane 2 canonical)
+      _: deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the fosmid ORFs, level-4, score>=0.3 (lane 2 optional comparison channel; superseded by clean_pred)
       Format: parquet
       ext: parquet
   uniref_hits:
