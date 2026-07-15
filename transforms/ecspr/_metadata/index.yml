@@ -3,11 +3,7 @@ manifest:
     type: transforms::transform
   addition_weights.py:
     type: transforms::transform
-  base_graphs.py:
-    type: transforms::transform
   evidence_weights.py:
-    type: transforms::transform
-  gem_base_graphs.py:
     type: transforms::transform
   reaction_catalog.py:
     type: transforms::transform

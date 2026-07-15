@@ -12,7 +12,7 @@ model      = Transform()
 reac_xref  = model.AddRequirement(lib.GetType("functional_annotation::metanetx_reac_xref"))
 rhea_sw    = model.AddRequirement(lib.GetType("functional_annotation::rhea2uniprot"))
 rhea_tr    = model.AddRequirement(lib.GetType("functional_annotation::rhea2uniprot_trembl"))
-env        = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env        = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 ev         = model.AddRequirement(lib.GetType("lib::fabfos_evidence.py"))
 bridge     = model.AddProduct(lib.GetType("functional_annotation::uniprot_to_mnxr"))
 

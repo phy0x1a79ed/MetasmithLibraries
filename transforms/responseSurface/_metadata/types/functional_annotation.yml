@@ -106,6 +106,19 @@ types:
     properties:
     - DIRECTORY of ESM-C 600M model weights for lane 4 embeddings (optional/comparison
       backbone)
+  evidence_source:
+    properties:
+      Format: YAML
+      _:
+      - 'the organism tag that labels every row of ONE evidence compile: `source:
+        <tag>` (e.g. fosmid | epi300 | metag). A STAGED, CONTENT-HASHED input, never
+        context.params -- params are populated only from the runtime resources line,
+        so a params-borne tag is silently always its default AND invisible to the
+        cache key, which lets a second organism''s compile collide with the first
+        and be served the first''s table. `source` is the column every downstream
+        consumer partitions on, so that collision silently reassigns one organism''s
+        reactions to another.'
+      ext: yml
   evidence_table:
     properties:
       Format: parquet

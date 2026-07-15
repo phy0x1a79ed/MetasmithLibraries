@@ -18,6 +18,16 @@ from metasmith.python_api import *
 
 lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
+# The experiment is REQUIRED even though the protocol never reads it, and that is
+# load-bearing rather than decorative. A product's ancestry is assembled from the
+# endpoints its transform actually used (solver.py `lineage`), so a base builder
+# that does not require the experiment produces base_graphs with no experiment in
+# its ancestry -- and every downstream consumer asks for base_graphs `parents={exp}`.
+# Without this line the transform is not merely unused: it is unreachable, and the
+# planner reports the target as unsatisfiable rather than naming the missing edge.
+# Verified by probe: pre-fix, `run_experiment.py scadc_netA --generate` fails to
+# plan with the curated GEM staged and this domain loaded.
+exp       = model.AddRequirement(lib.GetType("fosmids::recovery_experiment"))
 gem       = model.AddRequirement(lib.GetType("ecspr::curated_gem"))
 reac_xref = model.AddRequirement(lib.GetType("ecspr::metanetx_reac_xref"))
 bipartite = model.AddRequirement(lib.GetType("ecspr::mnx_bipartite"))

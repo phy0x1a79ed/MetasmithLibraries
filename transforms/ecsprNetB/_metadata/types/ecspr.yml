@@ -1,0 +1,263 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  ablation_importance:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, axis, orf) gene-ablation importance -- full/LOO/gene-solo for
+        BOTH delta_reff and delta_ieff
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_ieff_full
+      - delta_ieff_loo
+      - delta_ieff_solo
+      - delta_reff_full
+      - delta_reff_loo
+      - delta_reff_solo
+      - element
+      - fosmid
+      - importance
+      - importance_ieff
+      - n_rxn_orf
+      - orf
+      - r_base
+      - sink_hub
+      - source_hub
+  addition_weights:
+    properties:
+      Format: pickle
+      _:
+      - per-fosmid addition map pickle (contig -> mnxr -> E) derived from the evidence
+        weights; the reactions injected onto the host base graph
+      ext: pkl
+  base_graphs:
+    properties:
+    - DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl)
+      plus axes_testable.json (per-element list of solvable axis ids); the SMW base
+  biomass_axes:
+    properties:
+      Format: JSON
+      _:
+      - biomass source->sink axes as JSON; each axis id (..__src__snk__X) maps to
+        source/sink metabolite hubs. The axis SET is an experiment's choice, not the
+        engine's -- the caller stages the set it means and asserts its count; do not
+        infer the set from the filename, which is what drifted.
+      ext: json
+  compute_profile:
+    properties:
+      Format: YAML
+      _:
+      - 'compute profile for the solve/ablation: `device:` (cpu|cuda) and `dtype:`
+        (float64|float32), one per line. A STAGED, CONTENT-HASHED INPUT so it enters
+        the task hash -- a GPU run and a CPU run of the same step MUST produce different
+        cache keys. NEVER carry these via context.params: params are populated only
+        from the runtime resources line (cpus/memory/attempt), so a params-borne knob
+        is silently always its default AND collides on one cache entry.'
+      ext: yml
+  curated_gem:
+    properties:
+      Format: JSON
+      _:
+      - curated genome-scale metabolic model (COBRA JSON; iML1515 / iECDH10B) for
+        the direct-GEM Network A base -- crosswalked to current MNXR and induced on
+        the atom-mapped universe with uniform E=1.0
+      ext: json
+  evidence_weights:
+    properties:
+      Format: parquet
+      _:
+      - per-(source,orf,mnxr) belief-conservation evidence weights (E_full/E_dlec/n_orf)
+        from nomination allocation; = reaction_redundancy, consumed by base-graphs
+        + catalog
+      ext: parquet
+  frozen_null:
+    properties:
+    - DIRECTORY of null draws for BOTH lanes, one {lane}_null_canonical_N{n}.tsv per
+      draw size; the scorer DERIVES its draw sizes from this directory's contents,
+      so it must be a CURATED dir built from an explicit list by the caller -- never
+      a raw cache, which accumulates retired sizes beside the canonical ones
+  ieff_axes_report:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, element, axis) observed effective-conductance delta_ieff solve
+        report (1/r_aug - 1/r_base)
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_ieff
+      - element
+      - fosmid
+      - g_aug
+      - g_base
+      - iter
+      - n_added_rxns
+      - sink_hub
+      - source_hub
+      - null
+  ieff_significance:
+    properties:
+      Format: TSV
+      _:
+      - effective-conductance significance vs the staged null (full-mixture SF p +
+        per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q
+        within element x style for schema parity only -- rank by effect size)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - fosmid
+      - k_hi
+      - k_lo
+      - n_bg
+      - n_orfs
+      - p
+      - p_emp
+      - p_floor
+      - q
+      - survives
+      - w
+      - null
+  ieff_significance_study:
+    properties:
+      Format: TSV
+      _:
+      - effective-conductance significance under an ALTERNATIVE null-scoring family
+        (study only; not canonical -- see ecspr::ieff_significance)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - family
+      - fosmid
+      - n_bg
+      - n_orfs
+      - p
+      - p_floor
+      - q
+      - w
+      - null
+  metanetx_chem_prop:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX chemical/metabolite properties table (chem_prop.tsv; element formulas
+        per metabolite)
+      ext: tsv
+  metanetx_reac_prop:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction properties table (reac_prop.tsv;
+      ext: tsv
+  metanetx_reac_xref:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction cross-reference table (reac_xref.tsv; bigg.reaction / kegg.reaction
+        xrefs -> current MNXR) for the direct-GEM crosswalk
+      ext: tsv
+  mnx_bipartite:
+    properties:
+    - DIRECTORY of per-element metabolite<->reaction bipartite graphs (mnx_bipartite_{C,N,S,P}.pkl)
+      with element atom-count edge weights w_X; reused for addition-map construction
+      and base-graph building
+  null_model_spec:
+    properties:
+      Format: YAML
+      _:
+      - 'which null-SCORING family a STUDY run applies: `family:` (see resources/lib/ecspr_null_study.py
+        FAMILIES). A STAGED, CONTENT-HASHED input, so two families produce different
+        cache keys and cannot overwrite one another. Null GENERATION (style/K/N/seed)
+        and null SCORING (how a p comes off the draws) are orthogonal; this is the
+        scoring half. Adding a family is one entry in FAMILIES -- the transform, the
+        canonical scorer and the DAG shape are untouched.'
+      ext: yml
+  reaction_catalog:
+    properties:
+    - DIRECTORY holding the five reaction-catalog parquets (reactions, metabolites,
+      rxn_edges, orf_reactions, reaction_redundancy) synthesized from MetaNetX + the
+      evidence table
+  reff_axes_report:
+    properties:
+      Format: TSV
+      _:
+      - per-(fosmid, element, axis) observed effective-resistance delta_reff solve
+        report
+      ext: tsv
+      fields:
+      - axis_id
+      - delta_reff
+      - element
+      - fosmid
+      - iter
+      - n_added_rxns
+      - r_aug
+      - r_base
+      - sink_hub
+      - source_hub
+      - null
+  reff_significance:
+    properties:
+      Format: TSV
+      _:
+      - effective-resistance significance vs the staged null (full-mixture SF p +
+        per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q
+        within element x style for schema parity only -- rank by effect size)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - fosmid
+      - k_hi
+      - k_lo
+      - n_bg
+      - n_orfs
+      - p
+      - p_emp
+      - p_floor
+      - q
+      - survives
+      - w
+      - null
+  reff_significance_study:
+    properties:
+      Format: TSV
+      _:
+      - effective-resistance significance under an ALTERNATIVE null-scoring family
+        (study only; not canonical -- see ecspr::reff_significance)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - family
+      - fosmid
+      - n_bg
+      - n_orfs
+      - p
+      - p_floor
+      - q
+      - w
+      - null

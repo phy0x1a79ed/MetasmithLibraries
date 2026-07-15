@@ -1,0 +1,4 @@
+manifest:
+  base_graphs.py:
+    type: transforms::transform
+schema: v1

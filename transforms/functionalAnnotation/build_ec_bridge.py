@@ -9,7 +9,7 @@ from metasmith.python_api import *
 lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
 reac_prop = model.AddRequirement(lib.GetType("ecspr::metanetx_reac_prop"))
-env       = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env       = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 ev        = model.AddRequirement(lib.GetType("lib::fabfos_evidence.py"))
 bridge    = model.AddProduct(lib.GetType("functional_annotation::ec_to_mnxr"))
 

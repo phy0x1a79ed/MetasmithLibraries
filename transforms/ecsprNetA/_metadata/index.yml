@@ -1,0 +1,4 @@
+manifest:
+  gem_base_graphs.py:
+    type: transforms::transform
+schema: v1
