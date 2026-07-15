@@ -441,6 +441,24 @@ def load_placeholders(path: Path):
     return dict(zip(d.mnxm, d.smiles))
 
 
+def load_resolved(path: Path):
+    """mnxm -> curated smiles for metabolites whose structure `ecspr_aam_rescue` supplied.
+
+    THE OPPOSITE OF A PLACEHOLDER, and they must not be confused. A placeholder is named
+    here so its fragment matches, and then SUPPRESSED so its invented atoms never reach the
+    graph. A resolved metabolite is the metabolite: its structure was missing from
+    MetaNetX and a curated row asserted it, so its atoms are real and MUST become nodes --
+    suppressing a sulfur carrier's S would kill precisely the edge the curation exists to
+    license.
+
+    Hence there is no filter to go with this. These simply join the SMILES map and take the
+    ordinary path, which is the whole point: a metabolite with a structure is what this
+    module already knows how to handle.
+    """
+    d = pd.read_csv(path, sep="\t", comment="#")
+    return dict(zip(d.mnxm, d.smiles))
+
+
 def load_balance(path: Path):
     """(mnxr, element) -> whether the CONCRETE atoms balance.
 
@@ -462,10 +480,22 @@ def cmd_extract(args):
           f"{', '.join(Path(a).name for a in args.aam)}", flush=True)
 
     ph = load_placeholders(Path(args.placeholders)) if args.placeholders else {}
+    res = load_resolved(Path(args.resolved)) if args.resolved else {}
     bal = load_balance(Path(args.balance)) if args.balance else {}
     if ph:
         print(f"[atom-pairs] {len(ph):,} placeholder generics (atoms suppressed)",
               flush=True)
+    if res:
+        print(f"[atom-pairs] {len(res):,} curated structures (atoms KEPT -- they are the "
+              f"metabolite's own)", flush=True)
+        # A metabolite cannot be both scaffolding and real. If one were in both maps the
+        # suppression filter would silently delete the very pairs the curation licensed,
+        # and the payoff would read as zero with nothing to show why.
+        both = set(ph) & set(res)
+        if both:
+            raise SystemExit(f"[atom-pairs] {sorted(both)} are both placeheld and "
+                             f"resolved -- a metabolite is scaffolding or it is real, "
+                             f"not both")
     if bal:
         nbad = sum(1 for v in bal.values() if not v)
         print(f"[atom-pairs] {len(bal):,} (rxn, element) balance verdicts; "
@@ -484,6 +514,10 @@ def cmd_extract(args):
 
     raw = load_mnxm_smiles(Path(args.chem_prop), want)
     raw.update({m: s for m, s in ph.items() if m in want})
+    # Curated structures join the SAME map chem_prop's do -- they ARE structures, supplied
+    # where MetaNetX had none. Everything downstream (canon, match_mols, canonical_ranks,
+    # the pairs) then treats them as the ordinary metabolites they are.
+    raw.update({m: s for m, s in res.items() if m in want})
     canon = {}
     for m, smi in raw.items():
         cs = canon_smiles(smi)
@@ -601,6 +635,10 @@ def parse_args():
     p.add_argument("--placeholders", default=None,
                    help="ecspr_aam_rescue placeholder map. Names the stand-in fragments "
                         "so they match, then suppresses their atoms from the pairs.")
+    p.add_argument("--resolved", default=None,
+                   help="ecspr_aam_rescue curated structure crosswalk. Supplies structures "
+                        "MetaNetX lacks. NOT placeholders: their atoms are kept, because "
+                        "they are the metabolite's own.")
     p.add_argument("--balance", default=None,
                    help="ecspr_aam_rescue per-(reaction, element) concrete-balance "
                         "verdicts; unbalanced elements are dropped for that reaction.")

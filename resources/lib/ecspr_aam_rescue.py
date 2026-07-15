@@ -59,6 +59,54 @@ rather than a substitution:
     name is what this codebase has already been burned by (a gate "failed" because
     MetaNetX calls it `CoA`, not `coenzyme A`), so they stay refused until there is an
     identifier-based crosswalk.
+
+THE CROSSWALK THAT PARAGRAPH ASKS FOR: `--resolved`
+---------------------------------------------------
+The paragraph above names its own remedy and then declines to build it. `--resolved` is
+that crosswalk: hand-authored, one row per claim, staged as a content-hashed input.
+
+A RESOLVED metabolite is not a placeholder, and the difference is the whole design:
+
+  * A PLACEHOLDER is scaffolding. It stands in for a carrier so the mapper sees a sane
+    reaction, and its atoms are SUPPRESSED downstream -- they are not that molecule's
+    atoms, so they must never become graph nodes.
+  * A RESOLVED metabolite IS the metabolite. Its structure is supplied where MetaNetX has
+    none, and its atoms are REAL: they become nodes, and they must, because the entire
+    payoff is that the carrier's sulfur reaches the sink. Suppressing it would kill the
+    very edge the row exists to license.
+
+So a resolved structure joins the SMILES map and takes the ordinary path. Nothing special
+happens to it downstream, which is deliberate: `ecspr_atom_pairs` needs no new filter,
+because a metabolite that has a structure is what that module already handles.
+
+WHAT MAKES IT HONEST, GIVEN THAT IT CANNOT BE VERIFIED
+------------------------------------------------------
+A curated row is an ASSERTION. It cannot be checked against MetaNetX -- "structureless"
+means precisely that there is nothing there to check against (0/1531 blocking stubs carry
+a formula, InChI, InChIKey or SMILES; 100% carry a name). Pretending otherwise would make
+the name both the claim and its only support, which is trap #1 and has already produced
+false verdicts in this lane. The warrant is the row's `basis` citation. The code's job is
+not to validate the biology but to refuse the ways a row could be silently wrong:
+
+  * ADDITIVE ONLY (`load_resolved`). A row may only supply a structure MetaNetX lacks;
+    overriding an existing one is refused outright. That also means the crosswalk cannot
+    perturb any reaction that maps today.
+  * STALE-ID TRIPWIRE (`load_resolved`). The id is the key, and the recorded name must
+    still match chem_prop. This is not name-as-proof -- it is the check that the id the
+    curator reasoned about is the id they wrote down.
+  * THE ROW CHECKS ITSELF (`load_resolved`). The asserted atom count must equal what the
+    asserted SMILES actually contains.
+  * BODIES MUST CANCEL (`gate_bodies_cancel`).
+
+The `*` body is the honesty, not a shortcut: it says a carrier body exists and this row
+does not claim to know it. Because the carrier appears on both sides (-SH in, -H out) the
+unknown body cancels, so `concrete_balance` tests exactly the DIFFERENCE the row asserts --
+one sulfur -- against the concrete chemistry either side of it. This is why B_verdict's
+objection ("the body cancels, so a wrong carrier balances as well as the right one") kills
+IDENTITY assertion but not this one: identity was never tested by balance, whereas the
+difference is both what is claimed and what is tested. Where the bodies do NOT pair up the
+cancellation argument fails, and `gate_bodies_cancel` refuses the reaction rather than
+letting a `*`-counted-as-zero masquerade as a real count.
 """
 from __future__ import annotations
 
@@ -142,6 +190,84 @@ def placeholder_for(name: str):
 # ---------------------------------------------------------------------------
 # MetaNetX inputs (same derivations the universe builder uses)
 # ---------------------------------------------------------------------------
+
+def _count_struct(smiles: str, X: str):
+    """Atoms of element X in a SMILES, counted from the STRUCTURE.
+
+    The `*` dummy contributes to no element -- which is the correct reading of a curated
+    carrier, not a convenient one: the row asserts the drawn atoms and explicitly declines
+    to claim the body. `gate_bodies_cancel` is what makes that silence safe for balance.
+    """
+    from rdkit import Chem, RDLogger      # imported here: diagnostics run this module
+    RDLogger.DisableLog("rdApp.*")        # under envs without rdkit (p312)
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is None:
+        return None
+    return sum(1 for a in mol.GetAtoms() if a.GetSymbol() == X)
+
+
+def load_resolved(path: Path, chem: dict):
+    """mnxm -> curated SMILES. Every row is an ASSERTION; see the module docstring.
+
+    The gates here cannot check the biology -- nothing can, which is why the row carries a
+    citation. They refuse the ways a row could be silently wrong: overriding a structure
+    MetaNetX already has, naming an id that no longer means what the curator thought, or
+    asserting an atom count its own SMILES does not contain.
+    """
+    d = pd.read_csv(path, sep="\t", comment="#")
+    need = {"mnxm", "smiles", "mnx_name", "element", "n_atoms", "basis"}
+    missing = need - set(d.columns)
+    if missing:
+        raise SystemExit(f"[resolved] crosswalk lacks columns: {sorted(missing)}")
+    out = {}
+    for r in d.itertuples(index=False):
+        rec = chem.get(r.mnxm)
+        if rec is None:
+            raise SystemExit(f"[resolved] {r.mnxm}: not in chem_prop")
+        nm, _formula, smi = rec
+        if smi:
+            raise SystemExit(
+                f"[resolved] {r.mnxm} already HAS a structure ({smi!r}). A curated row may"
+                f" only SUPPLY a structure MetaNetX lacks, never override one -- that is a"
+                f" different and far larger claim.")
+        if (nm or "").strip() != str(r.mnx_name).strip():
+            raise SystemExit(
+                f"[resolved] {r.mnxm}: row says {str(r.mnx_name)!r}, chem_prop says "
+                f"{nm!r}. The id is the key -- a mismatch means the row is about a "
+                f"different metabolite than the curator reasoned about.")
+        got = _count_struct(r.smiles, r.element)
+        if got is None:
+            raise SystemExit(f"[resolved] {r.mnxm}: SMILES {r.smiles!r} does not parse")
+        if got != int(r.n_atoms):
+            raise SystemExit(
+                f"[resolved] {r.mnxm}: asserts {r.n_atoms} {r.element}, but its SMILES "
+                f"{r.smiles!r} contains {got}")
+        # `pd.isna` FIRST: an empty cell arrives as NaN, and `str(nan)` is "nan" -- truthy,
+        # so a bare `if not str(r.basis).strip()` accepts a row with no citation at all.
+        # Measured: that gate silently passed the empty-basis case it was written to catch.
+        if pd.isna(r.basis) or not str(r.basis).strip():
+            raise SystemExit(f"[resolved] {r.mnxm}: no basis. A curated row cannot be "
+                             f"verified against MetaNetX -- the citation IS its evidence.")
+        out[r.mnxm] = r.smiles
+    return out
+
+
+def gate_bodies_cancel(subs, prods, resolved: dict):
+    """Do the curated `*` bodies pair across the reaction?
+
+    A curated carrier draws its body as `*` and counts it as zero for every element. That
+    is only safe for balance when the same body stands on both sides and cancels. A carrier
+    appearing on ONE side would have its unknown body silently counted as nothing, and the
+    balance verdict would be about a molecule that does not exist.
+
+    Counts `*` atoms among resolved participants per side and requires equality. It does
+    NOT check the bodies are the same body -- it cannot; that is part of what the row
+    asserts. It refuses the case where they demonstrably cannot cancel.
+    """
+    def n_star(ms):
+        return sum(resolved[m].count("*") for m in ms if m in resolved)
+    return n_star(subs) == n_star(prods)
+
 
 def load_chem(chem_prop: Path):
     """mnxm -> (name, formula, smiles)."""
@@ -229,7 +355,7 @@ def count_el(formula: str, X: str):
     return n if seen else 0
 
 
-def concrete_balance(subs, prods, chem, ph_mnxms, X):
+def concrete_balance(subs, prods, chem, ph_mnxms, X, resolved=None):
     """Do the CONCRETE (non-placeholder) atoms of element X balance?
 
     This is what tests the conservation claim. If a carrier actually donated or
@@ -239,14 +365,25 @@ def concrete_balance(subs, prods, chem, ph_mnxms, X):
 
     Returns None when a concrete participant's formula is untrustworthy, which is a
     refusal too: an unknown count cannot be balanced.
+
+    A RESOLVED participant is counted from its CURATED STRUCTURE, not skipped. It is not
+    scaffolding -- it is a metabolite whose structure this run supplies, so its atoms are
+    part of the chemistry being balanced, and its asserted difference is precisely what
+    the balance then tests. Without `resolved` this behaves exactly as before: a curated
+    carrier has no formula, `count_el` returns None, and the whole reaction would abstain
+    -- the permissive answer, and the wrong one, since the gate is the point.
     """
+    resolved = resolved or {}
     tot = {}
     for side, ms in (("s", subs), ("p", prods)):
         n = 0
         for m in ms:
             if m in ph_mnxms:
                 continue
-            c = count_el(chem.get(m, ("", "", ""))[1], X)
+            if m in resolved:
+                c = _count_struct(resolved[m], X)
+            else:
+                c = count_el(chem.get(m, ("", "", ""))[1], X)
             if c is None:
                 return None
             n += c
@@ -265,6 +402,17 @@ def cmd_build(args):
     smi = {m: v[2] for m, v in chem.items() if v[2]}
     print(f"[aam-rescue] chem_prop: {len(chem):,} metabolites, {len(smi):,} with SMILES",
           flush=True)
+
+    # Curated structures join the SMILES map, so a resolved metabolite stops being a
+    # "generic" at `gens` below and simply becomes a metabolite with a structure. That is
+    # the whole integration: no placeholder, no suppression, no downstream special case.
+    resolved = load_resolved(Path(args.resolved), chem) if args.resolved else {}
+    if resolved:
+        print(f"\n[aam-rescue] {len(resolved)} CURATED structures -- each an ASSERTION, "
+              f"warranted by its citation, not derived:")
+        for m, s in resolved.items():
+            print(f"    {m:<14} {str(chem[m][0])[:44]:<44} -> {s}")
+        smi.update(resolved)
 
     want = None
     if args.targets:
@@ -291,12 +439,24 @@ def cmd_build(args):
         subs, prods = pe
         parts = set(subs) | set(prods)
         gens = [m for m in parts if m not in smi]
-        if not gens:
+        # `smi` now carries the curated structures, so a reaction blocked ONLY by resolved
+        # carriers has no generics left -- and would fall through here as "already
+        # buildable" and never be mapped, rescuing exactly nothing. It is not already
+        # buildable: the universe skipped it precisely because those participants had no
+        # structure at the time. Supplying one is what makes it a rescue case.
+        has_resolved = any(m in resolved for m in parts)
+        if not gens and not has_resolved:
             tally["already buildable (not a placeholder case)"] += 1
             continue
         res = {m: placeholder_for(chem.get(m, ("", "", ""))[0]) for m in gens}
         if any(v is None for v in res.values()):
             tally["has a generic with no admissible placeholder"] += 1
+            continue
+        if not gate_bodies_cancel(subs, prods, resolved):
+            # A curated `*` body counts as zero for every element. That is only sound when
+            # the same body stands on both sides; here it demonstrably does not, so the
+            # balance verdict would describe a molecule that does not exist.
+            tally["REFUSED: curated bodies do not cancel"] += 1
             continue
         for m, (s, t) in res.items():
             ph_smi[m], ph_tag[m] = s, t
@@ -361,7 +521,7 @@ def cmd_build(args):
     ok_el = {X: 0 for X in ELEMENTS}
     for r, subs, prods in [(r, s, p) for r, _, s, p in rows]:
         for X in ELEMENTS:
-            b = concrete_balance(subs, prods, chem, set(ph_smi), X)
+            b = concrete_balance(subs, prods, chem, set(ph_smi), X, resolved)
             if b:
                 ok_el[X] += 1
     print("[aam-rescue] reactions whose CONCRETE atoms balance, per element:")
@@ -377,7 +537,7 @@ def cmd_build(args):
     brows = []
     for r, subs, prods in [(r, s, p) for r, _, s, p in rows]:
         for X in ELEMENTS:
-            b = concrete_balance(subs, prods, chem, set(ph_smi), X)
+            b = concrete_balance(subs, prods, chem, set(ph_smi), X, resolved)
             if b is not None:
                 brows.append(dict(mnxr=r, element=X, balanced=bool(b)))
     pd.DataFrame(brows).to_csv(args.out_balance, sep="\t", index=False)
@@ -391,6 +551,12 @@ def main(argv=None):
     b.add_argument("--reac-prop", required=True)
     b.add_argument("--chem-prop", required=True)
     b.add_argument("--targets", help="file of MNXR ids, one per line (default: all)")
+    b.add_argument("--resolved", default=None,
+                   help="curated structure crosswalk (mnxm, smiles, mnx_name, element, "
+                        "n_atoms, basis). Each row ASSERTS a structure MetaNetX lacks, "
+                        "warranted by its citation -- it is not derived and cannot be "
+                        "auto-verified. Resolved metabolites are NOT placeholders: their "
+                        "atoms are real and become graph nodes.")
     b.add_argument("--exclude", help="TSV whose first column lists already-mapped MNXRs")
     b.add_argument("--out", required=True)
     b.add_argument("--out-placeholders", required=True)
