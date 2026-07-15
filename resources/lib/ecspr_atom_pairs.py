@@ -43,20 +43,32 @@ brought. Only atom-resolved nodes deny that, which is why this module emits the 
 INDICES and not merely the counts -- the indices are what the class refinement
 downstream partitions on.
 
-WHAT IS REFUSED, AND WHY
-------------------------
-  * ATOM-UNBALANCED reactions. Generic metabolites with no SMILES were dropped before
-    mapping, so the mapper re-routed their atoms onto whatever concrete product
-    remained. Those reactions' COUNTS were presence-trustworthy -- which is why the
-    incumbent could use them -- but their PAIRS are fabricated. Counts survive a lie
-    about destination; pairs are nothing but destination.
-  * DUPLICATE-METABOLITE reactions. `match_mols_to_mnxms` is greedy by canonical
-    SMILES (`candidates.pop(0)`), so when one metabolite appears twice the
-    substrate<->product assignment is arbitrary. Harmless at metabolite level;
-    fabricates a split at atom level.
+WHAT IS REFUSED, AND WHY -- AND THE TWO REFUSALS THAT WERE BUGS
+---------------------------------------------------------------
+This module's first version refused 40% of the mapper universe and reported that as a
+coverage finding about the method's reach. It was not. Two of the three refusals were
+defects in THIS FILE, and they cost the atom lane 29 of the curated set4 axes:
 
-Both are counted and reported rather than dropped quietly -- the coverage cost is a
-finding about the method's reach, not an embarrassment to hide.
+  * `stripped` (19,930 rxns, 34.6%) was a REGEX MISMATCH, not unbalanced chemistry.
+    The story told here -- "generic metabolites with no SMILES were dropped before
+    mapping, so the mapper re-routed their atoms" -- describes a real phenomenon in a
+    DIFFERENT file (`aam_stripped_input.tsv`), which this module never reads and which
+    is disjoint from the universe it does read. The real cause: `EQ_TERM` matched
+    `WATER`/`BIOMASS`, which the SMILES builder's regex does not, so the metabolite
+    count exceeded the template count and every water-bearing reaction was refused.
+    See `EQ_TERM`. Measured: 30,938 of 30,939 metabolites in the universe HAVE a
+    canonical SMILES -- nothing was dropped for lack of structure.
+  * `ambiguous_duplicate` (3,255 rxns) was 98.7% SELF-INFLICTED: the same metabolite
+    twice is not an ambiguity. See `match_mols`. Only 43 were real.
+  * DUPLICATE-METABOLITE reactions where two DISTINCT MNXMs share one canonical SMILES
+    are genuinely ambiguous -- `pop(0)` picks between different metabolites -- and stay
+    refused. That refusal is real.
+
+The lesson worth keeping: a refusal rate is not evidence about the world until the
+refusals have been read. Reporting 37.8% coverage as a property of the atom mapping,
+when most of it was this file disagreeing with a regex, put a false limitation into a
+report and nearly retired a set of biologically real axes. Every status here is
+counted and reported so the next reader can check rather than believe.
 
 Env: rdkit + pandas. No SCADC paths: every input arrives as an argument.
 """
@@ -75,7 +87,18 @@ from rdkit.Chem import AllChem
 RDLogger.DisableLog("rdApp.*")
 
 ELEMENTS = ("C", "N", "S", "P")
-EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\d+|MNXM\w+|WATER|BIOMASS)")
+
+# MUST BE THE REGEX THAT BUILT THE MAPPED SMILES, CHARACTER FOR CHARACTER.
+# `19b_rxnmapper_universe.py:33` reads the equation with exactly this pattern and
+# emits one SMILES fragment per match. If this regex matches a token that one did
+# not, the template count and the metabolite count disagree for every reaction
+# carrying that token, and the reaction is refused as `stripped` -- not because its
+# chemistry is unbalanced, but because two regexes disagreed. That is precisely what
+# happened: this pattern used to read `MNXM\d+|MNXM\w+|WATER|BIOMASS` without the
+# `@compartment` suffix, and `WATER`/`BIOMASS` are not MNXM tokens, so the builder
+# never wrote a fragment for them. 19,930 reactions -- 34.6% of the universe -- were
+# discarded on that mismatch alone.
+EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\w+)@\w+")
 
 PAIR_COLS = ("mnxr", "element", "substrate", "product", "n_atoms",
              "sub_idx", "prod_idx")
@@ -150,16 +173,22 @@ def parse_equation(eq: str):
 def match_mols(mols: list, mnxms: list, canon: dict):
     """Greedy canonical-SMILES match, aligned with `mols`.
 
-    Also returns whether the match was AMBIGUOUS -- i.e. some canonical SMILES
-    appears more than once among the MNXMs, so `pop(0)` picked arbitrarily. At
-    metabolite level that is harmless; at atom level it invents a split.
+    Also returns whether the match was AMBIGUOUS -- i.e. two DISTINCT MNXMs share a
+    canonical SMILES, so `pop(0)` picked arbitrarily between different metabolites.
+
+    THE SAME MNXM TWICE IS NOT AMBIGUOUS. `parse_equation` expands stoichiometry, so
+    `2 H2O` arrives as `[M, M]`. Testing `len(v) > 1` calls that ambiguous and refuses
+    the reaction -- but both entries are the same metabolite, so whichever way `pop(0)`
+    assigns them the answer is identical, and the canonical ranks agree because it is
+    literally the same molecule. Only `len(set(v)) > 1` is a real ambiguity. Measured:
+    3,212 of 3,255 `ambiguous_duplicate` refusals (98.7%) were this self-inflicted case.
     """
     pool = defaultdict(list)
     for m in mnxms:
         cs = canon.get(m)
         if cs:
             pool[cs].append(m)
-    ambiguous = any(len(v) > 1 for v in pool.values())
+    ambiguous = any(len(set(v)) > 1 for v in pool.values())
     out = []
     for mol in mols:
         if mol is None:
@@ -169,6 +198,13 @@ def match_mols(mols: list, mnxms: list, canon: dict):
         for a in m2.GetAtoms():
             a.SetAtomMapNum(0)
         try:
+            # Sanitize for the same reason `canonical_ranks` does, plus one specific to
+            # here: `canon` was built by `canon_smiles` via `MolFromSmiles`, which
+            # sanitizes. Canonicalising an UNSANITIZED template produces a string that
+            # can differ from the sanitized one for the very same molecule, so the
+            # lookup misses and the metabolite goes unnamed -- silently dropping its
+            # pairs. Both sides of this comparison must be perceived the same way.
+            Chem.SanitizeMol(m2)
             cs = Chem.MolToSmiles(m2, canonical=True)
         except Exception:
             out.append(None)
@@ -196,11 +232,25 @@ def canonical_ranks(mol):
     which reaction you read it from, and a graph keyed on it silently welds unrelated
     atoms together and splits identical ones apart. `CanonicalRankAtoms` is invariant
     to input ordering by construction, so `(metabolite, rank)` IS an atom.
+
+    SANITIZE FIRST, ALWAYS. Templates come off `ReactionFromSmarts` unsanitized, so
+    ring info and implicit valence are unset and `CanonicalRankAtoms` raises
+    "Pre-condition Violation". That refusal was reported as `unrankable` and cost
+    10,576 reactions (18.4% of the universe); sanitizing rescues 300/300 sampled.
+
+    It must be unconditional, not a fallback. Sanitization perceives aromaticity, and
+    canonical ranks depend on it -- so ranking some molecules sanitized and others raw
+    would give one metabolite two rank systems and break `(met, rank)` exactly the way
+    `GetIdx()` did. Doing it always also NORMALISES the kekulized-vs-aromatic spellings
+    the mapper emits for the same molecule, which makes ranks agree across reactions
+    that would otherwise disagree. If sanitization fails the molecule is genuinely
+    unrankable and is refused.
     """
     m2 = Chem.Mol(mol)
     for a in m2.GetAtoms():
         a.SetAtomMapNum(0)          # map numbers are per-reaction; they'd poison the rank
     try:
+        Chem.SanitizeMol(m2)
         return list(Chem.CanonicalRankAtoms(m2, breakTies=True))
     except Exception:
         return None
