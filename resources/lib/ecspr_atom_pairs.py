@@ -141,6 +141,22 @@ def load_mnxm_smiles(chem_prop: Path, want: set) -> dict:
     return out
 
 
+def load_mnxm_formulas(chem_prop: Path, want: set) -> dict:
+    """mnxm -> curated formula. Formulas exist for metabolites that have no SMILES, and
+    they are what makes a conservation argument possible without a structure."""
+    out = {}
+    with open(chem_prop) as fh:
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            p = line.rstrip("\n").split("\t")
+            if len(p) < 9 or p[0] not in want:
+                continue
+            if p[3].strip():
+                out[p[0]] = p[3].strip()
+    return out
+
+
 def load_equations(reac_prop: Path, want: set) -> dict:
     out = {}
     with open(reac_prop) as fh:
@@ -256,6 +272,84 @@ def canonical_ranks(mol):
         return None
 
 
+_FORMULA_TERM = re.compile(r"([A-Z][a-z]?)(\d*)")
+
+
+def count_element(formula: str, X: str):
+    """Atoms of element X in a MetaNetX formula; None when it cannot be trusted.
+
+    Untrustworthy means absent, a `*` polymer/R-group, or nested groups -- an unknown
+    count can never license a forced pairing, so None must propagate to a refusal
+    rather than to a zero.
+    """
+    if not formula or not isinstance(formula, str) or formula.strip() in ("", "*"):
+        return None
+    if "*" in formula or "(" in formula or ")" in formula:
+        return None
+    n, seen = 0, False
+    for sym, num in _FORMULA_TERM.findall(formula):
+        if not sym:
+            continue
+        if sym == X:
+            seen = True
+            n += int(num) if num else 1
+    return n if seen else 0
+
+
+def forced_pairs(sub_mnxms: list, prod_mnxms: list, formulas: dict, ranks_of: dict):
+    """Pairs that CONSERVATION forces, for reactions the mapper could not read.
+
+    WHY THIS EXISTS. `no_mapping` was reported as a mapper outcome. It is not: every one
+    of those 2,515 reactions has a buildable reaction SMILES and an EMPTY mapping,
+    because RXNMapper's transformer accepts at most 512 tokens and these are the long
+    ones -- median SMILES length 983 against the universe's 268, 97.5% over 400 chars.
+    It is a context-window limit on a neural model, and it eats a BIASED sample: the
+    reactions with the most and largest cofactors. `3 NADPH + 3 NADP+` blows the limit
+    while contributing no sulfur at all.
+
+    That bias is what makes this fallback sound. For a single element X most of a long
+    reaction is irrelevant, and when exactly one substrate and one product carry X, with
+    equal counts, conservation leaves exactly one possibility. This does not GUESS the
+    pairing; it is the only pairing that exists.
+
+    THE LIMIT IS DELIBERATE, AND IS THE WHOLE SAFEGUARD. Only n == 1 is emitted. With one
+    X atom on each side there is a unique bijection and nothing is chosen. With n > 1 the
+    metabolite pairing is still forced but the ATOM correspondence is not -- which of a
+    substrate's 5 carbons becomes which of a product's 5 -- and picking one (by rank
+    order, say) would fabricate exactly the atom identity this graph is built to respect.
+    Those are refused. A rescued axis resting on invented chemistry is worth less than a
+    lost one.
+
+    The single case where MNXR104650 (sulfite reductase, `H2S + 3 NADP+ + 3 H2O = 4 H+ +
+    sulfite + 3 NADPH`) severs sulfate from cysteine is exactly this shape: one S in, one
+    S out, three NADPH carrying none.
+    """
+    out = {}
+    for X in ELEMENTS:
+        sx, px = [], []
+        bad = False
+        for side, ms in ((sx, sub_mnxms), (px, prod_mnxms)):
+            for m in set(ms):
+                c = count_element(formulas.get(m), X)
+                if c is None:
+                    bad = True
+                    break
+                if c:
+                    side.append((m, c))
+            if bad:
+                break
+        if bad or len(sx) != 1 or len(px) != 1:
+            continue
+        (sm, sn), (pm, pn) = sx[0], px[0]
+        if sn != pn or sn != 1 or sm == pm:
+            continue
+        sr, pr = ranks_of.get((sm, X)), ranks_of.get((pm, X))
+        if not sr or not pr or len(sr) != 1 or len(pr) != 1:
+            continue
+        out[(X, sm, pm)] = [(sr[0], pr[0])]
+    return out
+
+
 def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
                       canon: dict):
     """(pairs, status). pairs: {(element, sm, pm) -> [(sub_rank, prod_rank)]}.
@@ -333,13 +427,49 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
 # Driver
 # =====================================================================
 
+def load_placeholders(path: Path):
+    """mnxm -> smiles for generics that were stood in for (see ecspr_aam_rescue).
+
+    These exist so the mapper could see a sane reaction. They are NOT metabolites: their
+    atoms must never become graph nodes, or `(met, rank)` would name an atom of a
+    molecule that does not exist. The SMILES are needed anyway, because `match_mols`
+    names fragments by canonical SMILES -- without them the placeholder fragment goes
+    unnamed, the template count stops matching the equation's, and the reaction is
+    refused as `stripped`.
+    """
+    d = pd.read_csv(path, sep="\t")
+    return dict(zip(d.mnxm, d.smiles))
+
+
+def load_balance(path: Path):
+    """(mnxr, element) -> whether the CONCRETE atoms balance.
+
+    A placeholder asserts its carrier is conserved for an element. `ecspr_aam_rescue`
+    tests that per reaction and per element rather than trusting it; this applies the
+    verdict. Absent from the table (an ordinary universe reaction) means no filter.
+    """
+    d = pd.read_csv(path, sep="\t")
+    return {(r.mnxr, r.element): bool(r.balanced) for r in d.itertuples(index=False)}
+
+
 def cmd_extract(args):
-    aam = pd.read_csv(args.aam, sep="\t")
+    aam = pd.concat([pd.read_csv(a, sep="\t") for a in args.aam], ignore_index=True)
+    aam = aam.drop_duplicates(subset="mnxr", keep="first")
     if args.min_confidence is not None and "confidence" in aam.columns:
         aam = aam[aam.confidence >= args.min_confidence]
     mnxrs = set(aam.mnxr)
-    print(f"[atom-pairs] {len(aam):,} mapped reactions from {Path(args.aam).name}",
-          flush=True)
+    print(f"[atom-pairs] {len(aam):,} mapped reactions from "
+          f"{', '.join(Path(a).name for a in args.aam)}", flush=True)
+
+    ph = load_placeholders(Path(args.placeholders)) if args.placeholders else {}
+    bal = load_balance(Path(args.balance)) if args.balance else {}
+    if ph:
+        print(f"[atom-pairs] {len(ph):,} placeholder generics (atoms suppressed)",
+              flush=True)
+    if bal:
+        nbad = sum(1 for v in bal.values() if not v)
+        print(f"[atom-pairs] {len(bal):,} (rxn, element) balance verdicts; "
+              f"{nbad:,} refused as unbalanced", flush=True)
 
     eqs = load_equations(Path(args.reac_prop), mnxrs)
     want = set()
@@ -353,12 +483,34 @@ def cmd_extract(args):
           flush=True)
 
     raw = load_mnxm_smiles(Path(args.chem_prop), want)
+    raw.update({m: s for m, s in ph.items() if m in want})
     canon = {}
     for m, smi in raw.items():
         cs = canon_smiles(smi)
         if cs:
             canon[m] = cs
     print(f"[atom-pairs] {len(canon):,} metabolites with canonical SMILES", flush=True)
+
+    formulas, ranks_of = {}, {}
+    if args.fallback_forced:
+        formulas = load_mnxm_formulas(Path(args.chem_prop), want)
+        # The rank of a metabolite's sole X atom, taken from ITS OWN canonical molecule
+        # -- never from a reaction template, which is per-reaction and unstable (see
+        # `canonical_ranks`). This is the same rank system the mapped path emits, so a
+        # forced pair and a mapped pair name the same node.
+        for m, smi in raw.items():
+            mol = Chem.MolFromSmiles(smi)
+            if mol is None:
+                continue
+            rk = canonical_ranks(mol)
+            if rk is None:
+                continue
+            for X in ELEMENTS:
+                idx = [a.GetIdx() for a in mol.GetAtoms() if a.GetSymbol() == X]
+                if idx:
+                    ranks_of[(m, X)] = [rk[i] for i in idx]
+        print(f"[atom-pairs] fallback armed: {len(formulas):,} formulas, "
+              f"{len(ranks_of):,} (metabolite, element) rank sets", flush=True)
 
     rows, status_rows = [], []
     tally = defaultdict(int)
@@ -373,6 +525,22 @@ def cmd_extract(args):
         subs, prods = pe
         pairs, status = pairs_from_mapped(
             getattr(rec, "mapped_rxn_smiles", None), subs, prods, canon)
+        if not pairs and status == "no_mapping" and args.fallback_forced:
+            fp = forced_pairs(subs, prods, formulas, ranks_of)
+            if fp:
+                pairs, status = fp, "forced"
+        if pairs and (ph or bal):
+            # A placeholder is scaffolding for the mapper, not a metabolite: drop every
+            # pair that touches one, so no fabricated atom reaches the graph. Then drop
+            # the elements whose concrete atoms did not balance -- that is where the
+            # conservation claim is actually tested, and it is per element: ferredoxin
+            # is inert to carbon in IspH and is the sulfur DONOR in biotin synthase, so
+            # the same stand-in is admissible for one element and refused for the other.
+            pairs = {(el, sm, pm): v for (el, sm, pm), v in pairs.items()
+                     if sm not in ph and pm not in ph
+                     and bal.get((r, el), True)}
+            if not pairs:
+                status = "placeholder_only"
         tally[status] += 1
         status_rows.append(dict(mnxr=r, status=status, n_sub=len(subs),
                                 n_prod=len(prods),
@@ -426,12 +594,26 @@ def parse_args():
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p = sub.add_parser("extract"); p.set_defaults(fn=cmd_extract)
-    p.add_argument("--aam", required=True,
-                   help="cached mapper output: mnxr, mapped_rxn_smiles, confidence")
+    p.add_argument("--aam", required=True, nargs="+",
+                   help="cached mapper output(s): mnxr, mapped_rxn_smiles, confidence. "
+                        "Repeatable, so a rescued universe (ecspr_aam_rescue) can be "
+                        "concatenated with the base one; first file wins on duplicates.")
+    p.add_argument("--placeholders", default=None,
+                   help="ecspr_aam_rescue placeholder map. Names the stand-in fragments "
+                        "so they match, then suppresses their atoms from the pairs.")
+    p.add_argument("--balance", default=None,
+                   help="ecspr_aam_rescue per-(reaction, element) concrete-balance "
+                        "verdicts; unbalanced elements are dropped for that reaction.")
     p.add_argument("--reac-prop", required=True)
     p.add_argument("--chem-prop", required=True)
     p.add_argument("--out", required=True, help="pairs parquet")
     p.add_argument("--out-status", required=True, help="per-reaction outcome tsv")
+    p.add_argument("--fallback-forced", action="store_true",
+                   help="for reactions the mapper returned nothing for (its 512-token "
+                        "limit, not a chemistry verdict), emit the pairs conservation "
+                        "FORCES: one substrate and one product carrying the element, one "
+                        "atom each. Only n==1; multi-atom cases stay refused because the "
+                        "atom correspondence would have to be invented.")
     p.add_argument("--min-confidence", type=float, default=None,
                    help="omit to keep the mapper's whole universe (tier B applies no "
                         "confidence gate; the acetyl-CoA split is chemically correct "
