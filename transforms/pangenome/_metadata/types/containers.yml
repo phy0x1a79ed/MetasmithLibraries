@@ -63,6 +63,26 @@ types:
       - diamond/blastp
       - diamond/linclust
       - diamond/makedb
+  ecspr.oci:
+    properties:
+      Format: OCI
+      _:
+      - 'ECSPr numeric core. Replaces envs::ecspr.condaenv on this lane: the conda_env
+        mechanism is consumed only under a MAMBA runtime, which exists solely on an
+        unmerged engine branch -- under the runtimes the engine actually ships, the
+        env file''s CONTENT is read as an image name, so `fabfos-ecspr` was being
+        handed to apptainer/docker as an image URI. Recipe: container_builds/main/ecspr.
+        Pins that matter: numpy>=2, and torch built for the CUDA the target cluster''s
+        GPUs accept (the default build breaks them). Solve and ablation are CPU-intractable
+        on the dense maps, so the GPU pin is not a fallback.'
+      provides:
+      - py/networkx
+      - py/numpy
+      - py/pandas
+      - py/pyarrow
+      - py/scikit-learn
+      - py/scipy
+      - py/torch
   fastani.oci:
     properties:
       Format: OCI

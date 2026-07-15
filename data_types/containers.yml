@@ -278,3 +278,25 @@ types:
       - py/biopython
       - py/jupyter
       - py/notebook
+  # -------------------------------------------------
+  # ECSPr numeric core (SMW solve / ablation / significance)
+  ecspr.oci:
+    extends: container
+    properties:
+      _: >-
+        ECSPr numeric core. Replaces envs::ecspr.condaenv on this lane: the conda_env
+        mechanism is consumed only under a MAMBA runtime, which exists solely on an
+        unmerged engine branch -- under the runtimes the engine actually ships, the
+        env file's CONTENT is read as an image name, so `fabfos-ecspr` was being
+        handed to apptainer/docker as an image URI. Recipe: container_builds/main/ecspr.
+        Pins that matter: numpy>=2, and torch built for the CUDA the target cluster's
+        GPUs accept (the default build breaks them). Solve and ablation are
+        CPU-intractable on the dense maps, so the GPU pin is not a fallback.
+      provides:
+      - py/numpy
+      - py/scipy
+      - py/pandas
+      - py/scikit-learn
+      - py/networkx
+      - py/pyarrow
+      - py/torch

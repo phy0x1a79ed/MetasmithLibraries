@@ -25,7 +25,7 @@ reff     = model.AddRequirement(lib.GetType("ecspr::reff_axes_report"), parents=
 ieff     = model.AddRequirement(lib.GetType("ecspr::ieff_axes_report"), parents={exp})
 proteins = model.AddRequirement(lib.GetType("sequences::open_reading_frames"), parents={exp})
 nulls    = model.AddRequirement(lib.GetType("ecspr::frozen_null"))
-env      = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env      = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 sig      = model.AddRequirement(lib.GetType("lib::ecspr_significance.py"))
 reff_sig = model.AddProduct(lib.GetType("ecspr::reff_significance"))
 ieff_sig = model.AddProduct(lib.GetType("ecspr::ieff_significance"))

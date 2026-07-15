@@ -25,7 +25,7 @@ bases     = model.AddRequirement(lib.GetType("ecspr::base_graphs"), parents={exp
 bipartite = model.AddRequirement(lib.GetType("ecspr::mnx_bipartite"))
 axes      = model.AddRequirement(lib.GetType("ecspr::biomass_axes"))
 profile   = model.AddRequirement(lib.GetType("ecspr::compute_profile"))
-env       = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env       = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 net       = model.AddRequirement(lib.GetType("lib::ecspr_network.py"))
 solver    = model.AddRequirement(lib.GetType("lib::ecspr_solver.py"))
 reff      = model.AddProduct(lib.GetType("ecspr::reff_axes_report"))

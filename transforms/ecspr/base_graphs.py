@@ -14,7 +14,7 @@ evidence  = model.AddRequirement(lib.GetType("functional_annotation::evidence_ta
 weights   = model.AddRequirement(lib.GetType("ecspr::evidence_weights"), parents={exp})
 bipartite = model.AddRequirement(lib.GetType("ecspr::mnx_bipartite"))
 axes      = model.AddRequirement(lib.GetType("ecspr::biomass_axes"))
-env       = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env       = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 net       = model.AddRequirement(lib.GetType("lib::ecspr_network.py"))
 solver    = model.AddRequirement(lib.GetType("lib::ecspr_solver.py"))
 bases     = model.AddProduct(lib.GetType("ecspr::base_graphs"))

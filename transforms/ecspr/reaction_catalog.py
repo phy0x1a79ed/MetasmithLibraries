@@ -13,7 +13,7 @@ evidence  = model.AddRequirement(lib.GetType("functional_annotation::evidence_ta
 weights   = model.AddRequirement(lib.GetType("ecspr::evidence_weights"), parents={exp})
 reac_prop = model.AddRequirement(lib.GetType("ecspr::metanetx_reac_prop"))
 chem_prop = model.AddRequirement(lib.GetType("ecspr::metanetx_chem_prop"))
-env       = model.AddRequirement(lib.GetType("envs::ecspr.condaenv"))
+env       = model.AddRequirement(lib.GetType("containers::ecspr.oci"))
 cat       = model.AddRequirement(lib.GetType("lib::ecspr_catalog.py"))
 net       = model.AddRequirement(lib.GetType("lib::ecspr_network.py"))
 solver    = model.AddRequirement(lib.GetType("lib::ecspr_solver.py"))

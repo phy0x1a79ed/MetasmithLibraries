@@ -21,6 +21,8 @@ manifest:
     type: containers::deeptfactor.oci
   diamond.oci:
     type: containers::diamond.oci
+  ecspr.oci:
+    type: containers::ecspr.oci
   fastani.oci:
     type: containers::fastani.oci
   fastp.oci:
