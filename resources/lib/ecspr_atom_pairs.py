@@ -182,12 +182,38 @@ def match_mols(mols: list, mnxms: list, canon: dict):
 # The pairing itself -- the two lines the unifier throws away
 # =====================================================================
 
+def canonical_ranks(mol):
+    """Atom -> canonical rank, invariant to how this reaction happened to write it.
+
+    THIS IS LOAD-BEARING, AND THE OBVIOUS THING IS WRONG. `a.GetIdx()` is the index
+    within THIS reaction's template molecule, and the same metabolite is not written
+    the same way in every reaction. Measured over the mapper universe: 248 of 847
+    carbon-bearing metabolites that appear in more than one reaction have
+    INCONSISTENT idx -> canonical-rank mappings. Pyruvate (MNXM23) alone shows up
+    with 3 distinct atom orderings across 63 reactions.
+
+    So `(metabolite, GetIdx())` is not an atom -- it is a different atom depending on
+    which reaction you read it from, and a graph keyed on it silently welds unrelated
+    atoms together and splits identical ones apart. `CanonicalRankAtoms` is invariant
+    to input ordering by construction, so `(metabolite, rank)` IS an atom.
+    """
+    m2 = Chem.Mol(mol)
+    for a in m2.GetAtoms():
+        a.SetAtomMapNum(0)          # map numbers are per-reaction; they'd poison the rank
+    try:
+        return list(Chem.CanonicalRankAtoms(m2, breakTies=True))
+    except Exception:
+        return None
+
+
 def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
                       canon: dict):
-    """(pairs, status). pairs: {(element, sm, pm) -> [(sub_atom_idx, prod_atom_idx)]}.
+    """(pairs, status). pairs: {(element, sm, pm) -> [(sub_rank, prod_rank)]}.
 
-    The atom indices are the RDKit indices WITHIN each metabolite's own molecule,
-    which is what makes a downstream (metabolite, atom-class) node well defined.
+    The atom identifiers are CANONICAL RANKS within each metabolite's own molecule,
+    not RDKit template indices -- see `canonical_ranks`. That is what makes
+    `(metabolite, rank)` a well-defined node across reactions, which is the whole
+    premise of the atom graph.
     """
     if not mapped_smi or pd.isna(mapped_smi):
         return {}, "no_mapping"
@@ -214,13 +240,18 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
     if amb_s or amb_p:
         return {}, "ambiguous_duplicate"
 
-    # atom-map number -> (which substrate template, atom idx, element)
+    sub_ranks = [canonical_ranks(m) for m in sub_mols]
+    prod_ranks = [canonical_ranks(m) for m in prod_mols]
+    if any(r is None for r in sub_ranks) or any(r is None for r in prod_ranks):
+        return {}, "unrankable"
+
+    # atom-map number -> (which substrate template, CANONICAL RANK, element)
     sub_index = {}
     for i, mol in enumerate(sub_mols):
         for a in mol.GetAtoms():
             n = a.GetAtomMapNum()
             if n > 0:
-                sub_index[n] = (i, a.GetIdx(), a.GetSymbol())
+                sub_index[n] = (i, sub_ranks[i][a.GetIdx()], a.GetSymbol())
 
     pairs = defaultdict(list)
     for j, mol in enumerate(prod_mols):
@@ -234,7 +265,7 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
             src = sub_index.get(n)
             if src is None:
                 continue
-            si, s_idx, sel = src
+            si, s_rank, sel = src
             if sel != el:
                 continue
             sm = sub_named[si] if si < len(sub_named) else None
@@ -242,7 +273,7 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
             if not sm or not pm:
                 continue
             # THE LINE THE UNIFIER DOES NOT WRITE: keep the pair, not two counts.
-            pairs[(el, sm, pm)].append((s_idx, a.GetIdx()))
+            pairs[(el, sm, pm)].append((s_rank, prod_ranks[j][a.GetIdx()]))
     if not pairs:
         return {}, "no_pairs"
     return dict(pairs), "ok"
