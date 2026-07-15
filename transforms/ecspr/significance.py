@@ -1,11 +1,20 @@
-"""ECSPr significance: reff/ieff reports + reused frozen null + fosmid proteins
+"""ECSPr significance: reff/ieff reports + staged null + fosmid proteins
 -> reff_significance + ieff_significance.
 
-Thin wrapper around `resources/lib/ecspr_significance.py run` (selftest reproduces
-scadc sig_emp_{reff,ieff}.tsv to 1e-16). Empirical-CCDF exceedance vs the REUSED
-frozen metagenome null (never recomputed), BH-q within (element, null-style),
-size-matched to nearest N in {21,34,56} by ORF count. Runs both lanes. The
-proteins FASTA (fosmid ORFs) supplies the per-fosmid ORF counts for size-matching.
+Thin wrapper around `resources/lib/ecspr_significance.py run`. Scores each observed
+per-fosmid delta against the staged null with the FULL-MIXTURE survival function,
+size-matched by SF interpolation across the two flanking draw-size anchors. Runs both
+lanes. The proteins FASTA supplies the per-fosmid ORF counts for size matching.
+
+The scorer DERIVES its draw sizes from the staged `ecspr::frozen_null` directory and
+holds no size constant of its own -- so the sizes are whatever the caller staged, and
+the caller is responsible for staging a CURATED directory built from an explicit list.
+Do not point this at a raw cache: caches accumulate retired sizes beside canonical
+ones, and a glob would silently widen the basis.
+
+Parity: `ecspr_significance.py selftest` reproduces the canonical scadc table on both
+lanes to ~1e-16, including the split-contig ids that the retired `\\w`-based ORF regex
+dropped silently. It is CPU-only and runs in seconds -- gate every commit with it.
 """
 from metasmith.python_api import *
 

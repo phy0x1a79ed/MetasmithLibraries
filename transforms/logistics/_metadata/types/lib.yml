@@ -13,6 +13,10 @@ types:
     properties:
       src: ecspr_catalog
       usage: command line
+  ecspr_community.py:
+    properties:
+      src: ecspr_community
+      usage: command line
   ecspr_network.py:
     properties:
       src: ecspr_network
@@ -24,6 +28,10 @@ types:
   ecspr_solver.py:
     properties:
       src: ecspr_solver
+      usage: library
+  ecspr_transporters.py:
+    properties:
+      src: ecspr_transporters
       usage: library
   fabfos_embed_transfer.py:
     properties:

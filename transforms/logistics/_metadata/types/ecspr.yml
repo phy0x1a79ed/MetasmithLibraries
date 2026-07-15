@@ -44,8 +44,29 @@ types:
     properties:
       Format: JSON
       _:
-      - biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X)
-        maps to source/sink metabolite hubs
+      - biomass source->sink axes as JSON; each axis id (..__src__snk__X) maps to
+        source/sink metabolite hubs. The axis SET is an experiment's choice, not the
+        engine's -- the caller stages the set it means and asserts its count; do not
+        infer the set from the filename, which is what drifted.
+      ext: json
+  compute_profile:
+    properties:
+      Format: YAML
+      _:
+      - 'compute profile for the solve/ablation: `device:` (cpu|cuda) and `dtype:`
+        (float64|float32), one per line. A STAGED, CONTENT-HASHED INPUT so it enters
+        the task hash -- a GPU run and a CPU run of the same step MUST produce different
+        cache keys. NEVER carry these via context.params: params are populated only
+        from the runtime resources line (cpus/memory/attempt), so a params-borne knob
+        is silently always its default AND collides on one cache entry.'
+      ext: yml
+  curated_gem:
+    properties:
+      Format: JSON
+      _:
+      - curated genome-scale metabolic model (COBRA JSON; iML1515 / iECDH10B) for
+        the direct-GEM Network A base -- crosswalked to current MNXR and induced on
+        the atom-mapped universe with uniform E=1.0
       ext: json
   evidence_weights:
     properties:
@@ -57,8 +78,10 @@ types:
       ext: parquet
   frozen_null:
     properties:
-    - DIRECTORY of FROZEN reused metagenome null draws for BOTH lanes ({reff,ieff}_null_canonical_N{21,34,56}.tsv);
-      reused verbatim, never recomputed (only the metaG null may be reused)
+    - DIRECTORY of null draws for BOTH lanes, one {lane}_null_canonical_N{n}.tsv per
+      draw size; the scorer DERIVES its draw sizes from this directory's contents,
+      so it must be a CURATED dir built from an explicit list by the caller -- never
+      a raw cache, which accumulates retired sizes beside the canonical ones
   ieff_axes_report:
     properties:
       Format: TSV
@@ -82,21 +105,28 @@ types:
     properties:
       Format: TSV
       _:
-      - effective-conductance significance vs the reused frozen null (empirical-CCDF
-        p, BH-q within element x style, size-matched N)
+      - effective-conductance significance vs the staged null (full-mixture SF p +
+        per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q
+        within element x style for schema parity only -- rank by effect size)
       ext: tsv
       fields:
+      - N_hi
+      - N_lo
       - at_floor
       - axis_id
       - delta_obs
       - element
       - fosmid
-      - matched_N
+      - k_hi
+      - k_lo
       - n_bg
+      - n_orfs
       - p
+      - p_emp
       - p_floor
       - q
       - survives
+      - w
       - null
   metanetx_chem_prop:
     properties:
@@ -110,6 +140,13 @@ types:
       Format: TSV
       _:
       - MetaNetX reaction properties table (reac_prop.tsv;
+      ext: tsv
+  metanetx_reac_xref:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction cross-reference table (reac_xref.tsv; bigg.reaction / kegg.reaction
+        xrefs -> current MNXR) for the direct-GEM crosswalk
       ext: tsv
   mnx_bipartite:
     properties:
@@ -144,19 +181,26 @@ types:
     properties:
       Format: TSV
       _:
-      - effective-resistance significance vs the reused frozen null (empirical-CCDF
-        p, BH-q within element x style, size-matched N)
+      - effective-resistance significance vs the staged null (full-mixture SF p +
+        per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q
+        within element x style for schema parity only -- rank by effect size)
       ext: tsv
       fields:
+      - N_hi
+      - N_lo
       - at_floor
       - axis_id
       - delta_obs
       - element
       - fosmid
-      - matched_N
+      - k_hi
+      - k_lo
       - n_bg
+      - n_orfs
       - p
+      - p_emp
       - p_floor
       - q
       - survives
+      - w
       - null

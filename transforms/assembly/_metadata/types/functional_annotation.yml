@@ -56,6 +56,14 @@ types:
   busco_source:
     properties:
     - Marker for BUSCO lineage dataset specification
+  clean_pred:
+    properties:
+      Format: TSV
+      _:
+      - canonical CLEAN contrastive EC predictions for the fosmid ORFs (3-col TSV
+        Query ID/Predicted EC number/clean_score); level-4, clean_score>=0.01 floor
+        applied downstream (lane 2 canonical EC channel)
+      ext: tsv
   deepec_hits:
     properties:
       Format: TSV
@@ -76,8 +84,9 @@ types:
     properties:
       Format: parquet
       _:
-      - canonical deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the
-        fosmid ORFs, level-4, score>=0.3 (lane 2 canonical)
+      - deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the fosmid
+        ORFs, level-4, score>=0.3 (lane 2 optional comparison channel; superseded
+        by clean_pred)
       ext: parquet
   ec_to_mnxr:
     properties:

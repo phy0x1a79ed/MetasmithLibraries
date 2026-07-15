@@ -23,7 +23,7 @@ types:
       _: DIRECTORY of per-element metabolite<->reaction bipartite graphs (mnx_bipartite_{C,N,S,P}.pkl) with element atom-count edge weights w_X; reused for addition-map construction and base-graph building
   biomass_axes:
     properties:
-      _: biomass source->sink axes (set2cat) as JSON; each axis id (..__src__snk__X) maps to source/sink metabolite hubs
+      _: biomass source->sink axes as JSON; each axis id (..__src__snk__X) maps to source/sink metabolite hubs. The axis SET is an experiment's choice, not the engine's -- the caller stages the set it means and asserts its count; do not infer the set from the filename, which is what drifted.
       Format: JSON
       ext: json
   curated_gem:
@@ -38,7 +38,12 @@ types:
       ext: tsv
   frozen_null:
     properties:
-      _: DIRECTORY of FROZEN reused metagenome null draws for BOTH lanes ({reff,ieff}_null_canonical_N{21,34,56}.tsv); reused verbatim, never recomputed (only the metaG null may be reused)
+      _: DIRECTORY of null draws for BOTH lanes, one {lane}_null_canonical_N{n}.tsv per draw size; the scorer DERIVES its draw sizes from this directory's contents, so it must be a CURATED dir built from an explicit list by the caller -- never a raw cache, which accumulates retired sizes beside the canonical ones
+  compute_profile:
+    properties:
+      _: "compute profile for the solve/ablation: `device:` (cpu|cuda) and `dtype:` (float64|float32), one per line. A STAGED, CONTENT-HASHED INPUT so it enters the task hash -- a GPU run and a CPU run of the same step MUST produce different cache keys. NEVER carry these via context.params: params are populated only from the runtime resources line (cpus/memory/attempt), so a params-borne knob is silently always its default AND collides on one cache entry."
+      Format: YAML
+      ext: yml
 
 # ---- evidence weights + reaction catalog (produced) ----
   evidence_weights:
@@ -98,19 +103,31 @@ types:
       - n_added_rxns
       ext: tsv
 
-# ---- significance (empirical-CCDF vs reused null; produced) ----
+# ---- significance (full-mixture SF vs the staged null; produced) ----
+# `p` is the full-mixture survival function, left UNFLOORED so out-of-distribution
+# cells get an estimate; `at_floor` flags rows resting on the fitted tail rather than
+# on counted draws (extrapolation -- they carry no headline). `p_emp` is pure counting
+# on the SAME raw pool, per row: the empirical null is a COLUMN, never a rival table.
+# N_lo/N_hi/w are the interpolation bracket; there is no single matched size, so the
+# retired `matched_N` column is gone and its presence marks a stale table.
   reff_significance:
     properties:
-      _: effective-resistance significance vs the reused frozen null (empirical-CCDF p, BH-q within element x style, size-matched N)
+      _: effective-resistance significance vs the staged null (full-mixture SF p + per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q within element x style for schema parity only -- rank by effect size)
       Format: TSV
       fields:
       - fosmid
       - element
       - axis_id
-      - matched_N
+      - n_orfs
+      - N_lo
+      - N_hi
+      - w
       - null
       - delta_obs
       - p
+      - p_emp
+      - k_lo
+      - k_hi
       - n_bg
       - p_floor
       - at_floor
@@ -119,16 +136,22 @@ types:
       ext: tsv
   ieff_significance:
     properties:
-      _: effective-conductance significance vs the reused frozen null (empirical-CCDF p, BH-q within element x style, size-matched N)
+      _: effective-conductance significance vs the staged null (full-mixture SF p + per-row empirical p_emp, SF-interpolated across flanking size anchors, BH-q within element x style for schema parity only -- rank by effect size)
       Format: TSV
       fields:
       - fosmid
       - element
       - axis_id
-      - matched_N
+      - n_orfs
+      - N_lo
+      - N_hi
+      - w
       - null
       - delta_obs
       - p
+      - p_emp
+      - k_lo
+      - k_hi
       - n_bg
       - p_floor
       - at_floor

@@ -49,12 +49,19 @@ case $1 in
     ###################################################
     # build
     -b) # update std xgdbs
-        $(which msm) && msm=msm || msm="$HERE/../Metasmith/dev.sh -r"
-        echo $msm
-        $msm build \
-        --types $HERE/data_types \
-        --uniques $HERE/resources/* \
-        --transforms $HERE/transforms/*
+        # `build` takes a STEP positional and REPEATABLE single-value flags. It used
+        # to accept a glob per flag (nargs="+"), so the old `--uniques $HERE/resources/*`
+        # form now feeds the 2nd..nth path in as a bogus STEP. Repeat the flag instead.
+        if which msm >/dev/null 2>&1; then msm="msm"; else msm="python -m metasmith"; fi
+        echo "using: $msm"
+        args=(--types "$HERE/data_types")
+        for d in "$HERE"/resources/*/; do
+            [ -d "$d" ] && args+=(--uniques "${d%/}")
+        done
+        for d in "$HERE"/transforms/*/; do
+            [ -d "$d" ] && args+=(--transforms "${d%/}")
+        done
+        $msm build all "${args[@]}"
     ;;
     ###################################################
     *)
