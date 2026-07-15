@@ -7,6 +7,8 @@ manifest:
     type: lib::ecspr_community.py
   ecspr_network.py:
     type: lib::ecspr_network.py
+  ecspr_null_study.py:
+    type: lib::ecspr_null_study.py
   ecspr_significance.py:
     type: lib::ecspr_significance.py
   ecspr_solver.py:

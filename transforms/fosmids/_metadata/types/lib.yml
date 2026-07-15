@@ -21,6 +21,10 @@ types:
     properties:
       src: ecspr_network
       usage: command line
+  ecspr_null_study.py:
+    properties:
+      src: ecspr_null_study
+      usage: command line
   ecspr_significance.py:
     properties:
       src: ecspr_significance

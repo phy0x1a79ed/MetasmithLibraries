@@ -128,6 +128,29 @@ types:
       - survives
       - w
       - null
+  ieff_significance_study:
+    properties:
+      Format: TSV
+      _:
+      - effective-conductance significance under an ALTERNATIVE null-scoring family
+        (study only; not canonical -- see ecspr::ieff_significance)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - family
+      - fosmid
+      - n_bg
+      - n_orfs
+      - p
+      - p_floor
+      - q
+      - w
+      - null
   metanetx_chem_prop:
     properties:
       Format: TSV
@@ -153,6 +176,17 @@ types:
     - DIRECTORY of per-element metabolite<->reaction bipartite graphs (mnx_bipartite_{C,N,S,P}.pkl)
       with element atom-count edge weights w_X; reused for addition-map construction
       and base-graph building
+  null_model_spec:
+    properties:
+      Format: YAML
+      _:
+      - 'which null-SCORING family a STUDY run applies: `family:` (see resources/lib/ecspr_null_study.py
+        FAMILIES). A STAGED, CONTENT-HASHED input, so two families produce different
+        cache keys and cannot overwrite one another. Null GENERATION (style/K/N/seed)
+        and null SCORING (how a p comes off the draws) are orthogonal; this is the
+        scoring half. Adding a family is one entry in FAMILIES -- the transform, the
+        canonical scorer and the DAG shape are untouched.'
+      ext: yml
   reaction_catalog:
     properties:
     - DIRECTORY holding the five reaction-catalog parquets (reactions, metabolites,
@@ -202,5 +236,28 @@ types:
       - p_floor
       - q
       - survives
+      - w
+      - null
+  reff_significance_study:
+    properties:
+      Format: TSV
+      _:
+      - effective-resistance significance under an ALTERNATIVE null-scoring family
+        (study only; not canonical -- see ecspr::reff_significance)
+      ext: tsv
+      fields:
+      - N_hi
+      - N_lo
+      - at_floor
+      - axis_id
+      - delta_obs
+      - element
+      - family
+      - fosmid
+      - n_bg
+      - n_orfs
+      - p
+      - p_floor
+      - q
       - w
       - null

@@ -35,6 +35,10 @@ types:
     properties:
       src: ecspr_significance
       usage: command line
+  ecspr_null_study.py:
+    properties:
+      src: ecspr_null_study
+      usage: command line
   fabfos_evidence.py:
     properties:
       src: fabfos_evidence

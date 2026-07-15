@@ -39,6 +39,11 @@ types:
   frozen_null:
     properties:
       _: DIRECTORY of null draws for BOTH lanes, one {lane}_null_canonical_N{n}.tsv per draw size; the scorer DERIVES its draw sizes from this directory's contents, so it must be a CURATED dir built from an explicit list by the caller -- never a raw cache, which accumulates retired sizes beside the canonical ones
+  null_model_spec:
+    properties:
+      _: "which null-SCORING family a STUDY run applies: `family:` (see resources/lib/ecspr_null_study.py FAMILIES). A STAGED, CONTENT-HASHED input, so two families produce different cache keys and cannot overwrite one another. Null GENERATION (style/K/N/seed) and null SCORING (how a p comes off the draws) are orthogonal; this is the scoring half. Adding a family is one entry in FAMILIES -- the transform, the canonical scorer and the DAG shape are untouched."
+      Format: YAML
+      ext: yml
   compute_profile:
     properties:
       _: "compute profile for the solve/ablation: `device:` (cpu|cuda) and `dtype:` (float64|float32), one per line. A STAGED, CONTENT-HASHED INPUT so it enters the task hash -- a GPU run and a CPU run of the same step MUST produce different cache keys. NEVER carry these via context.params: params are populated only from the runtime resources line (cpus/memory/attempt), so a params-borne knob is silently always its default AND collides on one cache entry."
@@ -181,4 +186,55 @@ types:
       - delta_reff_solo
       - delta_ieff_solo
       - n_rxn_orf
+      ext: tsv
+
+# ---- null-family STUDY tables (produced) ----
+# Separate from the canonical significance type ON PURPOSE. `ecspr::{lane}_significance`
+# has exactly ONE producer (the full-mixture SF) and no staged input can change what it
+# means. Alternative families land here instead, clearly labelled, where no figure reads
+# them by accident. The incumbent made the scorer a swappable flag; three figure
+# generators then drifted onto three different null tables in two days and one shipped a
+# title asserting the opposite of its own annotations. Promoting a family is a deliberate,
+# re-gated edit to the canonical scorer -- never a parameter someone passes.
+  reff_significance_study:
+    properties:
+      _: effective-resistance significance under an ALTERNATIVE null-scoring family (study only; not canonical -- see ecspr::reff_significance)
+      Format: TSV
+      fields:
+      - fosmid
+      - element
+      - axis_id
+      - n_orfs
+      - N_lo
+      - N_hi
+      - w
+      - null
+      - delta_obs
+      - family
+      - p
+      - n_bg
+      - p_floor
+      - at_floor
+      - q
+      ext: tsv
+  ieff_significance_study:
+    properties:
+      _: effective-conductance significance under an ALTERNATIVE null-scoring family (study only; not canonical -- see ecspr::ieff_significance)
+      Format: TSV
+      fields:
+      - fosmid
+      - element
+      - axis_id
+      - n_orfs
+      - N_lo
+      - N_hi
+      - w
+      - null
+      - delta_obs
+      - family
+      - p
+      - n_bg
+      - p_floor
+      - at_floor
+      - q
       ext: tsv
