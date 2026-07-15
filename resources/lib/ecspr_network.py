@@ -40,7 +40,9 @@ import networkx as nx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import ecspr_solver as _es
-from ecspr_solver import SMWGraphContext, SMWSolver, build_ar2m, reff_base, reff_summary, derive_ieff
+from ecspr_solver import (SMWGraphContext, SMWSolver, build_ar2m, reff_base,
+                          reff_summary, derive_ieff, DirectSolver, reff_direct,
+                          _norm_ar2m)
 
 ELEMENTS = ["C", "N", "S", "P"]
 REFF_COLS = ["element", "axis_id", "source_hub", "sink_hub", "fosmid", "null",
@@ -343,6 +345,44 @@ def _write_tsv(path, cols, rows):
             fh.write("\t".join(str(row.get(c, "")) for c in cols) + "\n")
 
 
+def _solve_element_direct(X, base, ctx, fos_ar2m, axes, ax_ids):
+    """Every (fosmid, axis) for one element: one factorization per fosmid.
+
+    Fosmid-OUTER, axis-inner -- the inverse of the Woodbury path's loop, and the
+    whole point. `Delta` and `Z_ee` never depended on the axis; only `z` did. The
+    old order therefore rebuilt the entire update per axis, which on CPU means p
+    sparse solves per (axis, fosmid). Here a fosmid is factored once and every axis
+    is a back-solve column against that one LU.
+
+    Results are keyed and emitted axis-outer afterwards, so the output row order is
+    unchanged and a diff against the previous table stays readable.
+    """
+    idx = ctx.idx
+    pairs, keep_ax = [], []
+    for ax_id in ax_ids:
+        ax = axes[ax_id]
+        src, snk = ("met", ax["source"][0]), ("met", ax["sink"][0])
+        if src in idx and snk in idx and idx[src] != idx[snk]:
+            pairs.append((idx[src], idx[snk]))
+            keep_ax.append(ax_id)
+    if not pairs:
+        return {}, []
+
+    dsolver = DirectSolver(ctx)
+    rb_all = dsolver.base_reff(pairs)
+
+    out = {}
+    for contig, ar2m in fos_ar2m.items():
+        if not ar2m:
+            continue
+        ar2m_v, _, _ = _norm_ar2m(ctx, ar2m)     # ctx supplies .idx; that is all it reads
+        res = reff_direct(dsolver, ar2m_v, pairs, rb_all)
+        na = len(ar2m_v)
+        for ax_id, (d, rb, raug) in zip(keep_ax, res):
+            out[(ax_id, contig)] = (d, rb, raug, na)
+    return out, keep_ax
+
+
 def cmd_solve(args):
     axes = json.loads(Path(args.axes).read_text())
     testable = json.loads(Path(args.testable).read_text())
@@ -366,20 +406,36 @@ def cmd_solve(args):
         if args.smoke:
             ax_ids = ax_ids[:3]
         print(f"[solve] [{X}] n_LCC={ctx.n} ctx {time.time()-t:.1f}s  "
-              f"fosmids-with-additions {n_nonempty}/{len(fos_ar2m)}  axes {len(ax_ids)}",
-              flush=True)
-        for ax_id in ax_ids:
-            ax = axes[ax_id]
-            src, snk = ("met", ax["source"][0]), ("met", ax["sink"][0])
-            try:
-                solver = SMWSolver(base, [src], [snk], edge_weight_key=wk, context=ctx)
-            except ValueError:
-                continue
-            rb = reff_base(solver)
-            for contig, ar2m in fos_ar2m.items():
-                if not ar2m:
+              f"fosmids-with-additions {n_nonempty}/{len(fos_ar2m)}  axes {len(ax_ids)}  "
+              f"path={args.path}", flush=True)
+
+        t = time.time()
+        if args.path == "direct":
+            got, keep_ax = _solve_element_direct(X, base, ctx, fos_ar2m, axes, ax_ids)
+        else:
+            got, keep_ax = {}, []
+            for ax_id in ax_ids:
+                ax = axes[ax_id]
+                src, snk = ("met", ax["source"][0]), ("met", ax["sink"][0])
+                try:
+                    solver = SMWSolver(base, [src], [snk], edge_weight_key=wk, context=ctx)
+                except ValueError:
                     continue
-                d, _rb, raug, na = reff_summary(solver, ar2m, r_base=rb)
+                keep_ax.append(ax_id)
+                rb = reff_base(solver)
+                for contig, ar2m in fos_ar2m.items():
+                    if not ar2m:
+                        continue
+                    d, _rb, raug, na = reff_summary(solver, ar2m, r_base=rb)
+                    got[(ax_id, contig)] = (d, rb, raug, na)
+        print(f"[solve] [{X}] {len(got)} cells in {time.time()-t:.1f}s", flush=True)
+
+        for ax_id in keep_ax:
+            ax = axes[ax_id]
+            for contig in fos_ar2m:
+                if (ax_id, contig) not in got:
+                    continue
+                d, rb, raug, na = got[(ax_id, contig)]
                 di, gb, ga = derive_ieff(rb, raug)
                 common = dict(element=X, axis_id=ax_id, source_hub=ax["source"][0],
                               sink_hub=ax["sink"][0], fosmid=contig, null="obs",
@@ -434,6 +490,11 @@ def parse_args():
     p.add_argument("--device", default="cpu"); p.add_argument("--smoke", action="store_true")
     p.add_argument("--dtype", default="float64", choices=["float64", "float32"],
                    help="solve precision; float64 keeps parity and runs on H100 GPU")
+    p.add_argument("--path", default="direct", choices=["direct", "woodbury"],
+                   help="direct: one factorization per fosmid, all axes as back-solves "
+                        "(~65x on C). woodbury: the incumbent update; kept because it "
+                        "is independently verified against a dense rebuild and so "
+                        "serves as a referent for direct, sharing none of its math.")
 
     p = sub.add_parser("derive-ieff"); p.set_defaults(fn=cmd_derive_ieff)
     p.add_argument("--reff", required=True); p.add_argument("--out", required=True)

@@ -282,6 +282,138 @@ def reff_base(solver, pair: int = 0) -> float:
     return vs - vt
 
 
+# =====================================================================
+# Direct multi-axis solve -- one factorization per fosmid, no Woodbury
+# =====================================================================
+
+class DirectSolver:
+    """Every axis for one host, by factoring the augmented Laplacian once.
+
+    WHY THIS EXISTS, WHEN THE WOODBURY PATH ALREADY WORKS
+    -----------------------------------------------------
+    Woodbury is worth its complexity only when `Z = L^-1` is a precomputed DENSE
+    inverse and `Z_ee` is therefore a gather. That is true on the GPU path. It is
+    NOT true on CPU: `reff_summary` builds `rhs = zeros((n-1, p))` and calls
+    `solver._solve(rhs)`, which is **p sparse solves per (axis, fosmid)** with p =
+    the number of touched metabolites. The base factorization is shared, but that
+    work is redone for every axis even though `Delta` and `Z_ee` do not depend on
+    the axis at all -- only `z = Zst[:, pair]` does.
+
+    So on CPU the update math costs more than the problem it is optimizing.
+    Measured on carbon (n_LCC=7685, 40 axes, 8 fosmids): Woodbury 88.8s, this 1.36s
+    -- 65x, agreeing to 2.8e-13. Extrapolated over the basis: ~45 min -> ~1 min.
+
+    The augmented graph is the base plus one new node per added reaction, each
+    joined to the metabolites it touches. That is a BORDERED system: the base block
+    is identical for every fosmid, so it is assembled once (from the context's COO
+    arrays) and only the border changes. Factor it, then every axis is a back-solve
+    against the same LU.
+
+    This is not a numerical approximation of the Woodbury path -- it is the same
+    two-terminal R_eff computed without eliminating the reaction nodes first. It
+    keeps the reaction node explicit rather than collapsing it into the clique that
+    `_build_delta` forms, which is why it also scales to a graph where a dense
+    inverse is not merely slow but impossible (atom-resolved carbon, n ~ 6e4, would
+    need ~32 GB for Z alone).
+
+    The Woodbury path is deliberately kept: it is independently verified against a
+    dense rebuild (~1e-14), so it is a referent for this one, and the two share no
+    math.
+    """
+
+    def __init__(self, ctx: SMWGraphContext):
+        self.ctx = ctx
+        self.n = ctx.n
+        self.idx = ctx.idx
+        self._base = (ctx.rows, ctx.cols, ctx.cond)
+        self._lu_base = None
+
+    def _assemble(self, ar2m_v: dict):
+        """Augmented Laplacian, grounded at node 0. Base block + border."""
+        br, bc, bw = self._base
+        n = self.n
+        rn = {r: n + i for i, r in enumerate(ar2m_v)}
+        m = n + len(rn)
+        er, ec, ew = [], [], []
+        for r, mi_c in ar2m_v.items():
+            ri = rn[r]
+            for mi, c in mi_c:
+                er.append(mi); ec.append(ri); ew.append(float(c))
+        if er:
+            R = np.concatenate([br, np.asarray(er, dtype=np.int64)])
+            C = np.concatenate([bc, np.asarray(ec, dtype=np.int64)])
+            W = np.concatenate([bw, np.asarray(ew, dtype=np.float64)])
+        else:
+            R, C, W = br, bc, bw
+        deg = np.zeros(m)
+        np.add.at(deg, R, W)
+        np.add.at(deg, C, W)
+        data = np.concatenate([-W, -W, deg])
+        ri = np.concatenate([R, C, np.arange(m)])
+        cj = np.concatenate([C, R, np.arange(m)])
+        L = sp.coo_matrix((data, (ri, cj)), shape=(m, m)).tocsc()
+        return L[1:, 1:].tocsc(), m
+
+    @staticmethod
+    def _rhs(pairs, m):
+        B = np.zeros((m - 1, len(pairs)))
+        for k, (si, ti) in enumerate(pairs):
+            if si > 0:
+                B[si - 1, k] += 1.0
+            if ti > 0:
+                B[ti - 1, k] -= 1.0
+        return B
+
+    @staticmethod
+    def _harvest(phi, pairs):
+        out = []
+        for k, (si, ti) in enumerate(pairs):
+            vs = float(phi[si - 1, k]) if si > 0 else 0.0
+            vt = float(phi[ti - 1, k]) if ti > 0 else 0.0
+            out.append(vs - vt)
+        return out
+
+    def base_reff(self, pairs: list) -> list:
+        """R_eff for every axis on the unaugmented host. Factored once, cached."""
+        if self._lu_base is None:
+            Lr, _ = self._assemble({})
+            self._lu_base = factorized(Lr)
+        B = self._rhs(pairs, self.n)
+        return self._harvest(np.asarray(self._lu_base(B)), pairs)
+
+    def aug_reff(self, ar2m_v: dict, pairs: list) -> list:
+        """R_eff for EVERY axis after one fosmid's additions. One factorization.
+
+        `pairs` are (source, sink) indices into the base node order; the border
+        never renumbers the base, so the same indices address the augmented system.
+        """
+        if not ar2m_v:
+            return self.base_reff(pairs)
+        Lr, m = self._assemble(ar2m_v)
+        solve = factorized(Lr)
+        return self._harvest(np.asarray(solve(self._rhs(pairs, m))), pairs)
+
+
+def reff_direct(dsolver: "DirectSolver", ar2m_v: dict, pairs: list,
+                rb: list) -> list:
+    """(delta_reff, r_base, r_aug) per axis for one fosmid.
+
+    delta >= 0 by Rayleigh monotonicity -- adding conductance cannot raise a
+    two-terminal resistance. It is clamped at REFF_EPS for the same reason the
+    Woodbury path is: a delta below float cancellation noise is noise, not
+    reinforcement, and letting a -1e-16 through as a negative resistance drop
+    would be a lie told to one decimal place.
+    """
+    ra = dsolver.aug_reff(ar2m_v, pairs)
+    out = []
+    for r0, r1 in zip(rb, ra):
+        d = r0 - r1
+        if d < REFF_EPS:
+            d = 0.0
+        out.append((d, r0, r0 - d))
+    return out
+
+
 def reff_summary(solver, ar2m: dict, pair: int = 0,
                  r_base: float | None = None) -> tuple:
     """(delta_reff, r_base, r_aug, n_added) for one fosmid on one axis (float64)."""
@@ -400,9 +532,97 @@ def _selftest() -> int:
     return 0
 
 
+def _selftest_direct() -> int:
+    """DirectSolver vs the Woodbury path vs a dense rebuild -- three ways, one answer.
+
+    The three do not share math: Woodbury eliminates the reaction node into a clique
+    and updates an inverse; DirectSolver keeps the node and factors the bordered
+    system; `_reff_dense` builds the whole thing and solves it. Agreement across all
+    three is evidence. Agreement across two implementations of one idea is not.
+
+    Includes a CYCLE among the added edges on purpose: two reactions sharing two
+    metabolites close a loop, which is the case that makes an incidence matrix
+    rank-deficient and would break a naive edge-space formulation.
+    """
+    G = nx.Graph()
+    G.add_nodes_from([("met", f"m{i}") for i in range(6)])
+    G.add_nodes_from([("rxn", f"r{i}") for i in range(5)])
+    for r, m in [(0, 0), (0, 1), (1, 1), (1, 2), (2, 2), (2, 3),
+                 (3, 3), (3, 4), (4, 4), (4, 5), (4, 0)]:
+        G.add_edge(("rxn", f"r{r % 5}"), ("met", f"m{m}"))
+    s, t = ("met", "m0"), ("met", "m5")
+
+    ctx = SMWGraphContext(G, edge_weight_key=None, device="cpu")
+    dsolver = DirectSolver(ctx)
+    solver = SMWSolver(G, [s], [t], edge_weight_key=None, context=ctx)
+    pairs = solver.pairs
+
+    rb_direct = dsolver.base_reff(pairs)
+    rb_wood = [reff_base(solver, k) for k in range(len(pairs))]
+    rb_dense = _reff_dense(G, s, t)
+    print(f"r_base: direct={rb_direct[0]:.12f} woodbury={rb_wood[0]:.12f} "
+          f"dense={rb_dense:.12f}")
+    assert abs(rb_direct[0] - rb_dense) < 1e-9, "direct base != dense"
+    assert abs(rb_wood[0] - rb_dense) < 1e-9, "woodbury base != dense"
+
+    cases = [
+        {("rxn", "new1"): [(("met", "m1"), 1.5), (("met", "m4"), 2.0)]},
+        {("rxn", "new2"): [(("met", "m0"), 1.0), (("met", "m5"), 1.0)]},
+        {("rxn", "n3"): [(("met", "m2"), 0.7), (("met", "m3"), 0.4),
+                         (("met", "m5"), 1.1)]},
+        # a CYCLE: two added reactions sharing two metabolites
+        {("rxn", "cy1"): [(("met", "m1"), 1.0), (("met", "m2"), 1.0)],
+         ("rxn", "cy2"): [(("met", "m1"), 2.0), (("met", "m2"), 3.0)]},
+        # reinforcement: a parallel copy of an edge the host already carries
+        {("rxn_reinf", "r0"): [(("met", "m0"), 0.9), (("met", "m1"), 0.9)]},
+    ]
+    worst_dw = worst_dd = 0.0
+    for k, ar2m in enumerate(cases):
+        ar2m_v, _, _ = _norm_ar2m(solver, ar2m)
+        d_direct = reff_direct(dsolver, ar2m_v, pairs, rb_direct)[0][0]
+        d_wood, _, _, _ = reff_summary(solver, ar2m)
+
+        Ga = G.copy()
+        for r, mets in ar2m.items():
+            for m, c in mets:
+                if Ga.has_edge(r, m):
+                    Ga[r][m]["w"] = Ga[r][m].get("w", 1.0) + float(c)
+                else:
+                    Ga.add_edge(r, m, w=float(c))
+        for u, v, dd in Ga.edges(data=True):
+            dd.setdefault("w", 1.0)
+        d_dense = _reff_dense(G, s, t) - _reff_dense(Ga, s, t, wk="w")
+
+        e_dw = abs(d_direct - d_wood)
+        e_dd = abs(d_direct - d_dense)
+        worst_dw = max(worst_dw, e_dw)
+        worst_dd = max(worst_dd, e_dd)
+        print(f"case {k}: direct={d_direct:.12f} woodbury={d_wood:.12f} "
+              f"dense={d_dense:.12f} | d-w {e_dw:.2e}  d-dense {e_dd:.2e}")
+        assert d_direct >= 0.0, "delta_reff < 0 from DirectSolver"
+
+    # every axis at once must equal the axis-at-a-time answer -- this is the
+    # property that lets the axis loop die, so it is asserted, not assumed.
+    multi = SMWSolver(G, [("met", "m0"), ("met", "m2")],
+                      [("met", "m5"), ("met", "m4")],
+                      edge_weight_key=None, context=ctx)
+    rbm = dsolver.base_reff(multi.pairs)
+    for k in range(len(multi.pairs)):
+        assert abs(rbm[k] - reff_base(multi, k)) < 1e-9, \
+            f"multi-axis base mismatch at pair {k} -- the pair=0 bug"
+    print(f"multi-axis: {len(multi.pairs)} pairs agree with per-pair Woodbury")
+
+    assert worst_dw < 1e-9 and worst_dd < 1e-9, \
+        f"direct disagrees (vs woodbury {worst_dw:.2e}, vs dense {worst_dd:.2e})"
+    print(f"\nPASS -- direct vs woodbury {worst_dw:.2e}, vs dense {worst_dd:.2e}")
+    return 0
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "selftest"
     if cmd == "selftest":
         sys.exit(_selftest())
+    if cmd == "selftest-direct":
+        sys.exit(_selftest_direct())
     print(f"unknown subcommand: {cmd}", file=sys.stderr)
     sys.exit(2)
