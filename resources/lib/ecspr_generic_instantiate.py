@@ -67,7 +67,7 @@ from pathlib import Path
 
 import pandas as pd
 
-EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\w+)@\w+")
+EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\w+)@(\w+)")
 _FORM = re.compile(r"([A-Z][a-z]?)(\d*)")
 
 
@@ -107,10 +107,33 @@ def is_generic(mnxm: str, smi: dict) -> bool:
 
 
 def parse_sides(equation: str):
-    """(substrates, products) as MNXM lists, in equation order."""
+    """(substrates, products) as (MNXM, compartment) lists, in equation order.
+
+    THE COMPARTMENT IS PART OF THE PARTICIPANT, AND DROPPING IT FAKES INSTANCES.
+    This function used to return bare MNXM ids, discarding the `@compartment` suffix the
+    equation writes. A participant is a species IN A PLACE: ATP in the cytosol and ATP in
+    the periplasm are not interchangeable, and a reaction that moves one to the other is a
+    TRANSLOCASE, not a chemical transformation.
+
+    What that cost, read rather than inferred: MNXR106400 is
+        `1 MNXM3@MNXD1 + 1 MNXM40333@MNXD1 = 1 MNXM3@MNXD2 + 1 MNXM40333@MNXD2`
+    -- ATP and dADP crossing a membrane, unchanged. It carries EC 2.7.4.6, so it is
+    generated as a candidate for every generic nucleoside-diphosphate kinase. Compartment-
+    blind, its two sides read as [ATP, dADP] and [ATP, dADP]: the concrete participants
+    appear verbatim, the generic finds a wildcard match, and `match_reaction` PROVES a
+    transport reaction to be the instance of a kinase. The chemistry it would then assert
+    -- a phosphate transfer -- does not happen in that reaction at all.
+
+    Making the compartment part of the identity kills it at the root, and kills it for the
+    right reason: MNXR106400's products live in MNXD2 and a cytosolic template's do not, so
+    the verbatim-participant clause simply fails. No transport blocklist, no `T` column, no
+    special case -- MetaNetX ships a transport flag, but reading a column and trusting it is
+    identify-by-column, which has faked a verdict in this lane before. The equation says
+    where the species is; read the equation.
+    """
     lhs, _, rhs = equation.partition(" = ")
-    return ([m for _, m in EQ_TERM.findall(lhs)],
-            [m for _, m in EQ_TERM.findall(rhs)])
+    return ([(m, c) for _, m, c in EQ_TERM.findall(lhs)],
+            [(m, c) for _, m, c in EQ_TERM.findall(rhs)])
 
 
 def match_reaction(G: str, C: str, eqn: dict, smi: dict):
@@ -120,9 +143,13 @@ def match_reaction(G: str, C: str, eqn: dict, smi: dict):
     Direction-free: caller decides which end it started from. Requirements, all of them:
       * same participant count on each side -- a reaction that gained or lost a species is
         a different reaction, not an instance;
-      * every NON-generic participant of G appears verbatim in C (same MNXM). A template's
-        concrete parts are not negotiable: water is water, acetate is acetate;
-      * every generic participant of G maps to some participant of C by `wildcard_chains`;
+      * every NON-generic participant of G appears verbatim in C (same MNXM, SAME
+        COMPARTMENT). A template's concrete parts are not negotiable: water is water,
+        acetate is acetate, and cytosolic ATP is not periplasmic ATP -- see `parse_sides`
+        for the transport reaction this clause used to admit as a kinase;
+      * every generic participant of G maps to some participant of C by `wildcard_chains`,
+        IN THE SAME COMPARTMENT -- an instance that happens somewhere else is a different
+        reaction;
       * the substitution is CONSISTENT across the whole reaction. This clause is what stops
         a template with two acyl slots matching a concrete with two UNRELATED chains -- the
         template says both slots carry the same R, so an instance where they differ is a
@@ -146,24 +173,27 @@ def match_reaction(G: str, C: str, eqn: dict, smi: dict):
     for gs, cs in zip(gs_all, cs_all):
         pool = list(cs)
         for g in gs:
-            if not is_generic(g, smi):
+            gm, gc = g
+            if not is_generic(gm, smi):
+                # verbatim means BOTH the species and its compartment
                 if g not in pool:
                     return None
                 pool.remove(g)
-                corr[g] = g
+                corr[gm] = gm
                 continue
             hit = None
             for c in pool:
-                if is_generic(c, smi):
+                cm, cc = c
+                if is_generic(cm, smi) or cc != gc:
                     continue
-                ch = wildcard_chains(smi.get(g) or "", smi.get(c) or "")
+                ch = wildcard_chains(smi.get(gm) or "", smi.get(cm) or "")
                 if ch and (chain is None or ch == chain):
                     hit, chain = c, ch
                     break
             if hit is None:
                 return None
             pool.remove(hit)
-            corr[g] = hit
+            corr[gm] = hit[0]
         if pool:
             return None
     return chain, corr
@@ -196,6 +226,56 @@ def find_instances(G: str, eqn: dict, smi: dict, ec2r: dict, r2ec: dict,
 
 
 # ---------------------------------------------------------------------------
+# Applying a nomination -- the step that turns a proved instance into a number
+# ---------------------------------------------------------------------------
+def apply_nominations(weights: dict, nominations, admissible=None):
+    """Re-express each template's evidence on the concrete member it was PROVED to be.
+
+    `nominations` is an iterable of (generic_mnxr, concrete_mnxr) -- what `main` writes and
+    what a caller stages back in as a content-hashed input. Returns a NEW weight dict.
+
+    REPLACE, NEVER SUPPLEMENT. This is the whole semantic, and it follows from what a
+    nomination claims. The instance is not new evidence: it IS the host's enzyme, re-written
+    on the member the host actually carries. Adding the concrete while keeping the template
+    would double-count one enzyme's evidence and -- much worse -- leave the generic node
+    alive, so two concretes that both match it could bridge through it. That is the clique
+    artifact this module exists to close, re-entering through the back door after
+    `gate_no_generic_survives` has already passed on the front.
+
+    So the template's weight MOVES. Measured on the lane's own set4 axes: the swap gains the
+    LPS nitrogen axis and loses nothing -- the template's own pairs were a floating island
+    (real chemistry, joined to nothing), which is exactly why moving them off it costs no
+    connectivity.
+
+    `admissible` optionally restricts to reactions with trustworthy atom pairs. A nomination
+    whose concrete is not mapped would silently DELETE the template's weight and put it
+    nowhere -- turning an instantiation into an evidence loss. Those are skipped, template
+    intact, and counted.
+    """
+    out = dict(weights)
+    applied, skipped = [], []
+    for G, C in nominations:
+        if admissible is not None and C not in admissible:
+            # never let a nomination destroy evidence it cannot re-express
+            skipped.append((G, C))
+            continue
+        out[C] = out.get(G, 1.0)
+        out.pop(G, None)
+        applied.append((G, C))
+    return out, applied, skipped
+
+
+def gate_no_template_retains_weight(weights: dict, nominations):
+    """After applying, no APPLIED template may still carry evidence.
+
+    The direct assertion of `apply_nominations`'s contract. A template left weighted is a
+    live generic node with conductance on it -- the exact thing the module refuses -- and it
+    would be invisible downstream because the concrete's edges look correct on their own.
+    """
+    return [G for G, C in nominations if G in weights]
+
+
+# ---------------------------------------------------------------------------
 # The gates. These encode the distinction the module exists to respect.
 # ---------------------------------------------------------------------------
 def gate_no_generic_survives(nominations, eqn, smi):
@@ -208,7 +288,7 @@ def gate_no_generic_survives(nominations, eqn, smi):
     bad = []
     for G, C, _, _ in nominations:
         subs, prods = parse_sides(eqn[C])
-        gen = [m for m in set(subs) | set(prods) if is_generic(m, smi)]
+        gen = [m for m, _c in set(subs) | set(prods) if is_generic(m, smi)]
         if gen:
             bad.append((C, gen))
     return bad
@@ -307,7 +387,7 @@ def main(argv=None):
 
     generic_host = [r for r in sorted(host)
                     if r in eqn and any(is_generic(m, smi)
-                                        for m in sum(parse_sides(eqn[r]), []))]
+                                        for m, _c in sum(parse_sides(eqn[r]), []))]
     print(f"[instantiate] host reactions touching a template: {len(generic_host):,}")
 
     nominations, ambiguous, tally = [], [], Counter()
