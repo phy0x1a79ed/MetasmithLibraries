@@ -66,6 +66,15 @@ import scipy.sparse as sp
 from scipy.sparse.linalg import factorized
 import networkx as nx
 
+# Floor below which an atom-lane R_eff is treated as float noise when inverted to a
+# conductance. Promoted from a bare `1e-12` literal in `score_grid` so a consumer
+# (the pulse-chase suite) can import the bound rather than restate it. This is the
+# ATOM-LANE clamp; it is deliberately a SEPARATE name from the star/production
+# solver's `ecspr_solver.REFF_EPS`, which governs a different graph. Do not conflate
+# the two -- the atom graph and the star graph are different topologies and their
+# floors are allowed to move independently.
+ATOM_REFF_EPS = 1e-12
+
 
 # =====================================================================
 # Graph construction
@@ -298,8 +307,8 @@ def score_grid(grid: Grid, atomic: bool, axes: dict, ax_ids: list,
         aug = best(Za)
         for ax_id in ends:
             rb, ra = base[ax_id], aug[ax_id]
-            gb = 1.0 / max(rb, 1e-12)
-            ga = 1.0 / max(ra, 1e-12)
+            gb = 1.0 / max(rb, ATOM_REFF_EPS)
+            ga = 1.0 / max(ra, ATOM_REFF_EPS)
             d = ga - gb
             rows[(contig, ax_id)] = max(d, 0.0)
         if (k + 1) % 50 == 0:

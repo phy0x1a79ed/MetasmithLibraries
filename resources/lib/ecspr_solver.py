@@ -38,6 +38,13 @@ import networkx as nx
 REFF_EPS = 1e-12
 IEFF_EPS = 1e-12
 
+# Tolerance the self-tests hold the solver to against an independent dense rebuild.
+# Promoted from a bare `1e-9` literal repeated across the asserts in `_selftest`
+# and `_selftest_direct` so a consumer (the pulse-chase suite's II3 correctness
+# gate) can import the bound rather than restate it. This governs the STAR/production
+# solver's two-terminal R_eff, not the atom lane (see ecspr_atom_graph.ATOM_REFF_EPS).
+SELFTEST_TOL = 1e-9
+
 
 # =====================================================================
 # SMW base: per-element shared Laplacian + dense inverse (port of 07b)
@@ -501,7 +508,7 @@ def _selftest() -> int:
     rb_dense = _reff_dense(G, s, t)
     print(f"R_eff_base: solver={rb_solver:.10f} dense={rb_dense:.10f} "
           f"|d|={abs(rb_solver - rb_dense):.2e}")
-    assert abs(rb_solver - rb_dense) < 1e-9, "base R_eff mismatch"
+    assert abs(rb_solver - rb_dense) < SELFTEST_TOL, "base R_eff mismatch"
 
     cases = [
         {("rxn", "new1"): [(("met", "m1"), 1.5), (("met", "m4"), 2.0)]},
@@ -562,8 +569,8 @@ def _selftest_direct() -> int:
     rb_dense = _reff_dense(G, s, t)
     print(f"r_base: direct={rb_direct[0]:.12f} woodbury={rb_wood[0]:.12f} "
           f"dense={rb_dense:.12f}")
-    assert abs(rb_direct[0] - rb_dense) < 1e-9, "direct base != dense"
-    assert abs(rb_wood[0] - rb_dense) < 1e-9, "woodbury base != dense"
+    assert abs(rb_direct[0] - rb_dense) < SELFTEST_TOL, "direct base != dense"
+    assert abs(rb_wood[0] - rb_dense) < SELFTEST_TOL, "woodbury base != dense"
 
     cases = [
         {("rxn", "new1"): [(("met", "m1"), 1.5), (("met", "m4"), 2.0)]},
@@ -608,11 +615,11 @@ def _selftest_direct() -> int:
                       edge_weight_key=None, context=ctx)
     rbm = dsolver.base_reff(multi.pairs)
     for k in range(len(multi.pairs)):
-        assert abs(rbm[k] - reff_base(multi, k)) < 1e-9, \
+        assert abs(rbm[k] - reff_base(multi, k)) < SELFTEST_TOL, \
             f"multi-axis base mismatch at pair {k} -- the pair=0 bug"
     print(f"multi-axis: {len(multi.pairs)} pairs agree with per-pair Woodbury")
 
-    assert worst_dw < 1e-9 and worst_dd < 1e-9, \
+    assert worst_dw < SELFTEST_TOL and worst_dd < SELFTEST_TOL, \
         f"direct disagrees (vs woodbury {worst_dw:.2e}, vs dense {worst_dd:.2e})"
     print(f"\nPASS -- direct vs woodbury {worst_dw:.2e}, vs dense {worst_dd:.2e}")
     return 0
