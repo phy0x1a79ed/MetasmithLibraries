@@ -139,17 +139,28 @@ class Grid:
 
     Deliberately not networkx at solve time: a fosmid's addition only appends edges,
     and the base arrays never change, so they are built once and reused.
+
+    PRUNING. `prune=True` (default) keeps only the largest connected component in the
+    factorized arrays (`nodes`/`idx`/`rows`/`cols`/`cond`), because a grounded Laplacian
+    over a disconnected graph is singular and the factorization would raise. `prune=False`
+    is the no-loss tier: it RETAINS every component, so no reaction's atoms are silently
+    dropped -- the property I9 gates. The full graph is always in `self.g` regardless, and
+    the all-paths measurement (`supernode_ieff`) reads `self.g`, so the SOLVE never prunes;
+    the flag only governs whether the single-factorization `zcols`/`reff_from_z` path is
+    available (it needs one connected component). Do not call `zcols` on a `prune=False`
+    grid whose graph is disconnected.
     """
 
-    def __init__(self, edges: dict, name: str = ""):
+    def __init__(self, edges: dict, name: str = "", prune: bool = True):
         g = nx.Graph()
         for (u, v), w in edges.items():
             if w > 0:
                 g.add_edge(u, v, w=w)
         if not g.number_of_nodes():
             raise ValueError(f"{name}: empty graph")
-        lcc = max(nx.connected_components(g), key=len)
+        lcc = max(nx.connected_components(g), key=len) if prune else set(g.nodes)
         self.g = g
+        self.pruned = prune
         self.lcc = lcc
         self.nodes = sorted(lcc, key=str)
         self.idx = {n: i for i, n in enumerate(self.nodes)}
