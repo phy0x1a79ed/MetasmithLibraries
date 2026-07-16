@@ -88,9 +88,12 @@ def load_pairs(path: Path, element: str) -> pd.DataFrame:
 def atom_edges(pairs: pd.DataFrame, weights: dict):
     """{(node_u, node_v): conductance} for the atom-transfer graph.
 
-    node = (metabolite, canonical atom rank). Conductance is E_r per transiting
-    atom; parallel transfers between the same atom pair add, which is the same
-    electrical convention the star uses for reinforcement.
+    node = (metabolite, canonical atom rank). Conductance is E_r * w per transiting
+    atom, where w is the pair's fanout-dilution weight (1.0 for a confident mapping,
+    1/n for a diluted one -- see `ecspr_atom_pairs`); parallel transfers between the
+    same atom pair add, which is the same electrical convention the star uses for
+    reinforcement. A pairs table without a `pair_w` column (an older extract, or the
+    star's) is read as all-1.0, so this is byte-identical on confident data.
     """
     out = defaultdict(float)
     for rec in pairs.itertuples(index=False):
@@ -99,11 +102,16 @@ def atom_edges(pairs: pd.DataFrame, weights: dict):
             continue
         si = [int(v) for v in rec.sub_idx.split(",")]
         pi = [int(v) for v in rec.prod_idx.split(",")]
-        for a, b in zip(si, pi):
+        pw_raw = getattr(rec, "pair_w", None)
+        if isinstance(pw_raw, str) and pw_raw:
+            pw = [float(v) for v in pw_raw.split(",")]
+        else:
+            pw = [1.0] * len(si)
+        for a, b, w in zip(si, pi, pw):
             u, v = (rec.substrate, a), (rec.product, b)
             if u == v:
                 continue
-            out[(u, v) if u < v else (v, u)] += float(er)
+            out[(u, v) if u < v else (v, u)] += float(er) * float(w)
     return out
 
 

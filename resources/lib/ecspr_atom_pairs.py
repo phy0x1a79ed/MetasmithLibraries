@@ -101,7 +101,7 @@ ELEMENTS = ("C", "N", "S", "P")
 EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\w+)@\w+")
 
 PAIR_COLS = ("mnxr", "element", "substrate", "product", "n_atoms",
-             "sub_idx", "prod_idx")
+             "sub_idx", "prod_idx", "pair_w")
 STATUS_COLS = ("mnxr", "status", "n_sub", "n_prod", "n_mapped_sub", "n_mapped_prod")
 
 
@@ -187,28 +187,41 @@ def parse_equation(eq: str):
 
 
 def match_mols(mols: list, mnxms: list, canon: dict):
-    """Greedy canonical-SMILES match, aligned with `mols`.
+    """Canonical-SMILES match, aligned with `mols`, returning WEIGHTED name candidates.
 
-    Also returns whether the match was AMBIGUOUS -- i.e. two DISTINCT MNXMs share a
-    canonical SMILES, so `pop(0)` picked arbitrarily between different metabolites.
+    Each template position gets the list of DISTINCT MNXMs whose canonical SMILES it
+    matches, each at weight 1/k (k = number of distinct candidates). k == 1 is the
+    ordinary confident case, weight 1.0. Also returns whether any position was diluted
+    (k > 1). Unmatched positions get an empty list.
+
+    WHY WEIGHTS RATHER THAN A GREEDY PICK, AND WHY NOT A REFUSAL. When two DISTINCT MNXMs
+    share a canonical SMILES the naming is genuinely ambiguous -- a greedy `pop(0)` picked
+    arbitrarily between different metabolites, and the previous version REFUSED the whole
+    reaction (`ambiguous_duplicate`) rather than choose. Both are wrong for the same
+    reason forced n > 1 was: a pick fabricates an identity, a refusal is a gap, and the
+    contract is dilute-not-gap. Emitting each candidate at 1/k is the doubly-stochastic
+    marginal of the uniform distribution over valid namings -- the honest "it is one of
+    these k, we cannot say which," spread as weight instead of collapsed to a guess or a
+    hole.
 
     THE SAME MNXM TWICE IS NOT AMBIGUOUS. `parse_equation` expands stoichiometry, so
-    `2 H2O` arrives as `[M, M]`. Testing `len(v) > 1` calls that ambiguous and refuses
-    the reaction -- but both entries are the same metabolite, so whichever way `pop(0)`
-    assigns them the answer is identical, and the canonical ranks agree because it is
-    literally the same molecule. Only `len(set(v)) > 1` is a real ambiguity. Measured:
-    3,212 of 3,255 `ambiguous_duplicate` refusals (98.7%) were this self-inflicted case.
+    `2 H2O` arrives as `[M, M]`; the pool is `[M, M]` but the distinct-candidate set is
+    `{M}`, k == 1, weight 1.0 -- no dilution. Only `len(set(v)) > 1` is a real ambiguity.
+    Measured: 3,212 of 3,255 old `ambiguous_duplicate` refusals (98.7%) were this
+    self-inflicted case; the remaining 43 are the ones now diluted rather than dropped.
     """
     pool = defaultdict(list)
     for m in mnxms:
         cs = canon.get(m)
         if cs:
             pool[cs].append(m)
-    ambiguous = any(len(set(v)) > 1 for v in pool.values())
+    # distinct candidates per canonical SMILES -- the same metabolite twice is one candidate
+    cand = {cs: sorted(set(v)) for cs, v in pool.items()}
+    diluted = any(len(v) > 1 for v in cand.values())
     out = []
     for mol in mols:
         if mol is None:
-            out.append(None)
+            out.append([])
             continue
         m2 = Chem.Mol(mol)
         for a in m2.GetAtoms():
@@ -223,11 +236,15 @@ def match_mols(mols: list, mnxms: list, canon: dict):
             Chem.SanitizeMol(m2)
             cs = Chem.MolToSmiles(m2, canonical=True)
         except Exception:
-            out.append(None)
+            out.append([])
             continue
-        cand = pool.get(cs)
-        out.append(cand.pop(0) if cand else None)
-    return out, ambiguous
+        c = cand.get(cs)
+        if not c:
+            out.append([])
+        else:
+            w = 1.0 / len(c)
+            out.append([(m, w) for m in c])
+    return out, diluted
 
 
 # =====================================================================
@@ -312,17 +329,30 @@ def forced_pairs(sub_mnxms: list, prod_mnxms: list, formulas: dict, ranks_of: di
     equal counts, conservation leaves exactly one possibility. This does not GUESS the
     pairing; it is the only pairing that exists.
 
-    THE LIMIT IS DELIBERATE, AND IS THE WHOLE SAFEGUARD. Only n == 1 is emitted. With one
-    X atom on each side there is a unique bijection and nothing is chosen. With n > 1 the
-    metabolite pairing is still forced but the ATOM correspondence is not -- which of a
-    substrate's 5 carbons becomes which of a product's 5 -- and picking one (by rank
-    order, say) would fabricate exactly the atom identity this graph is built to respect.
-    Those are refused. A rescued axis resting on invented chemistry is worth less than a
-    lost one.
+    WHEN n == 1, one X atom on each side, there is a unique bijection and nothing is
+    chosen: the pair is emitted at weight 1.0.
+
+    WHEN n > 1 the metabolite pairing is still forced but the ATOM correspondence is not
+    -- which of a substrate's 5 carbons becomes which of a product's 5. This used to be
+    REFUSED, on the reasoning that picking one pairing (by rank order, say) would
+    fabricate the very atom identity this graph is built to respect. That reasoning is
+    right about PICKING and wrong about REFUSING: a refusal is a gap, and the model's
+    stated contract is dilute-not-gap. So instead of picking one and instead of dropping
+    the reaction, every candidate source->product pairing is emitted DILUTED by the
+    fanout n -- each source atom spreads a total weight of 1.0 over its n candidate
+    destinations (weight 1/n each). This is the doubly-stochastic completion, the
+    maximum-entropy statement of "we know the metabolites transfer n atoms but not which
+    maps to which": rows and columns of the n x n candidate matrix each sum to 1.0, so
+    the per-atom margin is exactly a confident pairing's and O(n^2) edges are added, not
+    the O(n!) of enumerating bijections. Nothing is fabricated because nothing is chosen;
+    the uncertainty is represented as spread weight, which is what the graph then dilutes.
 
     The single case where MNXR104650 (sulfite reductase, `H2S + 3 NADP+ + 3 H2O = 4 H+ +
-    sulfite + 3 NADPH`) severs sulfate from cysteine is exactly this shape: one S in, one
-    S out, three NADPH carrying none.
+    sulfite + 3 NADPH`) severs sulfate from cysteine is exactly the n == 1 shape: one S
+    in, one S out, three NADPH carrying none.
+
+    Each emitted correspondence is a triple `(sub_rank, prod_rank, weight)`; the weight is
+    the fanout dilution the atom graph multiplies onto the reaction's evidence E_r.
     """
     out = {}
     for X in ELEMENTS:
@@ -341,12 +371,13 @@ def forced_pairs(sub_mnxms: list, prod_mnxms: list, formulas: dict, ranks_of: di
         if bad or len(sx) != 1 or len(px) != 1:
             continue
         (sm, sn), (pm, pn) = sx[0], px[0]
-        if sn != pn or sn != 1 or sm == pm:
+        if sn != pn or sm == pm:
             continue
         sr, pr = ranks_of.get((sm, X)), ranks_of.get((pm, X))
-        if not sr or not pr or len(sr) != 1 or len(pr) != 1:
+        if not sr or not pr or len(sr) != sn or len(pr) != pn:
             continue
-        out[(X, sm, pm)] = [(sr[0], pr[0])]
+        w = 1.0 / sn                      # fanout dilution; n == 1 -> 1.0 (unique pairing)
+        out[(X, sm, pm)] = [(a, b, w) for a in sr for b in pr]
     return out
 
 
@@ -379,10 +410,10 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
     if n_sub_t != len(sub_mnxms) or n_prod_t != len(prod_mnxms):
         return {}, "stripped"
 
+    # WEIGHTED name candidates per template. A shared-canonical-SMILES ambiguity is
+    # DILUTED across its candidates (weight 1/k), not refused -- see `match_mols`.
     sub_named, amb_s = match_mols(sub_mols, sub_mnxms, canon)
     prod_named, amb_p = match_mols(prod_mols, prod_mnxms, canon)
-    if amb_s or amb_p:
-        return {}, "ambiguous_duplicate"
 
     sub_ranks = [canonical_ranks(m) for m in sub_mols]
     prod_ranks = [canonical_ranks(m) for m in prod_mols]
@@ -412,15 +443,21 @@ def pairs_from_mapped(mapped_smi: str, sub_mnxms: list, prod_mnxms: list,
             si, s_rank, sel = src
             if sel != el:
                 continue
-            sm = sub_named[si] if si < len(sub_named) else None
-            pm = prod_named[j] if j < len(prod_named) else None
-            if not sm or not pm:
+            sub_cands = sub_named[si] if si < len(sub_named) else []
+            prod_cands = prod_named[j] if j < len(prod_named) else []
+            if not sub_cands or not prod_cands:
                 continue
-            # THE LINE THE UNIFIER DOES NOT WRITE: keep the pair, not two counts.
-            pairs[(el, sm, pm)].append((s_rank, prod_ranks[j][a.GetIdx()]))
+            p_rank = prod_ranks[j][a.GetIdx()]
+            # THE LINE THE UNIFIER DOES NOT WRITE: keep the pair, not two counts. When
+            # a side is name-ambiguous the pair is emitted once per candidate naming at
+            # the product of the two sides' dilution weights, so the atom's transfer is
+            # spread over the candidates rather than picked or dropped.
+            for sm, ws in sub_cands:
+                for pm, wp in prod_cands:
+                    pairs[(el, sm, pm)].append((s_rank, p_rank, ws * wp))
     if not pairs:
         return {}, "no_pairs"
-    return dict(pairs), "ok"
+    return dict(pairs), ("ambiguous_diluted" if (amb_s or amb_p) else "ok")
 
 
 # =====================================================================
@@ -583,8 +620,9 @@ def cmd_extract(args):
         for (el, sm, pm), idxs in pairs.items():
             rows.append(dict(mnxr=r, element=el, substrate=sm, product=pm,
                              n_atoms=len(idxs),
-                             sub_idx=",".join(str(i) for i, _ in idxs),
-                             prod_idx=",".join(str(j) for _, j in idxs)))
+                             sub_idx=",".join(str(i) for i, _, _ in idxs),
+                             prod_idx=",".join(str(j) for _, j, _ in idxs),
+                             pair_w=",".join(repr(float(w)) for _, _, w in idxs)))
         if (k + 1) % 10000 == 0:
             print(f"[atom-pairs]   {k+1:,}/{len(aam):,}", flush=True)
 
