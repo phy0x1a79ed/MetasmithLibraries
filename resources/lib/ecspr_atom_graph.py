@@ -245,10 +245,11 @@ def attachable(extra: dict, grid: Grid, atomic: bool) -> dict:
     """Keep only the added edges that actually attach to the host.
 
     The incumbent does the same thing and says why: build_ar2m keeps "edges only to
-    metabolites already in base". Without it, an addition whose endpoints are all
-    outside the base LCC forms a component with no path to ground, and the grounded
-    Laplacian is exactly singular -- scipy raises rather than lying, which is the one
-    mercy here.
+    metabolites already in base". Membership is against the WHOLE base graph (`grid.g`),
+    not just its LCC: the all-paths measurement (`supernode_ieff`) works on the full
+    graph and returns a definite zero for a disconnected endpoint rather than raising, so
+    the old 'must be in the LCC or the grounded Laplacian is singular' guard no longer
+    applies -- an addition may legitimately reinforce a minority component.
 
     star : an edge is (new_rxn_node, met) -- keep it iff the met is in the base.
            The reaction node is new by construction and attaches through that met.
@@ -257,13 +258,14 @@ def attachable(extra: dict, grid: Grid, atomic: bool) -> dict:
            routes among host atoms; it cannot invent a metabolite. That is exactly
            the freedom the star lane has, so the lanes stay comparable.
     """
+    base = set(grid.g.nodes)
     out = {}
     for (u, v), w in extra.items():
         if atomic:
-            if u in grid.idx and v in grid.idx:
+            if u in base and v in base:
                 out[(u, v)] = w
         else:
-            iu, iv = u in grid.idx, v in grid.idx
+            iu, iv = u in base, v in base
             if iu and iv:
                 out[(u, v)] = w
             elif iu != iv:
@@ -275,50 +277,174 @@ def attachable(extra: dict, grid: Grid, atomic: bool) -> dict:
 
 
 def axis_terminals(grid: Grid, met: str, atomic: bool):
-    """The node indices an axis endpoint denotes on this grid."""
+    """The node indices an axis endpoint denotes on this grid (LCC-local)."""
     if atomic:
         return sorted(grid.idx[n] for n in grid.lcc if n[0] == met)
     node = ("met", met)
     return [grid.idx[node]] if node in grid.idx else []
 
 
+# =====================================================================
+# The all-paths, edge-preserving measurement -- replaces MIN-over-pairs
+# =====================================================================
+
+def _dense_reff(G: nx.Graph, s, t) -> float:
+    """Two-terminal effective resistance by a dense grounded solve on G (edge attr 'w').
+
+    G must be connected (the caller restricts to the shared component). Grounds the last
+    node and inverts the reduced Laplacian. Shares no line of reasoning with the Woodbury
+    /Z path, which is what makes it the referent the pulse-chase gate checks against.
+    """
+    nodes = list(G.nodes)
+    idx = {n: i for i, n in enumerate(nodes)}
+    n = len(nodes)
+    L = np.zeros((n, n))
+    for u, v, d in G.edges(data=True):
+        w = float(d.get("w", 0.0))
+        if w <= 0:
+            continue
+        i, j = idx[u], idx[v]
+        L[i, i] += w
+        L[j, j] += w
+        L[i, j] -= w
+        L[j, i] -= w
+    b = np.zeros(n - 1)
+    if idx[s] < n - 1:
+        b[idx[s]] += 1.0
+    if idx[t] < n - 1:
+        b[idx[t]] -= 1.0
+    phi = np.zeros(n)
+    phi[:-1] = np.linalg.solve(L[:-1, :-1], b)
+    return float(phi[idx[s]] - phi[idx[t]])
+
+
+def merge_terminals(edges: dict, groups: list) -> dict:
+    """Short each named atom group into one super-node: sum parallel conductances, drop
+    intra-group edges. The exact realization of 'short all source atoms, short all sink
+    atoms' -- no big-weight approximation."""
+    remap = {}
+    for name, atoms in groups:
+        for a in atoms:
+            remap[a] = name
+    out = defaultdict(float)
+    for (u, v), w in edges.items():
+        uu, vv = remap.get(u, u), remap.get(v, v)
+        if uu == vv:
+            continue
+        key = (uu, vv) if str(uu) < str(vv) else (vv, uu)
+        out[key] += w
+    return dict(out)
+
+
+def metabolite_atoms(edges: dict, met: str) -> list:
+    """Every atom node (met, rank) of `met` present in an edge dict -- ALL of them, across
+    components. An axis endpoint is the whole metabolite, so its terminal is its atom SET."""
+    seen = set()
+    for (u, v) in edges:
+        for nnode in (u, v):
+            if isinstance(nnode, tuple) and nnode and nnode[0] == met:
+                seen.add(nnode)
+    return sorted(seen, key=str)
+
+
+def supernode_ieff(edges: dict, src_atoms, snk_atoms) -> float:
+    """The all-paths, edge-preserving effective conductance (Ieff) between two metabolite
+    endpoints. Each endpoint is the SET of its atoms, shorted to a super-node, and the
+    conductance is the full two-terminal solve -- every path, every edge, combined in
+    parallel.
+
+    THIS REPLACES THE MIN-OVER-ATOM-PAIRS SCORER, and the reason is behavioural, not
+    cosmetic. MIN reports only the single best (source-atom, sink-atom) route, so it
+    neither COMBINES parallel routes -- a second, independent route through different
+    atoms leaves it unchanged -- nor is EDGE-PRESERVING: removing a non-best edge that
+    still carries source->sink current leaves it unchanged. A pulse-chase measures where
+    the whole label can go, not its single fastest atom, so the endpoint must be the whole
+    atom set and every route must count. Shorting the endpoint atoms also BRIDGES what
+    atom-level components would split apart -- two routes that share no atom node still
+    share the source and sink metabolites -- which is what makes a metabolite-to-metabolite
+    conductance well defined at all.
+
+    Returns 0.0 (a definite zero-capacity, not an error) when the endpoints have no
+    connecting path or when either atom set is empty. Uses the atom-lane conductance floor
+    ATOM_REFF_EPS.
+    """
+    if not src_atoms or not snk_atoms:
+        return 0.0
+    merged = merge_terminals(edges, [("S*", set(src_atoms)), ("T*", set(snk_atoms))])
+    G = nx.Graph()
+    for (u, v), w in merged.items():
+        if w > 0:
+            G.add_edge(u, v, w=w)
+    if "S*" not in G or "T*" not in G or not nx.has_path(G, "S*", "T*"):
+        return 0.0
+    # _dense_reff grounds the last node and inverts the reduced Laplacian, singular on a
+    # disconnected graph. Restrict to the component the endpoints share (they do, above).
+    comp = nx.node_connected_component(G, "S*")
+    H = G.subgraph(comp)
+    return 1.0 / max(_dense_reff(H, "S*", "T*"), ATOM_REFF_EPS)
+
+
+def _endpoint_atoms(node_set: set, met: str, atomic: bool) -> list:
+    """The nodes an axis endpoint denotes, across the WHOLE graph. atom: every (met, rank)
+    atom node of the metabolite. star: the single ("met", met) node."""
+    if atomic:
+        return [n for n in node_set
+                if isinstance(n, tuple) and len(n) == 2 and n[0] == met
+                and isinstance(n[1], (int, np.integer))]
+    node = ("met", met)
+    return [node] if node in node_set else []
+
+
 def score_grid(grid: Grid, atomic: bool, axes: dict, ax_ids: list,
                fos_extra: dict, label: str):
-    """delta_ieff per (fosmid, axis): min-route R_eff, one factorization per fosmid."""
+    """delta_ieff per (fosmid, axis) via the ALL-PATHS super-node measurement.
+
+    Replaces the MIN-over-atom-pairs scorer with `supernode_ieff` (see its docstring for
+    why MIN is behaviourally wrong): each axis endpoint is the whole metabolite's atom
+    SET, shorted, and Ieff is the full two-terminal solve on the ENTIRE graph -- every
+    route, edge-preserving, and spanning the components atom-level pruning would separate.
+
+    Operates on `grid.g` (the full graph, not the LCC): shorting a metabolite's atoms
+    bridges components, and a route that reaches the endpoint through a minority component
+    is real capacity the pruned LCC would silently drop. This forfeits the one-
+    factorization-per-fosmid property the MIN path had -- a dense solve per (fosmid, axis)
+    -- which is the cost of the correctness the pulse-chase II2 gate demands; speeding it
+    back up (e.g. a super-node reff read off the shared factorization) is a separate,
+    benchmarked step.
+    """
+    base_edges = {(u, v): d["w"] for u, v, d in grid.g.edges(data=True)}
+    base_nodes = set(grid.g.nodes)
     ends = {}
     for ax_id in ax_ids:
         a = axes[ax_id]
-        s = axis_terminals(grid, a["source"][0], atomic)
-        t = axis_terminals(grid, a["sink"][0], atomic)
+        s = _endpoint_atoms(base_nodes, a["source"][0], atomic)
+        t = _endpoint_atoms(base_nodes, a["sink"][0], atomic)
         if s and t and set(s) != set(t):
-            ends[ax_id] = (s, t)
+            ends[ax_id] = (a["source"][0], a["sink"][0])
     if not ends:
         return {}
-    terms = sorted({i for s, t in ends.values() for i in s + t})
-
-    def best(Z):
-        out = {}
-        for ax_id, (S, T) in ends.items():
-            r = min(reff_from_z(Z, terms, a, b) for a in S for b in T if a != b)
-            out[ax_id] = r
-        return out
 
     t0 = time.time()
-    Zb, _ = grid.zcols(terms)
-    base = best(Zb)
+    base = {ax_id: supernode_ieff(base_edges,
+                                  _endpoint_atoms(base_nodes, sm, atomic),
+                                  _endpoint_atoms(base_nodes, km, atomic))
+            for ax_id, (sm, km) in ends.items()}
     rows = {}
     for k, (contig, extra) in enumerate(fos_extra.items()):
         extra = attachable(extra, grid, atomic)
         if not extra:
             continue
-        Za, _ = grid.zcols(terms, extra)
-        aug = best(Za)
-        for ax_id in ends:
-            rb, ra = base[ax_id], aug[ax_id]
-            gb = 1.0 / max(rb, ATOM_REFF_EPS)
-            ga = 1.0 / max(ra, ATOM_REFF_EPS)
-            d = ga - gb
-            rows[(contig, ax_id)] = max(d, 0.0)
+        aug_edges = dict(base_edges)
+        for (u, v), w in extra.items():
+            key = (u, v) if str(u) < str(v) else (v, u)
+            aug_edges[key] = aug_edges.get(key, 0.0) + w
+        aug_nodes = base_nodes | {n for e in extra for n in e}
+        for ax_id, (sm, km) in ends.items():
+            gb = base[ax_id]
+            ga = supernode_ieff(aug_edges,
+                                _endpoint_atoms(aug_nodes, sm, atomic),
+                                _endpoint_atoms(aug_nodes, km, atomic))
+            rows[(contig, ax_id)] = max(ga - gb, 0.0)
         if (k + 1) % 50 == 0:
             print(f"    [{label}] {k+1}/{len(fos_extra)}  ({time.time()-t0:.0f}s)",
                   flush=True)
