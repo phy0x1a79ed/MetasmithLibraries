@@ -152,6 +152,17 @@ PLACEHOLDERS = [
     (r"^fe\(ii\)-\[?cytochrome", FE_RED, "cytochrome"),
     (r"^oxidized \[?rubredoxin", FE_OX, "rubredoxin"),
     (r"^reduced \[?rubredoxin", FE_RED, "rubredoxin"),
+    (r"^\[?oxidized \[?adrenodoxin", FE_OX, "adrenodoxin"),
+    (r"^\[?reduced \[?adrenodoxin", FE_RED, "adrenodoxin"),
+    # diflavin NADPH--hemoprotein (cytochrome P450) reductase: a 2e- carrier via FAD/FMN,
+    # no transferable C/N/S/P. Both bracket orderings occur ("oxidized [NADPH--...]" and
+    # "[Oxidized NADPH---...]"), and MetaNetX writes the dash run as -- or ---.
+    (r"^\[?oxidized \[?nadph[- ]+hemoprotein reductase", FE_OX, "hemoprotein_reductase"),
+    (r"^\[?reduced \[?nadph[- ]+hemoprotein reductase", FE_RED, "hemoprotein_reductase"),
+    # membrane cytochrome b5 (and other ferri/ferro-named cytochromes): ferri = oxidized (Fe3+),
+    # ferro = reduced (Fe2+). One-electron protein carrier, no transferable C/N/S/P.
+    (r"^ferricytochrome", FE_OX, "cytochrome_ferri"),
+    (r"^ferrocytochrome", FE_RED, "cytochrome_ferri"),
     # --- thiol/disulfide redox carriers: sulfur-bearing, and sulfur-conserving ---
     (r"^\[?thioredoxin\]?-dithiol", DITHIOL, "thiol_carrier"),
     (r"^\[?thioredoxin\]?-disulfide", DISULFIDE, "thiol_carrier"),
@@ -171,6 +182,11 @@ _COMPILED = [(re.compile(p, re.I), s, t) for p, s, t in PLACEHOLDERS]
 REFUSE = re.compile(
     r"^(unknown|carbon|d|nad|nadh|idh\d*|enzyme-\w+ complex|acceptor|reduced acceptor"
     r"|.*\bacp\b.*|.*acyl-carrier.*|.*acyl carrier.*|starch|chitin|.*tRNA.*"
+    # generic redox donor/acceptor pair (A + 2[H] <-> AH2): structure unknown, transfers only
+    # H, and a reaction naming it is a generic template, not a concrete instance.
+    r"|a|ah2|reduced acceptor"
+    # non-molecules: an electron and a photon carry no atom -- nothing for the atom lane.
+    r"|e\(-\)|e-|hnu|hn|h\N{GREEK SMALL LETTER NU}|photon|light"
     r"|phosphoprotein|.*\[protein\]|protein .*)$", re.I)
 
 
@@ -214,7 +230,13 @@ def load_resolved(path: Path, chem: dict):
     MetaNetX already has, naming an id that no longer means what the curator thought, or
     asserting an atom count its own SMILES does not contain.
     """
-    d = pd.read_csv(path, sep="\t", comment="#")
+    # `#` is a comment ONLY at line start. An inline `comment="#"` truncates any curated
+    # SMILES that contains a `#` triple bond (nitrile C#N, alkyne C#C) -- silently dropping
+    # exactly the rows a curator most needs to supply. Filter full-line comments and parse
+    # the remainder, so a `#` inside a field survives.
+    from io import StringIO
+    _kept = [ln for ln in Path(path).read_text().splitlines() if not ln.lstrip().startswith("#")]
+    d = pd.read_csv(StringIO("\n".join(_kept)), sep="\t")
     need = {"mnxm", "smiles", "mnx_name", "element", "n_atoms", "basis"}
     missing = need - set(d.columns)
     if missing:

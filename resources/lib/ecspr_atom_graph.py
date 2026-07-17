@@ -85,33 +85,78 @@ def load_pairs(path: Path, element: str) -> pd.DataFrame:
     return df[df.element == element]
 
 
-def atom_edges(pairs: pd.DataFrame, weights: dict):
+def _rank_list(v) -> list:
+    """A rank field in two schemas: a comma-joined string of ranks (the incumbent extract
+    and the toy fixtures pack a whole substrate->product atom list into one row) OR a single
+    int (the frozen reference is at atom-pair granularity -- one correspondence per row)."""
+    if isinstance(v, str):
+        return [int(x) for x in v.split(",")]
+    return [int(v)]
+
+
+def _weight_list(v, n: int) -> list:
+    """The per-atom fanout-dilution weight list, matching `_rank_list`'s two schemas: a
+    comma-string is split; a scalar (the reference's per-row `pair_w`) is broadcast to n;
+    an ABSENT column (None) or a NaN reads as all-1.0 -- so a table with no `pair_w` (the
+    incumbent, the star's) is confident-by-default and this stays byte-identical on it."""
+    if isinstance(v, str) and v:
+        return [float(x) for x in v.split(",")]
+    if v is None:
+        return [1.0] * n
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return [1.0] * n
+    if f != f:                       # NaN
+        return [1.0] * n
+    return [f] * n
+
+
+def atom_edges(pairs: pd.DataFrame, weights: dict, *, use_confidence: bool = False):
     """{(node_u, node_v): conductance} for the atom-transfer graph.
 
-    node = (metabolite, canonical atom rank). Conductance is E_r * w per transiting
-    atom, where w is the pair's fanout-dilution weight (1.0 for a confident mapping,
-    1/n for a diluted one -- see `ecspr_atom_pairs`); parallel transfers between the
-    same atom pair add, which is the same electrical convention the star uses for
-    reinforcement. A pairs table without a `pair_w` column (an older extract, or the
-    star's) is read as all-1.0, so this is byte-identical on confident data.
+    node = (metabolite, canonical atom rank). Conductance is E_r * pair_w per transiting
+    atom, where `pair_w` is the pair's fanout-dilution weight: 1.0 for a confident mapping
+    (an ensemble consensus), 0.5 for a lone-member correspondence, and conf/wsum for a
+    disagreement DILUTED across candidates (see `ecspr_atom_pairs` and the AAM combiner).
+    That weight IS the ensemble's confidence expressed as conductance -- it is margin-
+    conserving (a source atom's candidate weights sum to 1.0, the dilute-not-gap property
+    the pulse-chase I1/I3 checks gate), which is exactly why it, not the raw `confidence`
+    column, is what folds into the edge. Parallel transfers between the same atom pair add
+    (the electrical convention the star uses for reinforcement).
+
+    Two input schemas are accepted transparently (see `_rank_list`/`_weight_list`): the
+    incumbent/toy extract (comma-joined ranks, string or absent `pair_w`) and the frozen
+    reference (int ranks, scalar `pair_w`). A table without a `pair_w` column reads as
+    all-1.0, so this is byte-identical on confident data -- the promotion's no-op.
+
+    `use_confidence` (default OFF) additionally multiplies each row's provenance
+    `confidence`. It is a SENSITIVITY knob, not the default weight: for lone-member and
+    disagreement rows `confidence` already contains `pair_w`, so multiplying it in
+    double-counts the dilution and breaks margin conservation. Left off, conductance is
+    the margin-conserving `pair_w`; a table where every `confidence` is 1.0 (or the column
+    is absent) makes even the on-path a no-op.
     """
     out = defaultdict(float)
     for rec in pairs.itertuples(index=False):
         er = weights.get(rec.mnxr, 0.0)
         if er <= 0:
             continue
-        si = [int(v) for v in rec.sub_idx.split(",")]
-        pi = [int(v) for v in rec.prod_idx.split(",")]
-        pw_raw = getattr(rec, "pair_w", None)
-        if isinstance(pw_raw, str) and pw_raw:
-            pw = [float(v) for v in pw_raw.split(",")]
-        else:
-            pw = [1.0] * len(si)
+        si = _rank_list(rec.sub_idx)
+        pi = _rank_list(rec.prod_idx)
+        pw = _weight_list(getattr(rec, "pair_w", None), len(si))
+        conf = 1.0
+        if use_confidence:
+            cf = getattr(rec, "confidence", None)
+            if cf is not None:
+                f = float(cf)
+                if f == f:           # not NaN
+                    conf = f
         for a, b, w in zip(si, pi, pw):
             u, v = (rec.substrate, a), (rec.product, b)
             if u == v:
                 continue
-            out[(u, v) if u < v else (v, u)] += float(er) * float(w)
+            out[(u, v) if u < v else (v, u)] += float(er) * float(w) * conf
     return out
 
 
