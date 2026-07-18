@@ -249,6 +249,62 @@ def orient_and_weight(G, X, roles, ratios, *, floor=DIODE_BACKWARD_FLOOR,
                             n_role_unknown=n_role_unknown, n_no_evidence_edges=n_noev))
 
 
+def build_ar2m_directed(weights, G_X, base_nodes, wkey, roles, ratios,
+                        *, reinforce=True, force_noop=False):
+    """Directed analog of ``ecspr_solver.build_ar2m``: ``{mnxr: E_r}`` -> a flat list of
+    directed reinforcement edges ``[(tail_key, head_key, gp, gm), ...]`` for :func:`augment`.
+
+    Node identity matches the undirected ``build_ar2m`` byte-for-byte: a reaction the host
+    already carries enters as its parallel copy ``("rxn_reinf", mnxr)`` (so conductances add,
+    realising ``E_epi300 + E_fosmid`` electrically) when ``reinforce``; a reaction absent
+    from the base enters as the canonical ``("rxn", mnxr)``. Topology is always read from
+    the canonical node in ``G_X``; edges are kept only to metabolites already in the base --
+    exactly the undirected build's rules.
+
+    Each met edge of conductance ``c = w_X * E_r`` is ORIENTED by the reaction's MetaNetX
+    roles, the same convention :func:`orient_and_weight` uses on the base: a substrate feeds
+    the reaction (``met -> rxn``), a product is fed by it (``rxn -> met``), and
+    ``gm = ratio * gp`` throttles the reverse branch (``ratio = g_rev/g_fwd`` from the
+    ensemble; ``1.0`` = no evidence -> symmetric). Role-unknown metabolites stay symmetric.
+    ``force_noop`` forces every ratio to 1.0 (the whole addition degrades to undirected) --
+    the addition-side half of the symmetric-limit parity gate.
+
+    ``roles`` is ``mnxr -> (S, P)`` and ``ratios`` is ``mnxr -> g_rev/g_fwd``, the caller's
+    dicts; ``base_nodes`` is the set of node keys already in the oriented base
+    (``set(onet.nodes)``). Path-free and canon-free.
+    """
+    edges = []
+    for mnxr, er in weights.items():
+        if er <= 0:
+            continue
+        canon = ("rxn", mnxr)
+        if canon not in G_X:
+            continue
+        in_base = canon in base_nodes
+        if in_base:
+            if not reinforce:
+                continue
+            node_id = ("rxn_reinf", mnxr)
+        else:
+            node_id = canon
+        S, P = roles.get(mnxr, (set(), set()))
+        ratio = 1.0 if force_noop else ratios.get(mnxr, 1.0)
+        for _, m, d in G_X.edges(canon, data=True):
+            if m[0] != "met" or m not in base_nodes:
+                continue
+            w = d.get(wkey, 0.0)
+            if w <= 0:
+                continue
+            c = float(w) * float(er)
+            if m[1] in S:                         # substrate: met -> rxn
+                edges.append((m, node_id, c, ratio * c))
+            elif m[1] in P:                       # product: rxn -> met
+                edges.append((node_id, m, c, ratio * c))
+            else:                                 # role unknown -> symmetric
+                edges.append((node_id, m, c, c))
+    return edges
+
+
 def _net_to_nx(onet):
     """Rebuild a plain undirected nx.Graph (edge weight 'w' = gp) for the parity referent."""
     import networkx as nx
@@ -265,10 +321,14 @@ def augment(onet, add_edges):
     ``add_edges``: list of ``(tail_key, head_key, gp, gm)``; node keys not already in
     ``onet.idx`` become new nodes appended after the base indices (e.g. reinforcement
     ``("rxn_reinf", mnxr)`` nodes for a GOF/draw addition). Returns
-    ``(B_aug, gp_aug, gm_aug, idx_aug, n_added_edges)``.
+    ``(B_aug, gp_aug, gm_aug, idx_aug, n_added_nodes)`` where ``n_added_nodes`` is the count
+    of newly introduced nodes. For an ECSPr addition every edge joins a NEW reaction node to
+    an EXISTING base metabolite, so ``n_added_nodes`` equals the number of distinct reactions
+    added -- the ``n_added_rxns`` the undirected report carries.
     """
     idx = dict(onet.idx)
     nodes = list(onet.nodes)
+    n_base = len(nodes)
 
     def _i(k):
         if k not in idx:
@@ -282,7 +342,7 @@ def augment(onet, add_edges):
     gm_aug = np.concatenate([onet.gm, np.array([e[3] for e in add_edges], float)]) \
         if add_edges else onet.gm
     B_aug = build_incidence(all_edges, len(nodes))
-    return B_aug, gp_aug, gm_aug, idx, len(extra)
+    return B_aug, gp_aug, gm_aug, idx, len(nodes) - n_base
 
 
 def directed_solve_element(onet, axes, additions=None, *, warm=True, tol=None):
@@ -510,10 +570,78 @@ def _selftest_orient_and_solve():
     add = {"u1": [(("met", "m0"), ("rxn_reinf", "x"), 1.0, 1.0),
                   (("rxn_reinf", "x"), ("met", "m3"), 1.0, 1.0)]}
     arow = list(directed_solve_element(onet, [("ax", ("met", "m0"), ("met", "m5"))], add))[0]
-    assert arow["n_added_rxns"] == 2 and np.isfinite(arow["delta_reff"]), "augment broke"
+    assert arow["n_added_rxns"] == 1 and np.isfinite(arow["delta_reff"]), "augment broke"
     print(f"  solve_element base parity |d|={err:.2e}; augment delta_reff="
           f"{arow['delta_reff']:.4e}  PASS\n")
     return worst
+
+
+def _selftest_build_ar2m_directed():
+    """``build_ar2m_directed`` at ``force_noop`` must reproduce the undirected
+    ``ecspr_solver.build_ar2m`` node identity, connectivity, and conductances exactly --
+    the addition-side half of the symmetric-limit invariant. Then the full oriented +
+    augmented directed solve at the symmetric limit must equal the undirected R_eff of the
+    same augmented graph (base + reinforcement) computed by the incumbent ``_reff_dense``."""
+    import networkx as nx
+    from ecspr_solver import build_ar2m, _reff_dense, SELFTEST_TOL
+
+    print("[directed] build_ar2m_directed force_noop == undirected build_ar2m + solve parity")
+    # A small universe: 3 reactions, one already in the base (-> reinforced parallel copy),
+    # one novel, one carrying a role-unknown metabolite; weights on w_C.
+    G_X = nx.Graph()
+    rxn_mets = {"r0": ["m0", "m1"], "r1": ["m1", "m2"], "r2": ["m2", "m3"]}
+    for r, ms in rxn_mets.items():
+        for i, m in enumerate(ms):
+            G_X.add_edge(("rxn", r), ("met", m), w_C=1.0 + 0.5 * i)
+    # Base = r0 only (so r0 reinforces, r1/r2 are novel), on mets m0,m1,m2,m3.
+    base = nx.Graph()
+    base.add_edge(("rxn", "r0"), ("met", "m0"), w_C=1.0)
+    base.add_edge(("rxn", "r0"), ("met", "m1"), w_C=1.5)
+    base.add_edge(("rxn", "rb"), ("met", "m1"), w_C=1.0)   # a base-only reaction for LCC
+    base.add_edge(("rxn", "rb"), ("met", "m2"), w_C=1.0)
+    base.add_edge(("rxn", "rb"), ("met", "m3"), w_C=1.0)
+    base_nodes = set(base.nodes)
+    weights = {"r0": 2.0, "r1": 1.0, "r2": 3.0}
+    roles = {"r0": ({"m0"}, {"m1"}), "r1": ({"m1"}, {"m2"}), "r2": ({"m2"}, {"m3"})}
+
+    und = build_ar2m(weights, G_X, base_nodes, "w_C", reinforce=True)
+    und_edges = {(node, m): c for node, mets in und.items() for m, c in mets}
+    dz = build_ar2m_directed(weights, G_X, base_nodes, "w_C", roles, {}, force_noop=True)
+    dz_edges = {}
+    for a, b, gp, gm in dz:
+        assert gp == gm, "force_noop must give a symmetric edge"
+        node, m = (a, b) if str(a[0]).startswith("rxn") else (b, a)
+        dz_edges[(node, m)] = gp
+    assert dz_edges.keys() == und_edges.keys(), \
+        f"directed/undirected addition connectivity differs: {dz_edges.keys() ^ und_edges.keys()}"
+    worst_w = max(abs(dz_edges[k] - und_edges[k]) for k in und_edges)
+    assert worst_w < 1e-12, f"addition conductances differ: worst {worst_w:.2e}"
+    print(f"  connectivity: {len(und_edges)} addition edges match; worst |dc|={worst_w:.2e}")
+
+    # Full parity: oriented base + directed additions at the symmetric limit == undirected
+    # R_eff of base-plus-reinforcement. Build the undirected augmented graph the incumbent
+    # way (parallel conductances add) and compare.
+    onet = orient_and_weight(base, "C", roles, {}, force_noop=True)
+    add = build_ar2m_directed(weights, G_X, base_nodes, "w_C", roles, {}, force_noop=True)
+    rows = list(directed_solve_element(onet, [("ax", ("met", "m0"), ("met", "m3"))],
+                                       {"u": add}, warm=True))
+    r_aug_dir = next(r["r_aug"] for r in rows if r["unit"] == "u")
+
+    Gu = nx.Graph()
+    for u, v, d in base.edges(data=True):
+        Gu.add_edge(u, v, w=float(d["w_C"]))
+    for a, b, gp, gm in add:                          # parallel add -> sum conductances
+        node, m = (a, b) if str(a[0]).startswith("rxn") else (b, a)
+        if Gu.has_edge(node, m):
+            Gu[node][m]["w"] += gp
+        else:
+            Gu.add_edge(node, m, w=gp)
+    r_aug_und = _reff_dense(Gu, ("met", "m0"), ("met", "m3"), wk="w")
+    err = abs(r_aug_dir - r_aug_und)
+    assert err < SELFTEST_TOL, f"augmented symmetric-limit parity |d|={err:.2e}"
+    print(f"  augmented solve: r_aug directed={r_aug_dir:.10f} undirected={r_aug_und:.10f} "
+          f"|d|={err:.2e}  PASS\n")
+    return worst_w
 
 
 def _selftest():
@@ -525,6 +653,7 @@ def _selftest():
     _selftest_directed_behaviour()
     _selftest_warm_start()
     _selftest_orient_and_solve()
+    _selftest_build_ar2m_directed()
     print("ALL PASS")
     return 0
 

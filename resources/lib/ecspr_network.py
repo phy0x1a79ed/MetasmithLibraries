@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import pickle
+import re
 import sys
 import time
 from collections import defaultdict
@@ -43,6 +44,8 @@ import ecspr_solver as _es
 from ecspr_solver import (SMWGraphContext, SMWSolver, build_ar2m, reff_base,
                           reff_summary, derive_ieff, DirectSolver, reff_direct,
                           _norm_ar2m)
+from ecspr_directed import (orient_and_weight, directed_solve_element,
+                            build_ar2m_directed)
 
 ELEMENTS = ["C", "N", "S", "P"]
 REFF_COLS = ["element", "axis_id", "source_hub", "sink_hub", "fosmid", "null",
@@ -447,6 +450,122 @@ def cmd_solve(args):
     print(f"[solve] wrote {args.out_reff} + {args.out_ieff} ({len(reff_rows)} rows each)")
 
 
+# =====================================================================
+# Directed (diode) observed solve -- reaction roles + directionality ratio,
+# fed into the engine's rectified-network primitive (ecspr_directed).
+# =====================================================================
+
+_DIR_EQ_TERM = re.compile(r"(\d+(?:\.\d+)?)\s+(MNXM\w+)@\w+")
+
+
+def load_reaction_roles(reac_prop_path) -> dict:
+    """MNXR -> (substrate set, product set), parsed from a MetaNetX reac_prop.tsv. This is
+    a generic file parser -- the caller supplies the path; no SCADC path is baked in."""
+    roles = {}
+    with open(reac_prop_path) as fh:
+        for ln in fh:
+            if ln.startswith("#"):
+                continue
+            p = ln.rstrip("\n").split("\t")
+            if len(p) < 2 or p[0] == "EMPTY" or "=" not in p[1]:
+                continue
+            lhs, rhs = p[1].split("=", 1)
+            S = {m for _, m in _DIR_EQ_TERM.findall(lhs)}
+            P = {m for _, m in _DIR_EQ_TERM.findall(rhs)}
+            if S and P:
+                roles[p[0]] = (S, P)
+    return roles
+
+
+def load_direction_ratios(direction_path) -> dict:
+    """MNXR -> g_rev/g_fwd ratio from the directionality ensemble parquet (cols mnxr, ratio)."""
+    df = pd.read_parquet(direction_path)
+    return dict(zip(df.mnxr.astype(str), df.ratio.astype(float)))
+
+
+def _base_lcc(base: nx.Graph, wk: str) -> nx.Graph:
+    """LCC of the base graph on w_{X}>0 edges -- exactly the sub-universe the undirected
+    SMWGraphContext solves on (ecspr_solver line ~64-75), so the directed symmetric limit
+    reproduces its axes_report node-for-node."""
+    G = nx.Graph()
+    G.add_nodes_from(base.nodes(data=True))
+    for u, v, d in base.edges(data=True):
+        w = float(d.get(wk, 0.0))
+        if w > 0:
+            G.add_edge(u, v, **{wk: w})
+    lcc = max(nx.connected_components(G), key=len)
+    return G.subgraph(lcc).copy()
+
+
+def cmd_solve_directed(args):
+    """Directed (diode) analog of :func:`cmd_solve`: orient the reference base per reaction
+    roles + the directionality ensemble's ``g_rev/g_fwd`` ratio, then solve every
+    ``(fosmid, axis)`` as a rectified-network ``C_eff`` through the engine's directed
+    primitive. Emits the SAME reff/ieff schema as the undirected solve. ``--force-noop``
+    forces every ratio to 1.0, degrading the whole model to undirected -- it must reproduce
+    the undirected reference ``axes_report`` to solver tolerance (the symmetric-limit gate)."""
+    axes = json.loads(Path(args.axes).read_text())
+    testable = json.loads(Path(args.testable).read_text())
+    with open(args.addition, "rb") as fh:
+        fos_w = pickle.load(fh)
+    roles = load_reaction_roles(args.roles)
+    if args.force_noop:
+        ratios = {}
+    else:
+        if not args.direction:
+            raise SystemExit("--direction is required unless --force-noop")
+        ratios = load_direction_ratios(args.direction)
+    tol = getattr(args, "tol", None)
+
+    reff_rows, ieff_rows = [], []
+    for X in args.elements:
+        wk = f"w_{X}"
+        with open(Path(args.base_dir) / f"base_{X}.pkl", "rb") as fh:
+            base = pickle.load(fh)
+        t = time.time()
+        lcc = _base_lcc(base, wk)
+        onet = orient_and_weight(lcc, X, roles, ratios, force_noop=args.force_noop)
+        base_nodes = set(onet.nodes)
+        G_X = load_bipartite(Path(args.bipartite_dir) / f"mnx_bipartite_{X}.pkl", X)
+        additions = {}
+        for c, w in fos_w.items():
+            e = build_ar2m_directed(w, G_X, base_nodes, wk, roles, ratios,
+                                    reinforce=True, force_noop=args.force_noop)
+            if e:
+                additions[c] = e
+        ax_ids = testable.get(X, [])
+        if args.smoke:
+            ax_ids = ax_ids[:3]
+        axes_list = []
+        for ax_id in ax_ids:
+            ax = axes[ax_id]
+            src, snk = ("met", ax["source"][0]), ("met", ax["sink"][0])
+            if src in onet.idx and snk in onet.idx and src != snk:
+                axes_list.append((ax_id, src, snk))
+        print(f"[solve-directed] [{X}] n_LCC={onet.n} orient {time.time()-t:.1f}s  "
+              f"directed_edges={onet.stats['n_directed_edges']}/{onet.stats['n_edges']}  "
+              f"fosmids-with-additions {len(additions)}/{len(fos_w)}  axes {len(axes_list)}  "
+              f"force_noop={args.force_noop}", flush=True)
+
+        t = time.time()
+        n_cells = 0
+        for row in directed_solve_element(onet, axes_list, additions, warm=True, tol=tol):
+            ax = axes[row["axis_id"]]
+            common = dict(element=X, axis_id=row["axis_id"], source_hub=ax["source"][0],
+                          sink_hub=ax["sink"][0], fosmid=row["unit"], null="obs",
+                          iter=0, n_added_rxns=row["n_added_rxns"])
+            reff_rows.append({**common, "delta_reff": row["delta_reff"],
+                              "r_base": row["r_base"], "r_aug": row["r_aug"]})
+            ieff_rows.append({**common, "delta_ieff": row["delta_ieff"],
+                              "g_base": row["g_base"], "g_aug": row["g_aug"]})
+            n_cells += 1
+        print(f"[solve-directed] [{X}] {n_cells} cells in {time.time()-t:.1f}s", flush=True)
+    _write_tsv(args.out_reff, REFF_COLS, reff_rows)
+    _write_tsv(args.out_ieff, IEFF_COLS, ieff_rows)
+    print(f"[solve-directed] wrote {args.out_reff} + {args.out_ieff} "
+          f"({len(reff_rows)} rows each)")
+
+
 def cmd_derive_ieff(args):
     df = pd.read_csv(args.reff, sep="\t")
     di, gb, ga = zip(*[derive_ieff(rb, ra) for rb, ra in zip(df["r_base"], df["r_aug"])]) \
@@ -495,6 +614,24 @@ def parse_args():
                         "(~65x on C). woodbury: the incumbent update; kept because it "
                         "is independently verified against a dense rebuild and so "
                         "serves as a referent for direct, sharing none of its math.")
+
+    p = sub.add_parser("solve-directed"); p.set_defaults(fn=cmd_solve_directed)
+    p.add_argument("--addition", required=True); p.add_argument("--base-dir", required=True)
+    p.add_argument("--bipartite-dir", required=True); p.add_argument("--axes", required=True)
+    p.add_argument("--testable", required=True)
+    p.add_argument("--direction", default=None,
+                   help="directionality ensemble parquet (mnxr, ratio); "
+                        "required unless --force-noop")
+    p.add_argument("--roles", required=True,
+                   help="MetaNetX reac_prop.tsv (reaction equations -> substrate/product sets)")
+    p.add_argument("--out-reff", required=True); p.add_argument("--out-ieff", required=True)
+    p.add_argument("--elements", nargs="+", default=ELEMENTS)
+    p.add_argument("--force-noop", action="store_true",
+                   help="force every ratio to 1.0 -> reproduces the undirected reference "
+                        "axes_report (the symmetric-limit parity gate)")
+    p.add_argument("--tol", type=float, default=None,
+                   help="Newton convergence tolerance (default engine 1e-10)")
+    p.add_argument("--smoke", action="store_true")
 
     p = sub.add_parser("derive-ieff"); p.set_defaults(fn=cmd_derive_ieff)
     p.add_argument("--reff", required=True); p.add_argument("--out", required=True)
