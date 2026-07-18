@@ -73,6 +73,32 @@ def build_incidence(edges, n):
     return sp.csr_matrix((vals, (rows, cols)), shape=(m, n))
 
 
+def _reg_spsolve(H, rhs):
+    """Solve ``H x = rhs`` for the reduced Newton system, regularizing a singular pivot.
+
+    With all-positive edge weights the grounded Laplacian ``H`` is nonsingular for any
+    CONNECTED augmented graph, so a raw ``splu`` succeeds on every well-conditioned iterate
+    (the self-tests and the symmetric-limit parity gate never reach the except branch -- the
+    fast path is byte-identical to the previous ``splu(H).solve``). A rare Newton iterate can
+    still drive ``splu`` to an exactly-zero pivot when the active-set weighting spreads
+    ``g-``/``g+`` across the ~9 orders the 1e-9 diode floor allows. A vanishing Tikhonov ridge
+    -- the linear-algebra analog of that floor -- restores a unique descent direction without
+    perturbing the well-conditioned bulk. Deterministic, escalating, and only ever reached
+    when the raw factorization is otherwise fatal, so both the observed solve and the null run
+    the identical primitive (they diverge only where the raw solve would have crashed)."""
+    try:
+        return splu(H).solve(rhs)
+    except RuntimeError:
+        scale = float(np.abs(H.diagonal()).max()) or 1.0
+        lam = 1e-12 * scale
+        while lam <= scale:
+            try:
+                return splu((H + lam * sp.eye(H.shape[0], format="csc")).tocsc()).solve(rhs)
+            except RuntimeError:
+                lam *= 10.0
+        raise
+
+
 def directed_ceff(B, gp, gm, s, t, g=0, tol=DIRECTED_TOL, maxit=DIRECTED_MAXIT,
                   floor=DIODE_BACKWARD_FLOOR, return_iters=False, phi0=None,
                   return_phi=False):
@@ -121,7 +147,7 @@ def directed_ceff(B, gp, gm, s, t, g=0, tol=DIRECTED_TOL, maxit=DIRECTED_MAXIT,
         d = np.where(x > 0.0, gp, gm)
         H = (B.T @ sp.diags(d) @ B).tocsc()[keep][:, keep]
         dphi = np.zeros(n)
-        dphi[keep] = splu(H).solve(-grad[keep])
+        dphi[keep] = _reg_spsolve(H, -grad[keep])
         E0 = energy(phi)
         slope = grad @ dphi
         step = 1.0
