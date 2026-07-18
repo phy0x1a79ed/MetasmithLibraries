@@ -11,6 +11,4 @@ manifest:
     type: transforms::transform
   significance_study.py:
     type: transforms::transform
-  solve.py:
-    type: transforms::transform
 schema: v1

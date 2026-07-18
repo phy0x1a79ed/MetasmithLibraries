@@ -49,6 +49,16 @@ types:
       _: "compute profile for the solve/ablation: `device:` (cpu|cuda) and `dtype:` (float64|float32), one per line. A STAGED, CONTENT-HASHED INPUT so it enters the task hash -- a GPU run and a CPU run of the same step MUST produce different cache keys. NEVER carry these via context.params: params are populated only from the runtime resources line (cpus/memory/attempt), so a params-borne knob is silently always its default AND collides on one cache entry."
       Format: YAML
       ext: yml
+  reaction_roles:
+    properties:
+      _: "reaction ROLES source for the directed (diode) solve: a MetaNetX reac_prop.tsv parsed to MNXR -> (substrate set, product set), which orients each base-graph reaction. Passed to `ecspr_network.py solve-directed --roles`. Network-AGNOSTIC (a static function of the MNXR ids), so it is a shared staged input, never per-experiment. Content-identical to metanetx_reac_prop but named for its role in the directed solve, matching the solve-directed CLI contract."
+      Format: TSV
+      ext: tsv
+  direction_ratios:
+    properties:
+      _: "per-reaction DIRECTIONALITY ratios for the directed (diode) solve: a parquet (cols mnxr, ratio) giving MNXR -> g_rev/g_fwd = exp(dG'/RT) from the fused direction ensemble. Passed to `ecspr_network.py solve-directed --direction`. ratio==1.0 is reversible (parity with the undirected model); every reaction is present. Network-AGNOSTIC (a static function of the MNXR ids), so it is a shared staged input, never per-experiment."
+      Format: parquet
+      ext: parquet
 
 # ---- evidence weights + reaction catalog (produced) ----
   evidence_weights:

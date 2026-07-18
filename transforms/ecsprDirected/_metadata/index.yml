@@ -1,0 +1,4 @@
+manifest:
+  solve_directed.py:
+    type: transforms::transform
+schema: v1

@@ -13,6 +13,8 @@ manifest:
     type: lib::ecspr_significance.py
   ecspr_solver.py:
     type: lib::ecspr_solver.py
+  ecspr_directed.py:
+    type: lib::ecspr_directed.py
   ecspr_transporters.py:
     type: lib::ecspr_transporters.py
   fabfos_embed_transfer.py:

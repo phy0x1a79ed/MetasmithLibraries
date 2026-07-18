@@ -1,0 +1,4 @@
+manifest:
+  solve.py:
+    type: transforms::transform
+schema: v1

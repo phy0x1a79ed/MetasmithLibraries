@@ -1,0 +1,220 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  antismash_db:
+    properties:
+    - antiSMASH database directory (Pfam, ClusterBlast, MIBiG, Resfams)
+  antismash_json:
+    properties:
+      Format: JSON
+      _:
+      - antiSMASH JSON results per assembly
+      ext: json
+  antismash_regions_gbk:
+    properties:
+      Format: GenBank
+      _:
+      - antiSMASH GenBank region files (tar)
+      ext: tar.gz
+  antismash_source:
+    properties:
+    - Marker for antiSMASH database download
+  bakta_db:
+    properties:
+    - Bakta light database directory
+  bakta_gff:
+    properties:
+      Format: GFF3
+      _:
+      - Bakta non-coding annotation in GFF3 format (tRNA, rRNA, ncRNA, CRISPR, riboswitches)
+      ext: gff3
+  bakta_tsv:
+    properties:
+      Format: TSV
+      _:
+      - Bakta non-coding annotation summary table
+      ext: tsv
+  busco_full_table:
+    properties:
+      Format: TSV
+      _:
+      - BUSCO full results table with per-sequence marker assignments
+      ext: tsv
+  busco_lineage:
+    properties:
+    - Pre-downloaded BUSCO lineage dataset directory
+  busco_results:
+    properties:
+      Format: JSON
+      _:
+      - BUSCO completeness assessment summary
+      ext: json
+  busco_source:
+    properties:
+    - Marker for BUSCO lineage dataset specification
+  clean_pred:
+    properties:
+      Format: TSV
+      _:
+      - canonical CLEAN contrastive EC predictions for the fosmid ORFs (3-col TSV
+        Query ID/Predicted EC number/clean_score); level-4, clean_score>=0.01 floor
+        applied downstream (lane 2 canonical EC channel)
+      ext: tsv
+  deepec_hits:
+    properties:
+      Format: TSV
+      _:
+      - DeepEC EC predictions for the fosmid ORFs (lane 2 comparison)
+      ext: tsv
+  deeptfactor_results:
+    properties:
+      Format: TSV
+      _:
+      - DeepTFactor TF predictions (binary TF/non-TF with probability score)
+      ext: tsv
+  dlec_model:
+    properties:
+    - DIRECTORY of EZpred / ESM-C 600M EC-head model weights for the dl_ec lane 2
+      (canonical EC channel)
+  dlec_pred:
+    properties:
+      Format: parquet
+      _:
+      - deep-learning EC predictions (EZpred / ESM-C 600M EC head) for the fosmid
+        ORFs, level-4, score>=0.3 (lane 2 optional comparison channel; superseded
+        by clean_pred)
+      ext: parquet
+  ec_to_mnxr:
+    properties:
+      Format: TSV
+      _:
+      - EC (level-4) -> MNXR bridge built from MetaNetX reac_prop classifs (lane 2
+        dl_ec / deepec projection)
+      ext: tsv
+  embed_transfer:
+    properties:
+      Format: parquet
+      _:
+      - lane 4 embedding-transfer kNN EC assignments (nearest labelled neighbours
+        in embedding space; ProteinBERT floor 0.20 admitted)
+      ext: parquet
+  esmc_model:
+    properties:
+    - DIRECTORY of ESM-C 600M model weights for lane 4 embeddings (optional/comparison
+      backbone)
+  evidence_source:
+    properties:
+      Format: YAML
+      _:
+      - 'the organism tag that labels every row of ONE evidence compile: `source:
+        <tag>` (e.g. fosmid | epi300 | metag). A STAGED, CONTENT-HASHED input, never
+        context.params -- params are populated only from the runtime resources line,
+        so a params-borne tag is silently always its default AND invisible to the
+        cache key, which lets a second organism''s compile collide with the first
+        and be served the first''s table. `source` is the column every downstream
+        consumer partitions on, so that collision silently reassigns one organism''s
+        reactions to another.'
+      ext: yml
+  evidence_table:
+    properties:
+      Format: parquet
+      _:
+      - unified per-ORF reaction-nomination evidence table (8-col schema source/orf/channel/mnxr/intermediate_id/intermediate_name/raw_score/projection_via)
+        folding the four lanes; the canonical dl_ec table; ECSPr consumes this
+      ext: parquet
+  ko_to_mnxr:
+    properties:
+      Format: TSV
+      _:
+      - KO -> MNXR bridge (lane 1 kofam projection); tab-separated ko, mnxr
+      ext: tsv
+  kofam_hits:
+    properties:
+      Format: TSV
+      _:
+      - kofamscan KO assignments for the fosmid ORFs (lane 1)
+      ext: tsv
+  kofam_ko_list:
+    properties:
+      Format: TSV
+      _:
+      - KOfam ko_list threshold table (per-KO score cutoffs) for kofamscan lane 1
+      ext: tsv
+  kofam_profiles:
+    properties:
+    - DIRECTORY of KOfam HMM profile files (profiles/*.hmm) for kofamscan lane 1
+  metanetx_reac_xref:
+    properties:
+      Format: TSV
+      _:
+      - MetaNetX reaction cross-reference table (reac_xref.tsv; rhea:/kegg:/etc ->
+        MNXR) for the uniprot bridge
+      ext: tsv
+  predictf_db:
+    properties:
+    - PredicTF database directory (deeparg-largerepo + model files)
+  predictf_potential:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF lower-confidence potential TF predictions
+      ext: tsv
+  predictf_results:
+    properties:
+      Format: TSV
+      _:
+      - PredicTF high-confidence TF predictions with family classification
+      ext: tsv
+  protein_embeddings:
+    properties:
+      Format: numpy
+      _:
+      - per-ORF protein embeddings (ProteinBERT primary; ESM-C 600M optional) for
+        the fosmid ORFs (lane 4 input)
+      ext: npy
+  proteinbert_model:
+    properties:
+    - DIRECTORY of ProteinBERT model weights for lane 4 embeddings (primary embedding
+      backbone)
+  reference_label_pool:
+    properties:
+    - DIRECTORY holding the labelled reference embedding pool (metag+epi300+fosmid
+      ORF embeddings + orf_index + projector weights) for lane-4 embed-transfer kNN;
+      reused reference (NOT the metaG null)
+  rhea2uniprot:
+    properties:
+      Format: TSV
+      _:
+      - Rhea -> UniProt (SwissProt/reviewed) mapping (rhea2uniprot.tsv) for the uniprot
+        bridge
+      ext: tsv
+  rhea2uniprot_trembl:
+    properties:
+      Format: TSV
+      _:
+      - Rhea -> UniProt (TrEMBL/unreviewed) mapping (rhea2uniprot_trembl.tsv.gz) for
+        the uniprot bridge
+      ext: tsv.gz
+  uniprot_to_mnxr:
+    properties:
+      Format: parquet
+      _:
+      - UniProt accession -> MNXR bridge via Rhea (rhea2uniprot); lane 3 UniRef-DIAMOND
+        projection
+      ext: parquet
+  uniref50_dmnd:
+    properties:
+      Format: diamond
+      _:
+      - DIAMOND-indexed UniRef50 protein database (.dmnd, ~24GB) for lane 3 blastp
+      ext: dmnd
+  uniref_hits:
+    properties:
+      Format: TSV
+      _:
+      - DIAMOND blastp hits of the fosmid ORFs vs UniRef50 (blast6) (lane 3)
+      ext: tsv

@@ -33,6 +33,10 @@ types:
     properties:
       src: ecspr_solver
       usage: library
+  ecspr_directed.py:
+    properties:
+      src: ecspr_directed
+      usage: library
   ecspr_transporters.py:
     properties:
       src: ecspr_transporters
