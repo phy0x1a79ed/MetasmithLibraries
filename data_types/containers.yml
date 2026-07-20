@@ -9,6 +9,19 @@ types:
       ext: log
       atomic_description: pulled OCI container
   # -------------------------------------------------
+  # unified tool-environment resource (*.env.yml): one file holds both the
+  # conda/mamba env spec and a container pointer. ResolveToolEnvironment picks
+  # the conda env name under the MAMBA runtime, the container URI otherwise.
+  metabolic.env.yml:
+    extends: container
+    properties:
+      provides:
+      - py/networkx
+      - py/pandas
+      - py/pyarrow
+      - py/scipy
+      - py/biopython
+  # -------------------------------------------------
   # read qc
   fastp.oci:
     extends: container

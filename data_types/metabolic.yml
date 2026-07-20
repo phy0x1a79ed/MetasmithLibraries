@@ -1,0 +1,71 @@
+types:
+  # Per-ORF reaction nominations for one source (the fosmid set). One row per
+  # (orf, channel, intermediate_id, mnxr) with a raw_score; mirrors the scadc
+  # layer-2 evidence schema, restricted to the fosmid source.
+  reaction_evidence:
+    properties:
+      _: per-ORF metabolic reaction evidence (MNXR nominations)
+      Format: PARQUET
+      fields:
+      - source
+      - orf
+      - channel
+      - intermediate_id
+      - mnxr
+      - raw_score
+      ext: parquet
+  # Per-reaction belief weight E_r, per-ORF-normalized then aggregated. Output
+  # of the evidence_weights transform (port of scadc 10_evidence_weights).
+  reaction_evidence_weights:
+    properties:
+      _: per-reaction evidence weight (E_full, E_dlec)
+      Format: PARQUET
+      fields:
+      - source
+      - mnxr
+      - E_full
+      - E_dlec
+      ext: parquet
+  # Reference: a DIAMOND protein DB plus a subject-id -> MNXR bridge TSV, used
+  # by the annotation lane to turn ORF homology into reaction nominations.
+  reaction_reference_db:
+    properties:
+      _: DIAMOND reaction DB (.dmnd) + subject_id->MNXR bridge (bridge.tsv)
+      content: directory with reactions.dmnd and bridge.tsv
+  # Reference: element-weighted EPI300 host base graphs, one pickle per element
+  # (base_C/N/S/P.pkl) in a directory. Pre-built from the host GEM + AAM
+  # universe; bundled with the library, not recomputed per run.
+  base_graphs:
+    properties:
+      _: element-weighted host base bipartite graphs (C/N/S/P)
+      Data: networkx bipartite pickles
+      content: directory of base_{C,N,S,P}.pkl
+  # Reference: the MetaNetX universe element bipartite graphs (mnx_bipartite_
+  # {C,N,S,P}.pkl) supplying each reaction's metabolite neighbours + per-element
+  # atom counts (w_X). Needed to place a fosmid's novel reactions onto the base.
+  element_bipartite:
+    properties:
+      _: MetaNetX universe element bipartite graphs (C/N/S/P, atom-count edges)
+      Data: networkx bipartite pickles
+      content: directory of mnx_bipartite_{C,N,S,P}.pkl
+  # Reference: curated source->sink metabolic axes (set2).
+  metabolic_axes:
+    properties:
+      _: curated metabolic axes (source/sink metabolite pairs per element)
+      Format: JSON
+      ext: json
+  # Per-fosmid (per-contig) reaction conductance weights. Output of the graph
+  # build; the additive perturbation each fosmid injects onto the base graph.
+  fosmid_addition_weights:
+    properties:
+      _: per-fosmid per-reaction evidence-weighted conductance additions
+      Data: "pickle of contig -> mnxr -> E"
+      content: fosmid_addition_weights.pkl
+  # The immediate prerequisite for the ECSPr axis computation: per element, the
+  # host base graph overlaid with each fosmid's evidence-weighted reactions.
+  # This is where the FabFos+ECSPr chain stops (no betweenness/conductance).
+  fosmid_bipartite_graph:
+    properties:
+      _: per-fosmid element-weighted bipartite metabolic graphs (base + additions)
+      Data: networkx bipartite pickles
+      content: directory of fosmid_graph_{C,N,S,P}.pkl

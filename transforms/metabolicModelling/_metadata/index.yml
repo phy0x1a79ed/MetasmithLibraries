@@ -1,10 +1,16 @@
 manifest:
+  build_fosmid_graph.py:
+    type: transforms::transform
   differential_analysis.py:
+    type: transforms::transform
+  evidence_weights.py:
     type: transforms::transform
   fba_constraint.py:
     type: transforms::transform
   jgi_loader.py:
     type: transforms::transform
   pathway_enrichment.py:
+    type: transforms::transform
+  reaction_evidence_from_orfs.py:
     type: transforms::transform
 schema: v1
