@@ -78,3 +78,12 @@ types:
     properties:
       src: ecspr_generic_instantiate
       usage: command line
+  # The X/Y benchmark engine, wrapped by transforms/ecsprBenchmark. Undeclared
+  # until 2026-07-19 for the same reason as the four above -- it landed in
+  # resources/lib/ ahead of its transforms -- and the symptom is identical:
+  # `dev.sh -b` cannot compile the lib resource, so the transform's requirement
+  # on lib::ecspr_benchmark.py has nothing to resolve to.
+  ecspr_benchmark.py:
+    properties:
+      src: ecspr_benchmark
+      usage: command line

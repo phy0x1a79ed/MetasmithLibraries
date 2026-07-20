@@ -329,3 +329,28 @@ types:
     properties:
       _: a benchmark version's own self-description -- per-file sha256 manifest, audit gate results, and the prose recording what it is and what it deliberately does not contain
       content: directory of MANIFEST.tsv + _audit.json + README.md + PROVENANCE.md
+
+# ---- the benchmark's SOLVED side (produced by ecsprBenchmark) ----
+# These two are the first benchmark types that are ECSPr OUTPUT rather than
+# frozen contract, and their descriptions carry more weight than most because of
+# what they sit beside. `ecspr::benchmark_observations` is the WET-LAB
+# observation set -- an input, authored before any solve -- and the two words
+# overlap. Under property-SUBSET matching a slack description here would let a
+# transform asking for the measured observations join the solver's output with
+# equal validity: a wrong join that raises nothing and produces a benchmark that
+# scores the solver against itself. Each `_` below therefore says explicitly
+# what the item IS, what it is NOT, and which side of the freeze it falls on.
+  benchmark_observations_solved:
+    properties:
+      _: SOLVER OUTPUT, one shard table per (facet, element) -- the signed conductance change g_perturbed - g_base on every panel edge, for every condition in the answer key. Emphatically NOT ecspr::benchmark_observations, which is the measured wet-lab evidence authored before any solve ran; this is what the incumbent PREDICTS for those conditions and exists only after a solve. Sharded, unsorted, and not yet scorable -- the scorer reads the merged ecspr::benchmark_result, never this
+      content: directory of <facet>/<element>.tsv, cols facet/condition_id/edge_id/effect
+  benchmark_result:
+    properties:
+      _: the single merged benchmark observation table -- every (facet, element) shard concatenated and sorted on (facet, condition_id, edge_id). THE scorable artifact of a benchmark run and the only one a scoring step should read; a per-shard table is a fragment of a measurement, not a measurement. Effects are signed differences, zero where a perturbation was silent (a zero is a result, never a missing value), and the scorer consumes ORDER only
+      Format: TSV
+      fields:
+      - facet
+      - condition_id
+      - edge_id
+      - effect
+      ext: tsv

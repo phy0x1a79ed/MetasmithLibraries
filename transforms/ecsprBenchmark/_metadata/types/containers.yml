@@ -1,0 +1,246 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  antismash.oci:
+    properties:
+      Format: OCI
+      provides: antismash
+  bakta.oci:
+    properties:
+      Format: OCI
+      provides: bakta
+  bbtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bbtools/bbduk.sh
+      - bbtools/filterbyname.sh
+      - bbtools/reformat.sh
+  bedtools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - bedtools
+      - bedtools/genomecov
+  blast.oci:
+    properties:
+      Format: OCI
+      provides:
+      - blastn
+      - makeblastdb
+  braker3.oci:
+    properties:
+      Format: OCI
+      provides: braker3
+  busco.oci:
+    properties:
+      Format: OCI
+      provides: busco
+  checkm.oci:
+    properties:
+      Format: OCI
+      provides: checkm
+  clean.oci:
+    properties:
+      Format: OCI
+      provides: clean
+  container:
+    properties:
+      Format: OCI
+  deeptfactor.oci:
+    properties:
+      Format: OCI
+      provides: deeptfactor
+  diamond.oci:
+    properties:
+      Format: OCI
+      provides:
+      - diamond
+      - diamond/blastp
+      - diamond/linclust
+      - diamond/makedb
+  ecspr.oci:
+    properties:
+      Format: OCI
+      _:
+      - 'ECSPr numeric core. Replaces envs::ecspr.condaenv on this lane: the conda_env
+        mechanism is consumed only under a MAMBA runtime, which exists solely on an
+        unmerged engine branch -- under the runtimes the engine actually ships, the
+        env file''s CONTENT is read as an image name, so `fabfos-ecspr` was being
+        handed to apptainer/docker as an image URI. Recipe: container_builds/main/ecspr.
+        Pins that matter: numpy>=2, and torch built for the CUDA the target cluster''s
+        GPUs accept (the default build breaks them). Solve and ablation are CPU-intractable
+        on the dense maps, so the GPU pin is not a fallback.'
+      provides:
+      - py/networkx
+      - py/numpy
+      - py/pandas
+      - py/pyarrow
+      - py/scikit-learn
+      - py/scipy
+      - py/torch
+  fastani.oci:
+    properties:
+      Format: OCI
+      provides: fastani
+  fastp.oci:
+    properties:
+      Format: OCI
+      provides: fastp
+  fastqc.oci:
+    properties:
+      Format: OCI
+      provides: fastqc
+  filtlong.oci:
+    properties:
+      Format: OCI
+      provides: filtlong
+  flye.oci:
+    properties:
+      Format: OCI
+      provides: flye
+  genomad.oci:
+    properties:
+      Format: OCI
+      provides: genomad
+  gfatools.oci:
+    properties:
+      Format: OCI
+      provides: gfatools
+  gffread.oci:
+    properties:
+      Format: OCI
+      provides: gffread
+  gtdbtk.oci:
+    properties:
+      Format: OCI
+      provides: gtdbtk
+  hifiasm-meta.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm-meta
+  hifiasm.oci:
+    properties:
+      Format: OCI
+      provides: hifiasm
+  megahit.oci:
+    properties:
+      Format: OCI
+      provides: megahit
+  metabolic.env.yml:
+    properties:
+      Format: OCI
+      provides:
+      - py/biopython
+      - py/networkx
+      - py/pandas
+      - py/pyarrow
+      - py/scipy
+  metabolomics-python.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/cobra
+      - py/escher
+  metabuli.oci:
+    properties:
+      Format: OCI
+      provides: metabuli
+  miniasm.oci:
+    properties:
+      Format: OCI
+      provides: miniasm
+  minimap2.oci:
+    properties:
+      Format: OCI
+      provides: minimap2
+  nanoplot.oci:
+    properties:
+      Format: OCI
+      provides: nanoplot
+  ncbi-datasets.oci:
+    properties:
+      Format: OCI
+      provides: ncbi-datasets
+  orad.oci:
+    properties:
+      Format: OCI
+      provides: orad
+  ppanggolin.oci:
+    properties:
+      Format: OCI
+      provides: ppanggolin
+  pprodigal.oci:
+    properties:
+      Format: OCI
+      provides: pprodigal
+  predictf.oci:
+    properties:
+      Format: OCI
+      provides: predictf
+  pulled_container:
+    properties:
+      atomic_description: pulled OCI container
+      ext: log
+  pydeseq2.oci:
+    properties:
+      Format: OCI
+      provides: py/pydeseq2
+  python_for_data_science.oci:
+    properties:
+      Format: OCI
+      provides:
+      - py/biopython
+      - py/jupyter
+      - py/matplotlib
+      - py/notebook
+      - py/numba
+      - py/numpy
+      - py/pandas
+      - py/plotly
+      - py/requests
+      - py/scipy
+      - py/xmltodict
+      - py/yaml
+      - python=3.12
+  salmon.oci:
+    properties:
+      Format: OCI
+      provides: salmon
+  samtools.oci:
+    properties:
+      Format: OCI
+      provides: samtools
+  seqkit.oci:
+    properties:
+      Format: OCI
+      provides:
+      - seqkit
+      - seqkit/stat
+  skani.oci:
+    properties:
+      Format: OCI
+      provides: skani
+  sra-tools.oci:
+    properties:
+      Format: OCI
+      provides:
+      - fasterq-dump
+      - sratk/prefetch
+      - sratk/vdb-validate
+  star.oci:
+    properties:
+      Format: OCI
+      provides: STAR
+  stringtie.oci:
+    properties:
+      Format: OCI
+      provides: stringtie
+  vsearch.oci:
+    properties:
+      Format: OCI
+      provides: vsearch

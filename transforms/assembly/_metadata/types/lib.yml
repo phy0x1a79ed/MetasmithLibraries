@@ -21,6 +21,10 @@ types:
     properties:
       src: ecspr_atom_pairs
       usage: command line
+  ecspr_benchmark.py:
+    properties:
+      src: ecspr_benchmark
+      usage: command line
   ecspr_catalog.py:
     properties:
       src: ecspr_catalog

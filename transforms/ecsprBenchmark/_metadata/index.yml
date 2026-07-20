@@ -1,0 +1,6 @@
+manifest:
+  merge_benchmark.py:
+    type: transforms::transform
+  solve_benchmark.py:
+    type: transforms::transform
+schema: v1

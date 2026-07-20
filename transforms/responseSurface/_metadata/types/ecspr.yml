@@ -46,6 +46,106 @@ types:
     properties:
     - DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl)
       plus axes_testable.json (per-element list of solvable axis ids); the SMW base
+  benchmark_answer_key:
+    properties:
+      _:
+      - the frozen Y of the benchmark contract -- conditions/panel_anchors/panel_edges/expectations.
+        Authored WITHOUT reading any ECSPr output, which is the property that makes
+        a score a measurement rather than a tuning; frozen and hashed before any solve
+        runs
+      content: directory of conditions/panel_anchors/panel_edges/expectations TSVs
+        + provenance JSON
+  benchmark_base_graphs:
+    properties:
+      _:
+      - the element-resolved bipartite graphs the incumbent solves on, one per (facet,
+        element). NOT derivable from X -- X withholds the atom mapping on purpose,
+        and the atom-transit count is both the edge weight and, via the w<=0 edge
+        drop, the connectivity. Network construction, never ECSPr output, which is
+        what lets the answer-key builders read it without breaking independence
+      content: directory of netA_*/netB_*/base_{C,N,S,P}.pkl networkx graphs
+  benchmark_baseline:
+    properties:
+      _:
+      - reference SCORES from a previously scored run, carried so a new result has
+        something to be compared against. An output of scoring, never an input to
+        it -- staging this where the answer key belongs would leak scored numbers
+        into the key
+      content: directory of specificity/potency/essentiality TSVs
+  benchmark_decisions:
+    properties:
+      _:
+      - the hand-made curation decision tables (strain->lineage->GEM, and gene->reaction
+        overrides with deciding evidence). Committed as DATA rather than buried as
+        literals in a builder, so each judgement call is reviewable
+      content: directory of host_lineage.tsv + gene_reaction_overrides.tsv
+  benchmark_ground_truth:
+    properties:
+      _:
+      - the upstream ground-truth tables the answer key is DERIVED FROM (phenotype/auxotrophy
+        edges, LOF essentiality, curated GOF transplant sinks). Staged so a version
+        can rebuild its own answer key from source rather than inheriting another
+        version's conclusions
+      content: directory of conditions_manifest + pheno_edges + lof_ground_truth +
+        gof_*.tsv
+  benchmark_inputs:
+    properties:
+      _:
+      - the frozen X of the benchmark contract -- hosts/gpr/reactions/reaction_participants/metabolites/crosswalk/invariants.
+        Carries the per-reaction evidence weight E for every build, which is exactly
+        why the benchmark needs no annotation lane re-run. Ships NO atom mapping,
+        deliberately
+      content: directory of the seven X TSVs + _provenance.json
+  benchmark_observations:
+    properties:
+      _:
+      - MEASURED perturbation outcomes (the observation set, X-side evidence); one
+        row per observed gene-set/host/target with the reactions it adds or removes.
+        Never an expectation and never scored output -- this is what was seen in a
+        wet lab, before any ECSPr number exists
+      content: directory of gof_/lof_ observation TSVs + drops/audit tables + README
+  benchmark_observations_solved:
+    properties:
+      _:
+      - SOLVER OUTPUT, one shard table per (facet, element) -- the signed conductance
+        change g_perturbed - g_base on every panel edge, for every condition in the
+        answer key. Emphatically NOT ecspr::benchmark_observations, which is the measured
+        wet-lab evidence authored before any solve ran; this is what the incumbent
+        PREDICTS for those conditions and exists only after a solve. Sharded, unsorted,
+        and not yet scorable -- the scorer reads the merged ecspr::benchmark_result,
+        never this
+      content: directory of <facet>/<element>.tsv, cols facet/condition_id/edge_id/effect
+  benchmark_provenance:
+    properties:
+      _:
+      - a benchmark version's own self-description -- per-file sha256 manifest, audit
+        gate results, and the prose recording what it is and what it deliberately
+        does not contain
+      content: directory of MANIFEST.tsv + _audit.json + README.md + PROVENANCE.md
+  benchmark_result:
+    properties:
+      Format: TSV
+      _:
+      - the single merged benchmark observation table -- every (facet, element) shard
+        concatenated and sorted on (facet, condition_id, edge_id). THE scorable artifact
+        of a benchmark run and the only one a scoring step should read; a per-shard
+        table is a fragment of a measurement, not a measurement. Effects are signed
+        differences, zero where a perturbation was silent (a zero is a result, never
+        a missing value), and the scorer consumes ORDER only
+      ext: tsv
+      fields:
+      - condition_id
+      - edge_id
+      - effect
+      - facet
+  benchmark_universe:
+    properties:
+      _:
+      - the atom-mapped MetaNetX universe per element, from which every base graph
+        is induced. Needed at SOLVE time and not only at build time -- applying a
+        gain-of-function perturbation re-reads it to find the inserted reactions,
+        so a tree without it fails on the first GOF condition
+      content: directory of mnx_bipartite_{C,N,S,P}.pkl
   biomass_axes:
     properties:
       Format: JSON

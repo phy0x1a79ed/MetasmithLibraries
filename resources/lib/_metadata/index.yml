@@ -7,6 +7,8 @@ manifest:
     type: lib::ecspr_atom_graph.py
   ecspr_atom_pairs.py:
     type: lib::ecspr_atom_pairs.py
+  ecspr_benchmark.py:
+    type: lib::ecspr_benchmark.py
   ecspr_catalog.py:
     type: lib::ecspr_catalog.py
   ecspr_community.py:
