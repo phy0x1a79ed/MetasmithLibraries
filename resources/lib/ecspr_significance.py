@@ -79,7 +79,26 @@ SEED = 0
 LANES = {"reff": ("delta_reff", "reff", "effective resistance"),
          "ieff": ("delta_ieff", "ieff", "effective current (conductance)")}
 
-_NULL_RE = re.compile(r"^(?P<prefix>\w+)_null_canonical_N(?P<n>\d+)\.tsv$")
+# The ORIENTATION STEM of a staged null filename: `{lane}_null_{stem}_N{n}.tsv`.
+#
+# This used to be hardcoded to `canonical`, which silently stopped matching when
+# the directed solve became canonical on 2026-07-18 and canon began emitting
+# `{lane}_null_directed_N{n}.tsv`. Staging the current nulls then found zero
+# files and died in `discover_draw_sizes` -- a hard failure rather than a wrong
+# answer, which is the one mercy in it.
+#
+# The stem stays EXPLICIT rather than being globbed over, and that is the whole
+# design: the undirected and directed nulls live under different names precisely
+# so a directed run cannot score against an undirected null. A regex loose
+# enough to accept either would delete that guarantee and reintroduce the exact
+# silent mismatch as a silent MIX. So: one stem per run, named, and reported.
+DIRECTED_STEM = "directed"
+UNDIRECTED_STEM = "canonical"
+NULL_STEMS = (DIRECTED_STEM, UNDIRECTED_STEM)
+
+
+def null_re(stem: str) -> re.Pattern:
+    return re.compile(rf"^(?P<prefix>\w+)_null_{re.escape(stem)}_N(?P<n>\d+)\.tsv$")
 
 
 # =====================================================================
@@ -282,22 +301,36 @@ def empirical_scorer(d: np.ndarray):
 # null loading -- sizes DERIVED from the staged directory, never a constant
 # =====================================================================
 
-def discover_draw_sizes(nulls_dir, prefix: str) -> list[int]:
+def discover_draw_sizes(nulls_dir, prefix: str, stem: str = DIRECTED_STEM) -> list[int]:
     """Sorted draw sizes present in the STAGED nulls directory.
 
     This is the module's only source of draw sizes. The directory must be the curated
     one the driver builds from an explicit list -- a raw cache also holds retired sizes
     and, in at least one case, an un-suffixed leftover from an overwrite incident.
     """
+    rx = null_re(stem)
     sizes = sorted(
         int(m.group("n"))
         for f in Path(nulls_dir).iterdir()
-        if (m := _NULL_RE.match(f.name)) and m.group("prefix") == prefix
+        if (m := rx.match(f.name)) and m.group("prefix") == prefix
     )
     if not sizes:
+        # Name the OTHER stem if it is what is actually sitting there. A run
+        # staged with the wrong orientation is the likeliest cause of an empty
+        # match, and "no files" sends the reader hunting for missing data
+        # instead of at a one-word mismatch.
+        others = sorted({
+            m.group(1) for f in Path(nulls_dir).iterdir()
+            if (m := re.match(rf"^{re.escape(prefix)}_null_(\w+)_N\d+\.tsv$", f.name))
+        } - {stem})
+        hint = (f" -- but this directory DOES hold {prefix}_null_{'/'.join(others)}_N*.tsv, "
+                f"so the staged nulls are of a different orientation than the one "
+                f"being scored. These are deliberately different filenames: it is what "
+                f"stops a {stem} run from scoring against a {'/'.join(others)} null."
+                ) if others else ""
         raise SystemExit(
-            f"no {prefix}_null_canonical_N*.tsv under {nulls_dir}; the staged nulls "
-            f"directory is the only source of draw sizes for this module"
+            f"no {prefix}_null_{stem}_N*.tsv under {nulls_dir}; the staged nulls "
+            f"directory is the only source of draw sizes for this module{hint}"
         )
     return sizes
 
@@ -347,11 +380,12 @@ def fosmid_orf_counts_from_evidence(ev_path, source: str = "fosmid") -> dict:
 # scoring
 # =====================================================================
 
-def load_nulls(nulls_dir, metric: str, prefix: str, draw_sizes: list[int]) -> dict:
+def load_nulls(nulls_dir, metric: str, prefix: str, draw_sizes: list[int],
+               stem: str = DIRECTED_STEM) -> dict:
     nulls_dir = Path(nulls_dir)
     nul = {}
     for N in draw_sizes:
-        p = nulls_dir / f"{prefix}_null_canonical_N{N}.tsv"
+        p = nulls_dir / f"{prefix}_null_{stem}_N{N}.tsv"
         if not p.exists():
             raise SystemExit(f"missing staged null {p}")
         df = pd.read_csv(p, sep="\t", usecols=["element", "axis_id", "null", metric])
@@ -430,11 +464,14 @@ def _load_obs(report_path, metric: str) -> pd.DataFrame:
 
 
 def _prepare(report, nulls_dir, metric, prefix, orf_counts, kmax, seed,
-             verbose=True):
-    draw_sizes = discover_draw_sizes(nulls_dir, prefix)
+             verbose=True, stem=DIRECTED_STEM):
+    draw_sizes = discover_draw_sizes(nulls_dir, prefix, stem)
     if verbose:
+        # The stem is REPORTED, not just used. Which orientation of null a score
+        # was computed against is part of what the score means.
+        print(f"[sig:{prefix}] null orientation: {stem}", flush=True)
         print(f"[sig:{prefix}] draw sizes from staged nulls: {draw_sizes}", flush=True)
-    nul = load_nulls(nulls_dir, metric, prefix, draw_sizes)
+    nul = load_nulls(nulls_dir, metric, prefix, draw_sizes, stem)
     obs = _load_obs(report, metric)
     obs["n_orfs"] = obs["fosmid"].astype(str).map(orf_counts)
     missing = obs[obs["n_orfs"].isna()]["fosmid"].nunique()
@@ -458,7 +495,8 @@ def run(args):
         raise SystemExit("need --faa or --evidence for ORF counts")
 
     nul, obs, draw_sizes = _prepare(args.report, args.nulls_dir, metric, prefix,
-                                    fc, args.kmax, args.seed)
+                                    fc, args.kmax, args.seed,
+                                    stem=args.null_stem)
     sig = score(nul, obs, metric, draw_sizes, kmax=args.kmax, seed=args.seed)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     sig.to_csv(args.out, sep="\t", index=False)
@@ -489,9 +527,21 @@ def selftest(args):
     fc = fosmid_orf_counts_from_faa(args.faa)
 
     metric, prefix, _ = LANES[args.lane]
+    # PINNED to the UNDIRECTED stem, and not switchable from the CLI.
+    #
+    # This is a parity gate: it reproduces the canonical scadc scorer's table to
+    # a tolerance. That reference table was computed against the undirected
+    # nulls, so scoring it against directed ones would not be a stricter test --
+    # it would be a different one, and it would fail for a reason that has
+    # nothing to do with whether this port still matches its original.
+    #
+    # When the directed null regen lands and a directed reference table is
+    # frozen, this gets a second reference and a second pinned stem -- never a
+    # flag that lets one reference be scored against the other's nulls.
     nul, obs, draw_sizes = _prepare(report_dir / f"{prefix}_axes_report.tsv",
                                     nulls_dir, metric, prefix, fc,
-                                    args.kmax, args.seed)
+                                    args.kmax, args.seed,
+                                    stem=UNDIRECTED_STEM)
     sig = score(nul, obs, metric, draw_sizes, kmax=args.kmax, seed=args.seed)
     ref = pd.read_csv(ref_path, sep="\t")
 
@@ -564,6 +614,13 @@ def parse_args():
 
     run_p, self_p = sub.choices["run"], sub.choices["selftest"]
 
+    run_p.add_argument("--null-stem", choices=list(NULL_STEMS), default=DIRECTED_STEM,
+                       help="orientation of the staged nulls: the filenames are "
+                            "{lane}_null_{stem}_N{n}.tsv. Defaults to 'directed', "
+                            "canonical since 2026-07-18. The two orientations have "
+                            "different filenames on purpose -- that is what stops a "
+                            "directed run scoring against an undirected null -- so "
+                            "this selects one, never both.")
     run_p.add_argument("--report", required=True, help="ecspr_network solve output tsv")
     run_p.add_argument("--faa", default=None, help="proteins (>contig_N) for ORF counts")
     run_p.add_argument("--evidence", default=None, help="evidence parquet fallback")

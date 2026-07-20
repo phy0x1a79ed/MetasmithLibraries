@@ -80,8 +80,27 @@ REFS = {
 }
 # Directory-typed reused refs -- curated symlink dirs are built at stage time.
 BIPARTITE_ELEMENTS = ["C", "N", "S", "P"]
-FROZEN_NULL_FILES = [f"{lane}_null_canonical_N{n}.tsv"
-                     for lane in ("reff", "ieff") for n in (21, 34, 56)]
+# MUST TRACK fabfos `canon.DRAW_SIZES` and the canonical solve orientation.
+# Mirrored rather than imported: this library is a dependency OF fabfos, not the
+# other way round, and inverting that to read one tuple is not worth it.
+#
+# Both halves of this were wrong, and both were wrong SILENTLY:
+#
+#   * the stem was `canonical` (the UNDIRECTED null) while the directed solve
+#     became canonical on 2026-07-18 and canon now emits `_null_directed_`;
+#   * the grid was (21, 34, 56) -- three of the SIX RETIRED sizes
+#     (21, 28, 34, 42, 51, 56), so it matched neither the live grid nor the
+#     retired one in full. A partial retired grid is the worst of both: it
+#     stages real files, so nothing is missing, and the scorer then
+#     size-matches observations against anchors that are no longer the null.
+#
+# The live grid is ORF-percentile derived. If canon's DRAW_SIZES moves, move
+# this with it; `discover_draw_sizes` reads what is STAGED, so a stale list here
+# quietly narrows the null basis rather than raising.
+NULL_STEM = "directed"
+DRAW_SIZES = (14, 25, 30, 35, 43)
+FROZEN_NULL_FILES = [f"{lane}_null_{NULL_STEM}_N{n}.tsv"
+                     for lane in ("reff", "ieff") for n in DRAW_SIZES]
 
 # ---- GATED external annotator DBs / model weights -------------------------
 # Provide these to run FRESH end-to-end. Intended default paths shown; override
