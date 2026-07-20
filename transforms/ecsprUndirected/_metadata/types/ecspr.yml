@@ -36,6 +36,12 @@ types:
       - per-fosmid addition map pickle (contig -> mnxr -> E) derived from the evidence
         weights; the reactions injected onto the host base graph
       ext: pkl
+  atom_pairs:
+    properties:
+      Format: PARQUET
+      _:
+      - atom-atom mapping table, MNXR-keyed (substrate/product atom transits)
+      ext: parquet
   base_graphs:
     properties:
     - DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl)
@@ -49,6 +55,12 @@ types:
         engine's -- the caller stages the set it means and asserts its count; do not
         infer the set from the filename, which is what drifted.
       ext: json
+  closure_ledger:
+    properties:
+      Format: PARQUET
+      _:
+      - per-reaction closure ledger (resolved / diluted / refused + reason)
+      ext: parquet
   compute_profile:
     properties:
       Format: YAML
@@ -214,6 +226,12 @@ types:
         per-experiment. Content-identical to metanetx_reac_prop but named for its
         role in the directed solve, matching the solve-directed CLI contract.'
       ext: tsv
+  reference_manifest:
+    properties:
+      Format: JSON
+      _:
+      - pre-bake MANIFEST.json -- pins, content hashes, verdict counts
+      ext: json
   reff_axes_report:
     properties:
       Format: TSV
@@ -283,3 +301,20 @@ types:
       - q
       - w
       - null
+  significance_table:
+    properties:
+      Format: TSV
+      _:
+      - full-mixture-SF significance scorer output, one row per axis/clone cell
+      ext: tsv
+  validation_set:
+    properties:
+      _:
+      - frozen expected outputs for the dual-network validation; gates only
+      content: directory with MANIFEST.tsv + netA/ netB/ lanes/ ground_truth/
+  worklist:
+    properties:
+      Format: TSV
+      _:
+      - pre-bake worklist of reactions pending resolution
+      ext: tsv

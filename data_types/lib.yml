@@ -59,3 +59,22 @@ types:
     properties:
       src: ecspr_transporters
       usage: library
+  # Four engine modules landed in resources/lib/ without a declaration here, so
+  # `dev.sh -b` could not compile the lib resource and the library's _metadata/
+  # went stale against its own sources. Declared 2026-07-19.
+  ecspr_atom_graph.py:
+    properties:
+      src: ecspr_atom_graph
+      usage: library
+  ecspr_aam_rescue.py:
+    properties:
+      src: ecspr_aam_rescue
+      usage: command line
+  ecspr_atom_pairs.py:
+    properties:
+      src: ecspr_atom_pairs
+      usage: command line
+  ecspr_generic_instantiate.py:
+    properties:
+      src: ecspr_generic_instantiate
+      usage: command line

@@ -36,6 +36,12 @@ types:
       - per-fosmid addition map pickle (contig -> mnxr -> E) derived from the evidence
         weights; the reactions injected onto the host base graph
       ext: pkl
+  atom_pairs:
+    properties:
+      Format: PARQUET
+      _:
+      - atom-atom mapping table, MNXR-keyed (substrate/product atom transits)
+      ext: parquet
   base_graphs:
     properties:
     - DIRECTORY of per-element host (epi300) base reaction-network graphs (base_{C,N,S,P}.pkl)
@@ -49,6 +55,12 @@ types:
         engine's -- the caller stages the set it means and asserts its count; do not
         infer the set from the filename, which is what drifted.
       ext: json
+  closure_ledger:
+    properties:
+      Format: PARQUET
+      _:
+      - per-reaction closure ledger (resolved / diluted / refused + reason)
+      ext: parquet
   compute_profile:
     properties:
       Format: YAML
@@ -68,6 +80,17 @@ types:
         the direct-GEM Network A base -- crosswalked to current MNXR and induced on
         the atom-mapped universe with uniform E=1.0
       ext: json
+  direction_ratios:
+    properties:
+      Format: parquet
+      _:
+      - 'per-reaction DIRECTIONALITY ratios for the directed (diode) solve: a parquet
+        (cols mnxr, ratio) giving MNXR -> g_rev/g_fwd = exp(dG''/RT) from the fused
+        direction ensemble. Passed to `ecspr_network.py solve-directed --direction`.
+        ratio==1.0 is reversible (parity with the undirected model); every reaction
+        is present. Network-AGNOSTIC (a static function of the MNXR ids), so it is
+        a shared staged input, never per-experiment.'
+      ext: parquet
   evidence_weights:
     properties:
       Format: parquet
@@ -192,6 +215,23 @@ types:
     - DIRECTORY holding the five reaction-catalog parquets (reactions, metabolites,
       rxn_edges, orf_reactions, reaction_redundancy) synthesized from MetaNetX + the
       evidence table
+  reaction_roles:
+    properties:
+      Format: TSV
+      _:
+      - 'reaction ROLES source for the directed (diode) solve: a MetaNetX reac_prop.tsv
+        parsed to MNXR -> (substrate set, product set), which orients each base-graph
+        reaction. Passed to `ecspr_network.py solve-directed --roles`. Network-AGNOSTIC
+        (a static function of the MNXR ids), so it is a shared staged input, never
+        per-experiment. Content-identical to metanetx_reac_prop but named for its
+        role in the directed solve, matching the solve-directed CLI contract.'
+      ext: tsv
+  reference_manifest:
+    properties:
+      Format: JSON
+      _:
+      - pre-bake MANIFEST.json -- pins, content hashes, verdict counts
+      ext: json
   reff_axes_report:
     properties:
       Format: TSV
@@ -261,3 +301,20 @@ types:
       - q
       - w
       - null
+  significance_table:
+    properties:
+      Format: TSV
+      _:
+      - full-mixture-SF significance scorer output, one row per axis/clone cell
+      ext: tsv
+  validation_set:
+    properties:
+      _:
+      - frozen expected outputs for the dual-network validation; gates only
+      content: directory with MANIFEST.tsv + netA/ netB/ lanes/ ground_truth/
+  worklist:
+    properties:
+      Format: TSV
+      _:
+      - pre-bake worklist of reactions pending resolution
+      ext: tsv

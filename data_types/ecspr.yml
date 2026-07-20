@@ -248,3 +248,40 @@ types:
       - at_floor
       - q
       ext: tsv
+
+# ---------------------------------------------------------------------
+# Folded in from the fabfos repo's own data_types/ (2026-07-19). These
+# name the frozen reference universe and the provenance-tracked data
+# library; no transform produces them. Names already present upstream
+# were left alone -- transforms encode those definitions in their
+# requirement hashes.
+# ---------------------------------------------------------------------
+  reference_manifest:
+    properties:
+      _: pre-bake MANIFEST.json -- pins, content hashes, verdict counts
+      Format: JSON
+      ext: json
+  atom_pairs:
+    properties:
+      _: atom-atom mapping table, MNXR-keyed (substrate/product atom transits)
+      Format: PARQUET
+      ext: parquet
+  closure_ledger:
+    properties:
+      _: per-reaction closure ledger (resolved / diluted / refused + reason)
+      Format: PARQUET
+      ext: parquet
+  worklist:
+    properties:
+      _: pre-bake worklist of reactions pending resolution
+      Format: TSV
+      ext: tsv
+  significance_table:
+    properties:
+      _: full-mixture-SF significance scorer output, one row per axis/clone cell
+      Format: TSV
+      ext: tsv
+  validation_set:
+    properties:
+      _: frozen expected outputs for the dual-network validation; gates only
+      content: directory with MANIFEST.tsv + netA/ netB/ lanes/ ground_truth/

@@ -5,9 +5,21 @@ ontology:
   version: '1.25'
 schema: v1
 types:
+  ecspr_aam_rescue.py:
+    properties:
+      src: ecspr_aam_rescue
+      usage: command line
   ecspr_ablation.py:
     properties:
       src: ecspr_ablation
+      usage: command line
+  ecspr_atom_graph.py:
+    properties:
+      src: ecspr_atom_graph
+      usage: library
+  ecspr_atom_pairs.py:
+    properties:
+      src: ecspr_atom_pairs
       usage: command line
   ecspr_catalog.py:
     properties:
@@ -21,6 +33,10 @@ types:
     properties:
       src: ecspr_directed
       usage: library
+  ecspr_generic_instantiate.py:
+    properties:
+      src: ecspr_generic_instantiate
+      usage: command line
   ecspr_network.py:
     properties:
       src: ecspr_network

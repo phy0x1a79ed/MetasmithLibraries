@@ -1,10 +1,20 @@
 manifest:
+  ecspr_aam_rescue.py:
+    type: lib::ecspr_aam_rescue.py
   ecspr_ablation.py:
     type: lib::ecspr_ablation.py
+  ecspr_atom_graph.py:
+    type: lib::ecspr_atom_graph.py
+  ecspr_atom_pairs.py:
+    type: lib::ecspr_atom_pairs.py
   ecspr_catalog.py:
     type: lib::ecspr_catalog.py
   ecspr_community.py:
     type: lib::ecspr_community.py
+  ecspr_directed.py:
+    type: lib::ecspr_directed.py
+  ecspr_generic_instantiate.py:
+    type: lib::ecspr_generic_instantiate.py
   ecspr_network.py:
     type: lib::ecspr_network.py
   ecspr_null_study.py:
@@ -13,8 +23,6 @@ manifest:
     type: lib::ecspr_significance.py
   ecspr_solver.py:
     type: lib::ecspr_solver.py
-  ecspr_directed.py:
-    type: lib::ecspr_directed.py
   ecspr_transporters.py:
     type: lib::ecspr_transporters.py
   fabfos_embed_transfer.py:

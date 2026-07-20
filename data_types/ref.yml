@@ -12,3 +12,54 @@ types:
     - reference_database
     properties:
       _: for antiSMASH
+
+# ---------------------------------------------------------------------
+# Folded in from the fabfos repo's own data_types/ (2026-07-19). These
+# name the frozen reference universe and the provenance-tracked data
+# library; no transform produces them. Names already present upstream
+# were left alone -- transforms encode those definitions in their
+# requirement hashes.
+# ---------------------------------------------------------------------
+  protein_fasta_gz:
+    properties:
+      _: gzipped protein FASTA (an upstream sequence release)
+      Format: FASTA
+      ext: fasta.gz
+  nucleotide_fasta:
+    properties:
+      _: nucleotide FASTA
+      Format: FASTA
+      ext: fna
+  diamond_db:
+    properties:
+      _: 'a DIAMOND-formatted protein database. DERIVED, not external: the on-disk format is coupled to
+        the DIAMOND binary that wrote it, so a major version bump invalidates the file even though its input
+        FASTA is unchanged.'
+      ext: dmnd
+  kofam_release:
+    properties:
+      _: a KOfam release component (ko_list, or the HMM profiles tarball)
+  model_weights_archive:
+    properties:
+      _: neural network weights shipped as a loose archive. Contrast weights baked into a container image,
+        which share that image's tier and inherit its availability.
+  genome_bundle:
+    properties:
+      _: a reference genome with its annotations (NCBI datasets layout)
+      content: directory
+  metanetx_chem_xref:
+    properties:
+      _: MetaNetX metabolite cross-reference table
+      Format: TSV
+      ext: tsv
+  biocyc_flatfiles:
+    properties:
+      _: BioCyc/MetaCyc flatfile distribution. LICENSED -- requires a BioCyc subscription and MUST NOT be
+        redistributed in any shared bundle.
+      content: directory
+  biocyc_pgdb:
+    properties:
+      _: Pathway Tools binary PGDB. LICENSED -- subscription only, never redistributed.
+  kegg_snapshot:
+    properties:
+      _: cached KEGG REST responses. LICENSED -- bulk KEGG access requires a paid academic FTP subscription.
