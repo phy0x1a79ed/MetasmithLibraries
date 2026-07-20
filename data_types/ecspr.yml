@@ -317,6 +317,14 @@ types:
     properties:
       _: reference SCORES from a previously scored run, carried so a new result has something to be compared against. An output of scoring, never an input to it -- staging this where the answer key belongs would leak scored numbers into the key
       content: directory of specificity/potency/essentiality TSVs
+  benchmark_base_graphs:
+    properties:
+      _: the element-resolved bipartite graphs the incumbent solves on, one per (facet, element). NOT derivable from X -- X withholds the atom mapping on purpose, and the atom-transit count is both the edge weight and, via the w<=0 edge drop, the connectivity. Network construction, never ECSPr output, which is what lets the answer-key builders read it without breaking independence
+      content: directory of netA_*/netB_*/base_{C,N,S,P}.pkl networkx graphs
+  benchmark_universe:
+    properties:
+      _: the atom-mapped MetaNetX universe per element, from which every base graph is induced. Needed at SOLVE time and not only at build time -- applying a gain-of-function perturbation re-reads it to find the inserted reactions, so a tree without it fails on the first GOF condition
+      content: directory of mnx_bipartite_{C,N,S,P}.pkl
   benchmark_provenance:
     properties:
       _: a benchmark version's own self-description -- per-file sha256 manifest, audit gate results, and the prose recording what it is and what it deliberately does not contain
