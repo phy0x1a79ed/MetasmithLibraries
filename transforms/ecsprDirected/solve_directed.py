@@ -81,5 +81,11 @@ TransformInstance(
     protocol=protocol,
     model=model,
     group_by=exp,
-    resources=Resources(cpus=4, memory=Size.GB(32), duration=Duration(hours=12)),
+    # cpus=1, not 4. `solve-directed` takes no thread flag and no --device, and
+    # the solve factorizes through scipy's SuperLU, which is serial -- so the
+    # extra three cores were reserved and then idled. Worse, the engine pins
+    # OMP/OPENBLAS/MKL/NUMEXPR to 1 thread on purpose (oversubscribing measured
+    # >10x slower), so even the BLAS underneath will not use them. Parallelism
+    # here comes from running many solves at once, not from widening one.
+    resources=Resources(cpus=1, memory=Size.GB(32), duration=Duration(hours=12)),
 )
