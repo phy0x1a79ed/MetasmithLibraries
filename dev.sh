@@ -36,6 +36,22 @@ case $1 in
         sleep 2
         $CONDA env create --no-default-packages -n $NAME -f ./base.yml
     ;;
+    --create-envs) # create the per-tool conda test envs from envs/tools/*.yml (idempotent)
+        # each recipe's `name:` is the env name referenced by resources/env/<tool>.env `conda:`.
+        # override the conda frontend with CONDA=... (default: mamba).
+        CONDA=${CONDA:-mamba}
+        existing="$($CONDA env list | awk '{print $1}')"
+        for recipe in "$HERE"/envs/tools/*.yml; do
+            name=$(awk -F': *' '/^name:/{print $2; exit}' "$recipe")
+            if echo "$existing" | grep -qxF "$name"; then
+                echo "[skip] env exists: $name"
+                continue
+            fi
+            echo "[create] $name  <- $(basename "$recipe")"
+            $CONDA env create -n "$name" -f "$recipe" \
+                || echo "[WARN] failed to solve/create env: $name (recipe $recipe)"
+        done
+    ;;
     --git-prune-local) # remove local branches not on remote
         git fetch -p
         git branch -r \

@@ -7,7 +7,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image = model.AddRequirement(lib.GetType("containers::phyloflash.oci"))
+image = model.AddRequirement(lib.GetType("env::phyloflash.env"))
 out   = model.AddProduct(lib.GetType("ref::phyloflash_db"))
 
 SILVA_RELEASE = "138.2"

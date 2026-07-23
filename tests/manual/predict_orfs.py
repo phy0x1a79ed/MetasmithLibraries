@@ -7,7 +7,7 @@ TEST_DATA = MLIB / "tests/test_data"
 
 # Setup
 agent = Agent(home=MLIB / "tests/test_msm_home")
-containers = DataInstanceLibrary.Load(MLIB / "resources/containers")
+containers = DataInstanceLibrary.Load(MLIB / "resources/env")
 transforms = [TransformInstanceLibrary.Load(MLIB / "transforms/functionalAnnotation")]
 
 # Create input with assembly

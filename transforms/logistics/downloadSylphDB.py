@@ -6,7 +6,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 out   = model.AddProduct(lib.GetType("ref::sylph_db"))
 
 SYLPH_DB_URL = "http://faust.compbio.cs.cmu.edu/sylph-stuff/gtdb-r220-c200-dbv1.syldb"

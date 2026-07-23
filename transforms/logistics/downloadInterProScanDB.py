@@ -2,8 +2,8 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
-img_ipr = model.AddRequirement(lib.GetType("containers::interproscan.oci"))
+image   = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
+img_ipr = model.AddRequirement(lib.GetType("env::interproscan.env"))
 data    = model.AddProduct(lib.GetType("ref::interproscan_data"))
 
 # InterProScan 5.67-99.0 data bundle

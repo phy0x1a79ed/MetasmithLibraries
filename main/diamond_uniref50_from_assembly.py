@@ -38,7 +38,7 @@ targets.Add("annotation::diamond_uniref50_results")
 
 task = smith.GenerateWorkflow(
     samples=list(inputs.AsSamples("sequences::assembly")),
-    resources=[DataInstanceLibrary.Load(MLIB / "resources" / "containers"), inputs],
+    resources=[DataInstanceLibrary.Load(MLIB / "resources" / "env"), inputs],
     transforms=[
         TransformInstanceLibrary.Load(MLIB / "transforms" / "logistics"),
         TransformInstanceLibrary.Load(MLIB / "transforms" / "metagenomics"),

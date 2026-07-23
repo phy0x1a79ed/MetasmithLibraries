@@ -12,7 +12,7 @@ implementations that planner draws from.
 ```
 data_types/      # YAML type definitions (15 namespaces)
 resources/
-  containers/    # 62 OCI container references (.oci → docker:// URI)
+  env/           # 70 generic env declarations (.env → container: URI and/or conda: env)
   lib/           # Reusable analysis scripts (clustering, plotting, etc.)
 transforms/      # Transform implementations grouped by domain
   amplicon/              #  2 transforms
@@ -31,7 +31,7 @@ main/            # Operator scripts (DAG rendering, planner probes, run launcher
 ```
 
 Data types (`data_types/*.yml`) cover: `alignment`, `amplicon`, `annotation`,
-`binning`, `clustering`, `containers`, `lib`, `media_optimization`,
+`binning`, `clustering`, `env`, `lib`, `media_optimization`,
 `metabolomics`, `ncbi`, `pangenome`, `ref`, `sequences`, `taxonomy`,
 `transcriptomics`.
 
@@ -66,15 +66,16 @@ After the build, `_metadata/` directories under `resources/` and
 `transforms/` reflect the current type graph. They're committed to the
 repo so consumers can pull the library without rebuilding.
 
-### Adding a container
+### Adding an env
 
-1. Add the type to `data_types/containers.yml` (`extends: container`,
-   declare what it `provides`).
-2. Create `resources/containers/<name>.oci` containing the registry URI
-   (e.g. `docker://quay.io/biocontainers/diamond:2.1.8--h43eeafb_0`).
-3. Rerun `./dev.sh -b`.
+1. Add the type to `data_types/env.yml` (`extends: env`, declare what it `provides`).
+2. Create `resources/env/<name>.env` with `container:` and/or `conda:`, e.g.
+   `container: docker://quay.io/biocontainers/diamond:2.1.8--h43eeafb_0` plus
+   `conda: diamond`. The engine picks the field matching the global runtime.
+3. Rerun `./dev.sh -b`. (For a `conda:` env, add `envs/tools/<name>.yml` or
+   re-run `python envs/gen_tool_envs.py`.)
 
-The build fails if any `.oci` file lacks a matching type definition.
+The build fails if any `.env` file lacks a matching type definition.
 
 ### Adding a transform
 
@@ -90,7 +91,7 @@ def protocol(context: ExecutionContext):
     in_path  = context.Input(inp)
     out_path = context.Output(out)
     context.ExecWithContainer(
-        image=lib.GetResource("containers::eggnog-mapper.oci"),
+        image=lib.GetResource("env::eggnog-mapper.env"),
         cmd=f"emapper.py -i {in_path.container} -o {out_path.container}",
     )
     return ExecutionResult(manifest=[{out: out_path.local}], success=out_path.local.exists())
@@ -128,8 +129,9 @@ and need a configured execution backend.
 ## Layout conventions
 
 - `transforms/*/_metadata/` is build-generated — do not hand-edit.
-- `data_types/`, `resources/*/_metadata/index.yml` (for declaring containers),
-  and the transform `.py` files themselves are the hand-edited surface.
+- `data_types/`, the `resources/*/` instance files (e.g. `resources/env/*.env`),
+  and the transform `.py` files themselves are the hand-edited surface;
+  `resources/*/_metadata/` is build-generated.
 - Disabled transforms live in `transforms/*/_disabled/` or are renamed
   `<name>.py.disabled` so the build skips them.
 

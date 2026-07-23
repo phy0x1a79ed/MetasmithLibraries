@@ -2,8 +2,8 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::ganon.oci"))
-img_bb  = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
+image   = model.AddRequirement(lib.GetType("env::ganon.env"))
+img_bb  = model.AddRequirement(lib.GetType("env::bbtools.env"))
 db      = model.AddRequirement(lib.GetType("ref::ganon2_db"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"))
 

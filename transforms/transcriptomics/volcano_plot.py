@@ -5,7 +5,7 @@ lib    = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model  = Transform()
 exp    = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 de     = model.AddRequirement(lib.GetType("transcriptomics::deseq2_results"), parents={exp})
-image  = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 out    = model.AddProduct(lib.GetType("transcriptomics::volcano_plot"))
 outpng = model.AddProduct(lib.GetType("transcriptomics::volcano_plot_png"))
 

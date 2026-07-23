@@ -2,8 +2,8 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::phyloflash.oci"))
-img_bb  = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
+image   = model.AddRequirement(lib.GetType("env::phyloflash.env"))
+img_bb  = model.AddRequirement(lib.GetType("env::bbtools.env"))
 db      = model.AddRequirement(lib.GetType("ref::phyloflash_db"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"))
 

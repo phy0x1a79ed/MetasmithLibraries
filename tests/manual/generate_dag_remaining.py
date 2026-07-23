@@ -31,9 +31,9 @@ transforms = [
 ]
 
 containers = DataInstanceLibrary(tmp / "containers.xgdb")
-containers.AddTypeLibrary(MLIB / "data_types" / "containers.yml")
-for name in ["stringtie.oci", "pydeseq2.oci", "python_for_data_science.oci"]:
-    containers.AddItem(MLIB / "resources/containers" / name, f"containers::{name}")
+containers.AddTypeLibrary(MLIB / "data_types" / "env.yml")
+for name in ["stringtie.env", "pydeseq2.env", "python_for_data_science.env"]:
+    containers.AddItem(MLIB / "resources/env" / name, f"env::{name}")
 containers.Save()
 
 inputs_dir = tmp / "inputs.xgdb"
@@ -91,5 +91,5 @@ _env_bin = Path(sys.executable).parent
 os.environ["PATH"] = f"{_env_bin}:{os.environ.get('PATH', '')}"
 
 out_png = MLIB / "results/remaining_dag.png"
-task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "containers"})
+task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "env"})
 print(f"\nDAG written to: {out_png}")

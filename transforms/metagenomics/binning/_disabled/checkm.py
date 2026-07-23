@@ -4,7 +4,7 @@ from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
-image       = model.AddRequirement(lib.GetType("containers::checkm.oci")) # database included at /checkm_database
+image       = model.AddRequirement(lib.GetType("env::checkm.env")) # database included at /checkm_database
 asm         = model.AddRequirement(lib.GetType("sequences::putative_genome"))
 out         = model.AddProduct(lib.GetType("taxonomy::checkm_stats"))
 

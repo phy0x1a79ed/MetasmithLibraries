@@ -8,8 +8,8 @@ ref      = model.AddRequirement(lib.GetType("transcriptomics::organellar_referen
 pair     = model.AddRequirement(lib.GetType("sequences::read_pair"))
 r1       = model.AddRequirement(lib.GetType("sequences::zipped_forward_short_reads"), parents={pair})
 r2       = model.AddRequirement(lib.GetType("sequences::zipped_reverse_short_reads"), parents={pair})
-mm2_img  = model.AddRequirement(lib.GetType("containers::minimap2.oci"))
-sam_img  = model.AddRequirement(lib.GetType("containers::samtools.oci"))
+mm2_img  = model.AddRequirement(lib.GetType("env::minimap2.env"))
+sam_img  = model.AddRequirement(lib.GetType("env::samtools.env"))
 out      = model.AddProduct(lib.GetType("transcriptomics::organellar_bam"))
 
 def protocol(context: ExecutionContext):

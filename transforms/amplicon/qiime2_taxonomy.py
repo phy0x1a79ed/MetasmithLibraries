@@ -9,7 +9,7 @@ from metasmith.python_api import *
 
 lib        = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model      = Transform()
-image      = model.AddRequirement(lib.GetType("containers::qiime2.oci"))
+image      = model.AddRequirement(lib.GetType("env::qiime2.env"))
 asvs       = model.AddRequirement(lib.GetType("amplicon::asv_seqs"))
 classifier = model.AddRequirement(lib.GetType("amplicon::silva_nb_classifier"))
 tax        = model.AddProduct(lib.GetType("amplicon::asv_taxonomy"))

@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 orfs  = model.AddRequirement(lib.GetType("sequences::orfs"))
 ecs   = model.AddRequirement(lib.GetType("annotation::deepec_predictions"))
 kos   = model.AddRequirement(lib.GetType("annotation::kofamscan_results"))

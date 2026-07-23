@@ -4,7 +4,7 @@ from pathlib import Path
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 
-image   = model.AddRequirement(lib.GetType("containers::metabolomics-python.oci"))
+image   = model.AddRequirement(lib.GetType("env::metabolomics-python.env"))
 dataset = model.AddRequirement(lib.GetType("metabolomics::jgi_metabolomics_dataset"))
 out_ft  = model.AddProduct(lib.GetType("metabolomics::metabolomics_feature_table"))
 

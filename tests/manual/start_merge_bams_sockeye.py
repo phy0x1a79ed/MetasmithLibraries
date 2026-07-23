@@ -44,7 +44,7 @@ def main() -> None:
         ],
     )
 
-    base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+    base_res = [DataInstanceLibrary.Load(MLIB / "resources/env")]
     t_transforms = [TransformInstanceLibrary.Load(MLIB / "transforms/transcriptomics")]
 
     import tempfile

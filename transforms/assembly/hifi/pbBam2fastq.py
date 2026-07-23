@@ -2,7 +2,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-img   = model.AddRequirement(lib.GetType("containers::bam2fastx.oci"))
+img   = model.AddRequirement(lib.GetType("env::bam2fastx.env"))
 rmeta = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 bam   = model.AddRequirement(lib.GetType("sequences::pacbio_hifi_bam"), parents={rmeta})
 out   = model.AddProduct(lib.GetType("sequences::long_reads"))

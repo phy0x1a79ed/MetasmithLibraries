@@ -7,7 +7,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image = model.AddRequirement(lib.GetType("containers::ganon.oci"))
+image = model.AddRequirement(lib.GetType("env::ganon.env"))
 out   = model.AddProduct(lib.GetType("ref::ganon2_db"))
 
 

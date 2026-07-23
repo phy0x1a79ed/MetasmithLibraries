@@ -2,9 +2,9 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::centrifuger.oci"))
-img_bb  = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
-img_pq  = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image   = model.AddRequirement(lib.GetType("env::centrifuger.env"))
+img_bb  = model.AddRequirement(lib.GetType("env::bbtools.env"))
+img_pq  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 db      = model.AddRequirement(lib.GetType("ref::centrifuger_db"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"))
 

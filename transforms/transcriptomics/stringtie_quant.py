@@ -4,7 +4,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 bam     = model.AddRequirement(lib.GetType("transcriptomics::star_bam"))
 mgtf    = model.AddRequirement(lib.GetType("transcriptomics::merged_gtf"))
-image   = model.AddRequirement(lib.GetType("containers::stringtie.oci"))
+image   = model.AddRequirement(lib.GetType("env::stringtie.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::stringtie_quant_gtf"))
 
 def protocol(context: ExecutionContext):

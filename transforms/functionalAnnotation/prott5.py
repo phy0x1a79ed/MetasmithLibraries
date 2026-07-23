@@ -5,7 +5,7 @@ from pathlib import Path
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::prott5.oci"))
+image    = model.AddRequirement(lib.GetType("env::prott5.env"))
 weights  = model.AddRequirement(lib.GetType("ref::prott5_xl_uniref50_weights"))
 orfs     = model.AddRequirement(lib.GetType("sequences::orfs_shard"))
 out_emb  = model.AddProduct(lib.GetType("annotation::prott5_embeddings"))

@@ -6,7 +6,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image      = model.AddRequirement(lib.GetType("containers::promotech.oci"))
+image      = model.AddRequirement(lib.GetType("env::promotech.env"))
 assembly   = model.AddRequirement(lib.GetType("sequences::assembly"))
 gff        = model.AddRequirement(lib.GetType("sequences::gff"))
 

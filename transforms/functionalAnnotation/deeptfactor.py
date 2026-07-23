@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image       = model.AddRequirement(lib.GetType("containers::deeptfactor.oci"))
+image       = model.AddRequirement(lib.GetType("env::deeptfactor.env"))
 orfs        = model.AddRequirement(lib.GetType("sequences::orfs"))
 out_results = model.AddProduct(lib.GetType("annotation::deeptfactor_results"))
 

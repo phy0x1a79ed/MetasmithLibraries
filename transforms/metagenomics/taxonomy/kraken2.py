@@ -2,10 +2,10 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-img_k2  = model.AddRequirement(lib.GetType("containers::kraken2.oci"))
-img_brk = model.AddRequirement(lib.GetType("containers::bracken.oci"))
-img_bb  = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
-img_pq  = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+img_k2  = model.AddRequirement(lib.GetType("env::kraken2.env"))
+img_brk = model.AddRequirement(lib.GetType("env::bracken.env"))
+img_bb  = model.AddRequirement(lib.GetType("env::bbtools.env"))
+img_pq  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 db      = model.AddRequirement(lib.GetType("ref::kraken2_db"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"))
 

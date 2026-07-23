@@ -7,7 +7,7 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 reads   = model.AddRequirement(lib.GetType("sequences::reads"))
-img_sqk = model.AddRequirement(lib.GetType("containers::seqkit.oci"))
+img_sqk = model.AddRequirement(lib.GetType("env::seqkit.env"))
 stats   = model.AddProduct(lib.GetType("sequences::read_qc_stats"))
 
 def protocol(context: ExecutionContext):

@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image = model.AddRequirement(lib.GetType("containers::dram.oci"))
+image = model.AddRequirement(lib.GetType("env::dram.env"))
 orfs  = model.AddRequirement(lib.GetType("sequences::orfs"))
 db    = model.AddRequirement(lib.GetType("annotation::dram_db"))
 out   = model.AddProduct(lib.GetType("annotation::dram_annotations"))

@@ -264,7 +264,7 @@ def run_one(
     inputs = build_input_library(orfs_path, needed_weights, name, force_rebuild=True)
 
     # resources (container libs + transform libs)
-    containers = DataInstanceLibrary.Load(DL_LIB / "resources" / "containers")
+    containers = DataInstanceLibrary.Load(DL_LIB / "resources" / "env")
     transforms = [
         TransformInstanceLibrary.Load(DL_LIB / "transforms" / "functionalAnnotation"),
         TransformInstanceLibrary.Load(DL_LIB / "transforms" / "logistics"),

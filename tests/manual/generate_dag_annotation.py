@@ -29,7 +29,7 @@ transforms = [
 ]
 
 # Load containers from the resource library (matches running pipeline)
-base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+base_res = [DataInstanceLibrary.Load(MLIB / "resources/env")]
 
 inputs_dir = tmp / "inputs.xgdb"
 inputs = DataInstanceLibrary(inputs_dir)
@@ -89,5 +89,5 @@ _env_bin = Path(sys.executable).parent
 os.environ["PATH"] = f"{_env_bin}:{os.environ.get('PATH', '')}"
 
 out_png = MLIB / "results/annotation_dag.png"
-task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "containers"})
+task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "env"})
 print(f"\nDAG written to: {out_png}")

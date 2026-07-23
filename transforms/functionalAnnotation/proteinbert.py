@@ -4,8 +4,8 @@ from pathlib import Path
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image_pbert = model.AddRequirement(lib.GetType("containers::proteinbert.oci"))
-image_polars = model.AddRequirement(lib.GetType("containers::polars.oci"))
+image_pbert = model.AddRequirement(lib.GetType("env::proteinbert.env"))
+image_polars = model.AddRequirement(lib.GetType("env::polars.env"))
 orfs = model.AddRequirement(lib.GetType("sequences::orfs"))
 out_embeddings = model.AddProduct(lib.GetType("annotation::proteinbert_embeddings"))
 out_index = model.AddProduct(lib.GetType("annotation::proteinbert_index"))

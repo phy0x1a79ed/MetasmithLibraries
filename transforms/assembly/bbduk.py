@@ -4,7 +4,7 @@ import re
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
+image   = model.AddRequirement(lib.GetType("env::bbtools.env"))
 meta    = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"), parents={meta})
 rstats  = model.AddRequirement(lib.GetType("sequences::read_qc_stats"), parents={reads})

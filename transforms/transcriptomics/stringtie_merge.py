@@ -6,7 +6,7 @@ model   = Transform()
 exp     = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 gtf     = model.AddRequirement(lib.GetType("transcriptomics::stringtie_gtf"), parents={exp})
 gff     = model.AddRequirement(lib.GetType("transcriptomics::braker3_gff"), parents={exp})
-image   = model.AddRequirement(lib.GetType("containers::stringtie.oci"))
+image   = model.AddRequirement(lib.GetType("env::stringtie.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::merged_gtf"))
 
 def protocol(context: ExecutionContext):

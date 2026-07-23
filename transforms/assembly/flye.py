@@ -3,7 +3,7 @@ import json
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::flye.oci"))
+image   = model.AddRequirement(lib.GetType("env::flye.env"))
 oreads  = model.AddRequirement(lib.GetType("sequences::long_reads"))
 reads   = model.AddRequirement(lib.GetType("sequences::clean_long_reads"), parents={oreads})
 stats   = model.AddRequirement(lib.GetType("sequences::read_qc_stats"), parents={oreads})

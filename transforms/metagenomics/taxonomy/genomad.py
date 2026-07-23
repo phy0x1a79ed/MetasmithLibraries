@@ -4,7 +4,7 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::genomad.oci"))
+image    = model.AddRequirement(lib.GetType("env::genomad.env"))
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
 ref  = model.AddRequirement(lib.GetType("ref::genomad"))
 

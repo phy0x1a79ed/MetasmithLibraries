@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 bam     = model.AddRequirement(lib.GetType("transcriptomics::star_bam"))
-image   = model.AddRequirement(lib.GetType("containers::stringtie.oci"))
+image   = model.AddRequirement(lib.GetType("env::stringtie.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::stringtie_gtf"))
 
 def protocol(context: ExecutionContext):

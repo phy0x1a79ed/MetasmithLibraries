@@ -2,7 +2,7 @@ from metasmith.python_api import *
 
 lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model    = Transform()
-image    = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image    = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 w_base   = model.AddProduct(lib.GetType("ref::ankh_base_weights"))
 w_large  = model.AddProduct(lib.GetType("ref::ankh_large_weights"))
 

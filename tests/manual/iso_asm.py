@@ -103,7 +103,7 @@ else:
 resources = [
     DataInstanceLibrary.Load(f"../resources/{n}")
     for n in [
-        "containers",
+        "env",
         # "lib",
     ]
 ]

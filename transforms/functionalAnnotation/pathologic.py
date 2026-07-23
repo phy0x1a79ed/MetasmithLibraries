@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::pathologic.oci"))
+image    = model.AddRequirement(lib.GetType("env::pathologic.env"))
 orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
 ann      = model.AddRequirement(lib.GetType("annotation::ptools_annotation_table"))
 archive  = model.AddProduct(lib.GetType("annotation::pgdb_archive"))

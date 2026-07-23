@@ -4,7 +4,7 @@ from pathlib import Path
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::metabolomics-python.oci"))
+image    = model.AddRequirement(lib.GetType("env::metabolomics-python.env"))
 diff_dir = model.AddRequirement(lib.GetType("metabolomics::metabolomics_differential"))
 out_dir  = model.AddProduct(lib.GetType("metabolomics::metabolomics_pathway_enrichment"))
 

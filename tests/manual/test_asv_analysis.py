@@ -78,7 +78,7 @@ print("\n=== Step 3: Generate Workflow ===")
 
 resources = [
     DataInstanceLibrary.Load(MLIB / f"resources/{n}")
-    for n in ["containers"]
+    for n in ["env"]
 ] + [
     view
     for view in inputs.AsSamples("amplicon::silva_source")

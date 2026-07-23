@@ -5,7 +5,7 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 reads   = model.AddRequirement(lib.GetType("sequences::long_reads"))
-image   = model.AddRequirement(lib.GetType("containers::nanoplot.oci"))
+image   = model.AddRequirement(lib.GetType("env::nanoplot.env"))
 stats   = model.AddProduct(lib.GetType("sequences::read_qc_stats"))
 html    = model.AddProduct(lib.GetType("sequences::nanoplot_html_report"))
 raw     = model.AddProduct(lib.GetType("sequences::nanoplot_raw_report"))

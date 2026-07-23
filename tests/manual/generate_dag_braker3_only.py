@@ -25,26 +25,26 @@ transforms = [
 
 # Only the containers needed for this subset
 CONTAINERS = [
-    "braker3.oci",
-    "stringtie.oci",
-    "gffread.oci",
-    "busco.oci",
-    "eggnog-mapper.oci",
-    "samtools.oci",
-    "pydeseq2.oci",
-    "star.oci",
-    "python_for_data_science.oci",
+    "braker3.env",
+    "stringtie.env",
+    "gffread.env",
+    "busco.env",
+    "eggnog-mapper.env",
+    "samtools.env",
+    "pydeseq2.env",
+    "star.env",
+    "python_for_data_science.env",
 ]
 containers = DataInstanceLibrary(tmp / "containers.xgdb")
-containers.AddTypeLibrary(MLIB / "data_types" / "containers.yml")
+containers.AddTypeLibrary(MLIB / "data_types" / "env.yml")
 for name in CONTAINERS:
-    containers.AddItem(MLIB / "resources/containers" / name, f"containers::{name}")
+    containers.AddItem(MLIB / "resources/env" / name, f"env::{name}")
 containers.Save()
 
 # Inputs: merged BAM + assembly + experiment
 inputs_dir = tmp / "inputs.xgdb"
 inputs = DataInstanceLibrary(inputs_dir)
-for tl in ["sequences.yml", "transcriptomics.yml", "annotation.yml", "containers.yml"]:
+for tl in ["sequences.yml", "transcriptomics.yml", "annotation.yml", "env.yml"]:
     inputs.AddTypeLibrary(MLIB / "data_types" / tl)
 
 def mock(name, is_dir=False):
@@ -99,5 +99,5 @@ _env_bin = Path(sys.executable).parent
 os.environ["PATH"] = f"{_env_bin}:{os.environ.get('PATH', '')}"
 
 out_png = MLIB / "results/braker3_dag.png"
-task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "containers"})
+task.plan.RenderDAG(out_png, blacklist_namespaces={"lib", "env"})
 print(f"\nDAG written to: {out_png}")

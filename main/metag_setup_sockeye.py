@@ -8,7 +8,7 @@ staging jobs, then metag_workflow_from_reads_sockeye.py (W1) executes straight
 from what is staged here, with no on-the-fly pulls or downloads:
 
   1. Prefetch the workflow's tool containers into the persistent apptainer store
-     (<agent_home>/container_images) via the `containers::pulled_container`
+     (<agent_home>/container_images) via the `env::pulled_container`
      transform, run on the LOCAL executor (login node = has internet).
   2. Upload the paired R1/R2 reads to cluster scratch (metasmith does not
      auto-transfer non-resident inputs).
@@ -168,22 +168,22 @@ def main():
         setup_commands=SETUP_COMMANDS,
     )
 
-    containers = DataInstanceLibrary.Load(MLIB / "resources" / "containers")
+    containers = DataInstanceLibrary.Load(MLIB / "resources" / "env")
     logistics  = TransformInstanceLibrary.Load(MLIB / "transforms" / "logistics")
 
-    all_samples = list(containers.AsSamples("containers::container"))
+    all_samples = list(containers.AsSamples("env::env"))
     if PULL_ALL:
         samples = all_samples
     else:
         wl = {Path(f"{n}.oci") for n in W1_CONTAINERS}
         samples = [s for s in all_samples if s._mask.intersection(wl)]
         missing = wl - {p for s in samples for p in s._mask}
-        assert not missing, f"requested containers not in {MLIB}/resources/containers: {sorted(missing)}"
+        assert not missing, f"requested containers not in {MLIB}/resources/env: {sorted(missing)}"
     print(f"==> containers to pull: {len(samples)}"
           + ("" if PULL_ALL else f" (W1 set: {W1_CONTAINERS})"), flush=True)
 
     targets = TargetBuilder()
-    targets.Add("containers::pulled_container")
+    targets.Add("env::pulled_container")
 
     task = smith.GenerateWorkflow(
         samples=samples,

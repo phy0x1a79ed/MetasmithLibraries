@@ -7,7 +7,7 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 dep     = model.AddRequirement(lib.GetType("ncbi::assembly_accession"))
-image   = model.AddRequirement(lib.GetType("containers::ncbi-datasets.oci"))
+image   = model.AddRequirement(lib.GetType("env::ncbi-datasets.env"))
 fna     = model.AddProduct(lib.GetType("sequences::isolate_assembly"))
 faa     = model.AddProduct(lib.GetType("sequences::orfs"))
 gff     = model.AddProduct(lib.GetType("sequences::gff"))

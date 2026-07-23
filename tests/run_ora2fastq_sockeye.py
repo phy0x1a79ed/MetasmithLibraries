@@ -67,7 +67,7 @@ inputs.AddItem(
 inputs.Save()
 
 resources = [
-    DataInstanceLibrary.Load(MLIB / "resources/containers"),
+    DataInstanceLibrary.Load(MLIB / "resources/env"),
     inputs,
 ]
 

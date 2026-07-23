@@ -36,7 +36,7 @@ def run_single_target(target_name, target_type):
         ],
     )
 
-    base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+    base_res = [DataInstanceLibrary.Load(MLIB / "resources/env")]
     t_transforms = [
         TransformInstanceLibrary.Load(MLIB / "transforms/logistics"),
     ]

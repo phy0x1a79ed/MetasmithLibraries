@@ -4,7 +4,7 @@ from metasmith.python_api import *
 
 lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
-image     = model.AddRequirement(lib.GetType("containers::blast.oci"))
+image     = model.AddRequirement(lib.GetType("env::blast.env"))
 asvs      = model.AddRequirement(lib.GetType("amplicon::asv_seqs"))
 contigs   = model.AddRequirement(lib.GetType("sequences::assembly"))
 threshold = model.AddRequirement(lib.GetType("amplicon::blast_identity_threshold"))

@@ -82,7 +82,7 @@ def probe(label: str, target_keys: list[str], weight_keys: list[str],
           f"iter={max_iter} refine={max_refine} seed={seed}\n{'='*70}")
 
     inputs = build_library(weight_keys, label)
-    containers = DataInstanceLibrary.Load(DL_LIB / "resources" / "containers")
+    containers = DataInstanceLibrary.Load(DL_LIB / "resources" / "env")
     transforms = [
         TransformInstanceLibrary.Load(DL_LIB / "transforms" / "functionalAnnotation"),
         TransformInstanceLibrary.Load(DL_LIB / "transforms" / "logistics"),

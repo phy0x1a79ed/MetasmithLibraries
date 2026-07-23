@@ -4,7 +4,7 @@ from pathlib import Path
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::kofamscan.oci"))
+image    = model.AddRequirement(lib.GetType("env::kofamscan.env"))
 orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
 profiles = model.AddRequirement(lib.GetType("ref::kofamscan_profiles"))
 ko_list  = model.AddRequirement(lib.GetType("ref::kofamscan_ko_list"))

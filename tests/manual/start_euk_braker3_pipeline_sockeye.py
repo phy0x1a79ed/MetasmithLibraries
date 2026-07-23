@@ -57,7 +57,7 @@ def main():
     )
 
     print("=== Loading resources & transforms ===")
-    base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+    base_res = [DataInstanceLibrary.Load(MLIB / "resources/env")]
     t_transforms = [
         TransformInstanceLibrary.Load(MLIB / "transforms/transcriptomics"),
         TransformInstanceLibrary.Load(MLIB / "transforms/functionalAnnotation"),

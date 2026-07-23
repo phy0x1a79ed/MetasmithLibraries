@@ -5,8 +5,8 @@ model   = Transform()
 pair    = model.AddRequirement(lib.GetType("sequences::read_pair"))
 r1      = model.AddRequirement(lib.GetType("sequences::forward_ora_reads"), parents={pair})
 r2      = model.AddRequirement(lib.GetType("sequences::reverse_ora_reads"), parents={pair})
-orad    = model.AddRequirement(lib.GetType("containers::orad.oci"))
-bbtools = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
+orad    = model.AddRequirement(lib.GetType("env::orad.env"))
+bbtools = model.AddRequirement(lib.GetType("env::bbtools.env"))
 out     = model.AddProduct(lib.GetType("sequences::short_reads_pe"))
 
 def protocol(context: ExecutionContext):

@@ -42,7 +42,7 @@ logistics_transforms = [
     TransformInstanceLibrary.Load(MLIB / "transforms/logistics"),
 ]
 
-base_resources = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+base_resources = [DataInstanceLibrary.Load(MLIB / "resources/env")]
 
 # Generate workflow
 import tempfile

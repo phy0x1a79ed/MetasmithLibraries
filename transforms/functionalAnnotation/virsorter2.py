@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image       = model.AddRequirement(lib.GetType("containers::virsorter2.oci"))
+image       = model.AddRequirement(lib.GetType("env::virsorter2.env"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 db          = model.AddRequirement(lib.GetType("annotation::virsorter2_db"))
 out_seqs    = model.AddProduct(lib.GetType("annotation::virsorter2_viral_sequences"))

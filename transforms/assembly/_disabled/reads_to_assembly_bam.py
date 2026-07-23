@@ -4,8 +4,8 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-img_mm2 = model.AddRequirement(lib.GetType("containers::minimap2.oci"))
-img_sam = model.AddRequirement(lib.GetType("containers::samtools.oci"))
+img_mm2 = model.AddRequirement(lib.GetType("env::minimap2.env"))
+img_sam = model.AddRequirement(lib.GetType("env::samtools.env"))
 meta    = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 reads   = model.AddRequirement(lib.GetType("sequences::reads"), parents={meta})
 rstats  = model.AddRequirement(lib.GetType("sequences::read_qc_stats"), parents={meta})

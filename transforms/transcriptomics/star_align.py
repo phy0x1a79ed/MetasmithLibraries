@@ -6,7 +6,7 @@ pair    = model.AddRequirement(lib.GetType("sequences::read_pair"))
 r1      = model.AddRequirement(lib.GetType("sequences::zipped_forward_short_reads"), parents={pair})
 r2      = model.AddRequirement(lib.GetType("sequences::zipped_reverse_short_reads"), parents={pair})
 idx     = model.AddRequirement(lib.GetType("transcriptomics::star_index"))
-image   = model.AddRequirement(lib.GetType("containers::star.oci"))
+image   = model.AddRequirement(lib.GetType("env::star.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::star_bam"))
 
 def protocol(context: ExecutionContext):

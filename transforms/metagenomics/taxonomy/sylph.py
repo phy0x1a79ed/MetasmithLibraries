@@ -2,8 +2,8 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::sylph.oci"))
-img_bb  = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
+image   = model.AddRequirement(lib.GetType("env::sylph.env"))
+img_bb  = model.AddRequirement(lib.GetType("env::bbtools.env"))
 db      = model.AddRequirement(lib.GetType("ref::sylph_db"))
 reads   = model.AddRequirement(lib.GetType("sequences::short_reads"))
 

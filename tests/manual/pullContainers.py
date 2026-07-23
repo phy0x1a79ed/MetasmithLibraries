@@ -41,20 +41,20 @@ smith = Agent(
 notebook_name = Path(__file__).stem
 in_dir = base_dir/f"{notebook_name}/inputs.xgdb"
 
-containers = DataInstanceLibrary.Load(MLIB/"resources/containers")
+containers = DataInstanceLibrary.Load(MLIB/"resources/env")
 logistics = TransformInstanceLibrary.Load(MLIB/f"transforms/logistics")
 
 targets = TargetBuilder()
-targets.Add("containers::pulled_container")
+targets.Add("env::pulled_container")
 
 # WL = {Path(f"{n}.oci") for n in [
 #     # "gtdbtk",
 #     "fastani",
 # ]}
-# samples = [x for x in containers.AsSamples("containers::container") if len(x._mask.intersection(WL))>0]
+# samples = [x for x in containers.AsSamples("env::env") if len(x._mask.intersection(WL))>0]
 task = smith.GenerateWorkflow(
     # samples=samples,
-    samples=containers.AsSamples("containers::container"),
+    samples=containers.AsSamples("env::env"),
     resources=[],
     transforms=[logistics],
     # targets=[inputs.GetType("sequences::gbk")]

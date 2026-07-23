@@ -76,7 +76,7 @@ except:
 
 resources = [
     DataInstanceLibrary.Load(f"../resources/{n}")
-    for n in ["containers", "lib"]
+    for n in ["env", "lib"]
 ]
 
 transforms = [

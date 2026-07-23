@@ -54,7 +54,7 @@ for yml in sorted((ROOT / "data_types").glob("*.yml")):
 
 # ── 2. Resource libraries ──────────────────────────────────────────
 print("\n[2] Loading resources/")
-for res in ["containers", "lib"]:
+for res in ["env", "lib"]:
     def _load(r=res):
         DataInstanceLibrary.Load(ROOT / f"resources/{r}")
     check(f"resources/{res}", _load)
@@ -82,7 +82,7 @@ tmpdir = Path(tempfile.mkdtemp(prefix="msm_test_"))
 
 resources = [
     DataInstanceLibrary.Load(ROOT / f"resources/{n}")
-    for n in ["containers", "lib"]
+    for n in ["env", "lib"]
 ]
 all_transforms = [
     TransformInstanceLibrary.Load(ROOT / f"transforms/{d}")

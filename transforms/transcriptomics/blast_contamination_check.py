@@ -6,7 +6,7 @@ lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model    = Transform()
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
 orgref   = model.AddRequirement(lib.GetType("transcriptomics::organellar_reference"))
-image    = model.AddRequirement(lib.GetType("containers::blast.oci"))
+image    = model.AddRequirement(lib.GetType("env::blast.env"))
 out      = model.AddProduct(lib.GetType("transcriptomics::contamination_report"))
 
 def protocol(context: ExecutionContext):

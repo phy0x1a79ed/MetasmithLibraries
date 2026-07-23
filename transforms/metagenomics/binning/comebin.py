@@ -4,7 +4,7 @@ from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
-image       = model.AddRequirement(lib.GetType("containers::comebin.oci"))
+image       = model.AddRequirement(lib.GetType("env::comebin.env"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 bam         = model.AddRequirement(lib.GetType("alignment::bam"), parents={asm})
 bin_fasta   = model.AddProduct(lib.GetType("sequences::comebin_bin_fasta"))

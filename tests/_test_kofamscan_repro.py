@@ -42,7 +42,7 @@ def agent():
 
 @pytest.fixture(scope="module")
 def base_resources():
-    return [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+    return [DataInstanceLibrary.Load(MLIB / "resources/env")]
 
 
 @pytest.fixture(scope="module")

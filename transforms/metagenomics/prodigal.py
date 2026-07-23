@@ -2,7 +2,7 @@ from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
-image       = model.AddRequirement(lib.GetType("containers::pprodigal.oci"))
+image       = model.AddRequirement(lib.GetType("env::pprodigal.env"))
 asm         = model.AddRequirement(lib.GetType("sequences::assembly"))
 cds         = model.AddProduct(lib.GetType("sequences::orfs"))
 gff         = model.AddProduct(lib.GetType("sequences::gff"))

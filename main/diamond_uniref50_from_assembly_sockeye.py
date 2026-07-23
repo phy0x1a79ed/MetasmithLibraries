@@ -102,7 +102,7 @@ def prefetch_tool_containers(agent_home: str, task_key: str):
     Compute nodes typically have NO outbound network, so a step's lazy
     `apptainer exec docker://...` dies with 'no route to host'. metasmith's
     Deploy pulls only its own image, not per-transform tools. We warm the cache
-    here: parse the staged workflow.nf for the `containers::<x>.oci` it actually
+    here: parse the staged workflow.nf for the `env::<x>.oci` it actually
     uses, read each .oci's docker URL, and pull it as a .sif (use-sif).
     """
     run = f"{agent_home}/runs/{task_key}"
@@ -112,7 +112,7 @@ def prefetch_tool_containers(agent_home: str, task_key: str):
         {setup}
         export APPTAINER_CACHEDIR="{agent_home}/.apptainer_cache"; mkdir -p "$APPTAINER_CACHEDIR"
         R="{run}"; CACHE="{agent_home}/container_images"; mkdir -p "$CACHE"
-        names=$(grep -oE 'containers::[A-Za-z0-9._-]+\\.oci' "$R/workflow.nf" | sed 's/containers:://' | sort -u)
+        names=$(grep -oE 'env::[A-Za-z0-9._-]+\\.oci' "$R/workflow.nf" | sed 's/env:://' | sort -u)
         echo "plan containers: $names"
         for n in $names; do
             oci=$(find "$R/_metasmith/task/data" -name "$n" | head -1)
@@ -172,7 +172,7 @@ def main():
     print("==> GenerateWorkflow()", flush=True)
     task = smith.GenerateWorkflow(
         samples=list(inputs.AsSamples("sequences::assembly")),
-        resources=[DataInstanceLibrary.Load(MLIB / "resources" / "containers"), inputs],
+        resources=[DataInstanceLibrary.Load(MLIB / "resources" / "env"), inputs],
         transforms=[
             TransformInstanceLibrary.Load(MLIB / "transforms" / "logistics"),
             TransformInstanceLibrary.Load(MLIB / "transforms" / "metagenomics"),

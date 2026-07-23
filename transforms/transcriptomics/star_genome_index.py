@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 asm     = model.AddRequirement(lib.GetType("sequences::assembly"))
-image   = model.AddRequirement(lib.GetType("containers::star.oci"))
+image   = model.AddRequirement(lib.GetType("env::star.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::star_index"))
 
 def protocol(context: ExecutionContext):

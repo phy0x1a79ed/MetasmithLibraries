@@ -192,7 +192,7 @@ def main():
     print("==> GenerateWorkflow()", flush=True)
     task = smith.GenerateWorkflow(
         samples=list(inputs.AsSamples("sequences::read_metadata")),
-        resources=[DataInstanceLibrary.Load(MLIB / "resources" / "containers"), inputs],
+        resources=[DataInstanceLibrary.Load(MLIB / "resources" / "env"), inputs],
         transforms=[
             TransformInstanceLibrary.Load(MLIB / "transforms" / "logistics"),
             TransformInstanceLibrary.Load(MLIB / "transforms" / "assembly"),

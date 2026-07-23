@@ -3,7 +3,7 @@ from metasmith.python_api import *
 
 lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model    = Transform()
-image    = model.AddRequirement(lib.GetType("containers::busco.oci"))
+image    = model.AddRequirement(lib.GetType("env::busco.env"))
 orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
 lineage  = model.AddRequirement(lib.GetType("annotation::busco_lineage"))
 out      = model.AddProduct(lib.GetType("annotation::busco_full_table"))

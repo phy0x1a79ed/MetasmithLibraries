@@ -13,7 +13,7 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image = model.AddRequirement(lib.GetType("containers::skani.oci"))
+image = model.AddRequirement(lib.GetType("env::skani.env"))
 asm   = model.AddRequirement(lib.GetType("sequences::assembly"))
 bin   = model.AddRequirement(lib.GetType("binning_local::quality_bin_fasta"), parents={asm})
 table = model.AddProduct(lib.GetType("binning_local::cluster_table"))

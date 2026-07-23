@@ -4,8 +4,8 @@ from pathlib import Path
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image     = model.AddRequirement(lib.GetType("containers::foldseek.oci"))
-image_py  = model.AddRequirement(lib.GetType("containers::polars.oci"))
+image     = model.AddRequirement(lib.GetType("env::foldseek.env"))
+image_py  = model.AddRequirement(lib.GetType("env::polars.env"))
 structs   = model.AddRequirement(lib.GetType("sequences::predicted_structures"))
 out_3di   = model.AddProduct(lib.GetType("sequences::structure_3di_tokens"))
 

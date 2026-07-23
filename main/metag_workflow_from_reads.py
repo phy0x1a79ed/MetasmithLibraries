@@ -80,7 +80,7 @@ targets.Add("binning::comebin_contig_to_bin_table")
 
 task = smith.GenerateWorkflow(
     samples=list(inputs.AsSamples("sequences::read_metadata")),
-    resources=[DataInstanceLibrary.Load(MLIB / "resources" / "containers"), inputs],
+    resources=[DataInstanceLibrary.Load(MLIB / "resources" / "env"), inputs],
     transforms=[
         TransformInstanceLibrary.Load(MLIB / "transforms" / "logistics"),
         TransformInstanceLibrary.Load(MLIB / "transforms" / "assembly"),

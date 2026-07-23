@@ -4,7 +4,7 @@ import sys
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-image   = model.AddRequirement(lib.GetType("containers::sra-tools.oci"))
+image   = model.AddRequirement(lib.GetType("env::sra-tools.env"))
 meta    = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 dep     = model.AddRequirement(lib.GetType("ncbi::sra_accession"), parents={meta})
 out     = model.AddProduct(lib.GetType("ncbi::sra_cache"))

@@ -2,7 +2,7 @@ from metasmith.python_api import *
 
 lib      = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model    = Transform()
-image    = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image    = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 weights  = model.AddProduct(lib.GetType("ref::prott5_xl_uniref50_weights"))
 
 HF_REPO  = "Rostlab/prot_t5_xl_uniref50"

@@ -2,8 +2,8 @@ from metasmith.python_api import *
 
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
-im_bb   = model.AddRequirement(lib.GetType("containers::bbtools.oci"))
-image   = model.AddRequirement(lib.GetType("containers::filtlong.oci"))
+im_bb   = model.AddRequirement(lib.GetType("env::bbtools.env"))
+image   = model.AddRequirement(lib.GetType("env::filtlong.env"))
 reads   = model.AddRequirement(lib.GetType("sequences::long_reads"))
 out     = model.AddProduct(lib.GetType("sequences::clean_long_reads"))
 disc    = model.AddProduct(lib.GetType("sequences::discarded_long_reads"))

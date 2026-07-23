@@ -6,7 +6,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image = model.AddRequirement(lib.GetType("containers::metaphlan.oci"))
+image = model.AddRequirement(lib.GetType("env::metaphlan.env"))
 out   = model.AddProduct(lib.GetType("ref::metaphlan_db"))
 
 

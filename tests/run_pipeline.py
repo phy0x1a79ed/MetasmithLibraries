@@ -44,7 +44,7 @@ def main():
         print("Agent already deployed")
 
     print("\n=== Loading resources ===")
-    base_res = [DataInstanceLibrary.Load(MLIB / "resources/containers")]
+    base_res = [DataInstanceLibrary.Load(MLIB / "resources/env")]
 
     print("=== Loading transforms ===")
     t_transforms = [

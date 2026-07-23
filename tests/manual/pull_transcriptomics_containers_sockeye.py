@@ -19,11 +19,11 @@ smith = Agent(
     ],
 )
 
-containers = DataInstanceLibrary.Load(MLIB / "resources/containers")
+containers = DataInstanceLibrary.Load(MLIB / "resources/env")
 logistics = TransformInstanceLibrary.Load(MLIB / "transforms/logistics")
 
 targets = TargetBuilder()
-targets.Add("containers::pulled_container")
+targets.Add("env::pulled_container")
 
 WHITELIST = {Path(f"{n}.oci") for n in [
     "star",
@@ -41,7 +41,7 @@ WHITELIST = {Path(f"{n}.oci") for n in [
 ]}
 
 samples = [
-    x for x in containers.AsSamples("containers::container")
+    x for x in containers.AsSamples("env::env")
     if len(x._mask.intersection(WHITELIST)) > 0
 ]
 print(f"Pulling {len(samples)} containers: {[str(p) for s in samples for p in s._mask]}")

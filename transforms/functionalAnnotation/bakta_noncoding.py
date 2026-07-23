@@ -6,7 +6,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::bakta.oci"))
+image    = model.AddRequirement(lib.GetType("env::bakta.env"))
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
 db       = model.AddRequirement(lib.GetType("annotation::bakta_db"))
 out_gff  = model.AddProduct(lib.GetType("annotation::bakta_gff"))

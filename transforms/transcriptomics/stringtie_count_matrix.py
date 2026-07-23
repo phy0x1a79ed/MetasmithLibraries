@@ -5,7 +5,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 exp     = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 qgtf    = model.AddRequirement(lib.GetType("transcriptomics::stringtie_quant_gtf"), parents={exp})
-image   = model.AddRequirement(lib.GetType("containers::python_for_data_science.oci"))
+image   = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::gene_count_table"))
 
 def protocol(context: ExecutionContext):

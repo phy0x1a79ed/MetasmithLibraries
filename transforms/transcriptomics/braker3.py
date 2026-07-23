@@ -6,7 +6,7 @@ model   = Transform()
 exp     = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 asm     = model.AddRequirement(lib.GetType("sequences::assembly"), parents={exp})
 bam     = model.AddRequirement(lib.GetType("transcriptomics::merged_bam"), parents={exp})
-image   = model.AddRequirement(lib.GetType("containers::braker3.oci"))
+image   = model.AddRequirement(lib.GetType("env::braker3.env"))
 out_gff = model.AddProduct(lib.GetType("transcriptomics::braker3_gff"))
 out_aa  = model.AddProduct(lib.GetType("transcriptomics::braker3_proteins"))
 

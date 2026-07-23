@@ -3,7 +3,7 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image        = model.AddRequirement(lib.GetType("containers::predictf.oci"))
+image        = model.AddRequirement(lib.GetType("env::predictf.env"))
 orfs         = model.AddRequirement(lib.GetType("sequences::orfs"))
 db           = model.AddRequirement(lib.GetType("annotation::predictf_db"))
 out_tf       = model.AddProduct(lib.GetType("annotation::predictf_results"))

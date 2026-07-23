@@ -5,7 +5,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 exp     = model.AddRequirement(lib.GetType("transcriptomics::experiment"))
 bam     = model.AddRequirement(lib.GetType("transcriptomics::star_bam"), parents={exp})
-image   = model.AddRequirement(lib.GetType("containers::samtools.oci"))
+image   = model.AddRequirement(lib.GetType("env::samtools.env"))
 out     = model.AddProduct(lib.GetType("transcriptomics::merged_bam"))
 
 def protocol(context: ExecutionContext):

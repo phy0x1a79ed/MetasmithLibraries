@@ -15,7 +15,7 @@ from metasmith.python_api import *
 
 lib         = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model       = Transform()
-image       = model.AddRequirement(lib.GetType("containers::checkm.oci")) # checkm2; DiamondDB baked, CHECKM2DB set
+image       = model.AddRequirement(lib.GetType("env::checkm.env")) # checkm2; DiamondDB baked, CHECKM2DB set
 asm         = model.AddRequirement(lib.GetType("sequences::putative_genome"))
 out         = model.AddProduct(lib.GetType("taxonomy::checkm_stats"))
 

@@ -6,7 +6,7 @@ from metasmith.python_api import *
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image    = model.AddRequirement(lib.GetType("containers::antismash.oci"))
+image    = model.AddRequirement(lib.GetType("env::antismash.env"))
 assembly = model.AddRequirement(lib.GetType("sequences::assembly"))
 db       = model.AddRequirement(lib.GetType("ref::antismash"))
 

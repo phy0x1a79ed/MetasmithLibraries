@@ -4,8 +4,8 @@ from pathlib import Path
 lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 
-img_hfa = model.AddRequirement(lib.GetType("containers::hifiasm-meta.oci"))
-img_gft = model.AddRequirement(lib.GetType("containers::gfatools.oci"))
+img_hfa = model.AddRequirement(lib.GetType("env::hifiasm-meta.env"))
+img_gft = model.AddRequirement(lib.GetType("env::gfatools.env"))
 reads   = model.AddRequirement(lib.GetType("sequences::long_reads"))
 out     = model.AddProduct(lib.GetType("sequences::hifiasm_meta_assembly"))
 

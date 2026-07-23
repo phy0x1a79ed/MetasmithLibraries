@@ -4,7 +4,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image    = model.AddRequirement(lib.GetType("containers::eggnog-mapper.oci"))
+image    = model.AddRequirement(lib.GetType("env::eggnog-mapper.env"))
 orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
 data_dir = model.AddRequirement(lib.GetType("annotation::eggnog_data"))
 out      = model.AddProduct(lib.GetType("annotation::eggnog_results"))

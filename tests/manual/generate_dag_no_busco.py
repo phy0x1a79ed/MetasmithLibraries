@@ -29,24 +29,24 @@ transforms = [
 
 # Eukaryotic containers — BUSCO excluded
 EUKARYOTIC_CONTAINERS = [
-    "star.oci",
-    "samtools.oci",
-    "stringtie.oci",
-    "gffread.oci",
-    "python_for_data_science.oci",
-    "eggnog-mapper.oci",
-    "braker3.oci",
-    "pydeseq2.oci",
+    "star.env",
+    "samtools.env",
+    "stringtie.env",
+    "gffread.env",
+    "python_for_data_science.env",
+    "eggnog-mapper.env",
+    "braker3.env",
+    "pydeseq2.env",
 ]
 euk_containers = DataInstanceLibrary(tmp / "containers_euk.xgdb")
-euk_containers.AddTypeLibrary(MLIB / "data_types" / "containers.yml")
+euk_containers.AddTypeLibrary(MLIB / "data_types" / "env.yml")
 for name in EUKARYOTIC_CONTAINERS:
-    euk_containers.AddItem(MLIB / "resources/containers" / name, f"containers::{name}")
+    euk_containers.AddItem(MLIB / "resources/env" / name, f"env::{name}")
 euk_containers.Save()
 
 inputs_dir = tmp / "inputs.xgdb"
 inputs = DataInstanceLibrary(inputs_dir)
-for tl in ["sequences.yml", "transcriptomics.yml", "annotation.yml", "containers.yml"]:
+for tl in ["sequences.yml", "transcriptomics.yml", "annotation.yml", "env.yml"]:
     inputs.AddTypeLibrary(MLIB / "data_types" / tl)
 
 def mock(name, is_dir=False):
@@ -102,5 +102,5 @@ os.environ["PATH"] = f"{_env_bin}:{os.environ.get('PATH', '')}"
 out_dir = MLIB / "results/report_package01"
 for ext in ["svg", "png"]:
     out = out_dir / f"workflow_dag.{ext}"
-    task.plan.RenderDAG(out, blacklist_namespaces={"lib", "containers"})
+    task.plan.RenderDAG(out, blacklist_namespaces={"lib", "env"})
     print(f"DAG written to: {out}")

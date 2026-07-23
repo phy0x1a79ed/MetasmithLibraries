@@ -4,7 +4,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 pan     = model.AddRequirement(lib.GetType("pangenome::pangenome"))
 asm     = model.AddRequirement(lib.GetType("sequences::putative_genome"), parents={pan})
-image   = model.AddRequirement(lib.GetType("containers::fastani.oci"))
+image   = model.AddRequirement(lib.GetType("env::fastani.env"))
 out     = model.AddProduct(lib.GetType("taxonomy::ani_table"))
 
 def protocol(context: ExecutionContext):

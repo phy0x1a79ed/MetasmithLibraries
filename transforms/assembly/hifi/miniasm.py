@@ -7,8 +7,8 @@ from metasmith.python_api import *
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-img_mm2 = model.AddRequirement(lib.GetType("containers::minimap2.oci"))
-img_mam = model.AddRequirement(lib.GetType("containers::miniasm.oci"))
+img_mm2 = model.AddRequirement(lib.GetType("env::minimap2.env"))
+img_mam = model.AddRequirement(lib.GetType("env::miniasm.env"))
 rmeta   = model.AddRequirement(lib.GetType("sequences::read_metadata"))
 reads   = model.AddRequirement(lib.GetType("sequences::long_reads"), parents={rmeta})
 rstats  = model.AddRequirement(lib.GetType("sequences::read_qc_stats"), parents={rmeta})

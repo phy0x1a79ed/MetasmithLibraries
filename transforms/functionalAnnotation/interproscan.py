@@ -5,7 +5,7 @@ import csv
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image = model.AddRequirement(lib.GetType("containers::interproscan.oci"))
+image = model.AddRequirement(lib.GetType("env::interproscan.env"))
 orfs = model.AddRequirement(lib.GetType("sequences::orfs"))
 data_dir = model.AddRequirement(lib.GetType("ref::interproscan_data"))
 out_gff = model.AddProduct(lib.GetType("annotation::interproscan_results"))

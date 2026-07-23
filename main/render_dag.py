@@ -23,7 +23,7 @@ for t in L.TARGETS:
 
 inputs = L.build_input_library(ORFS, needed_weights, "dag_all_targets", force_rebuild=True)
 
-containers = DataInstanceLibrary.Load(L.DL_LIB / "resources" / "containers")
+containers = DataInstanceLibrary.Load(L.DL_LIB / "resources" / "env")
 transforms = [
     TransformInstanceLibrary.Load(L.DL_LIB / "transforms" / "functionalAnnotation"),
     TransformInstanceLibrary.Load(L.DL_LIB / "transforms" / "logistics"),

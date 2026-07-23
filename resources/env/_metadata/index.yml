@@ -1,0 +1,142 @@
+manifest:
+  ankh.env:
+    type: env::ankh.env
+  antismash.env:
+    type: env::antismash.env
+  bakta.env:
+    type: env::bakta.env
+  bam2fastx.env:
+    type: env::bam2fastx.env
+  bbtools.env:
+    type: env::bbtools.env
+  bedtools.env:
+    type: env::bedtools.env
+  blast.env:
+    type: env::blast.env
+  bracken.env:
+    type: env::bracken.env
+  braker3.env:
+    type: env::braker3.env
+  busco.env:
+    type: env::busco.env
+  centrifuger.env:
+    type: env::centrifuger.env
+  checkm.env:
+    type: env::checkm.env
+  comebin.env:
+    type: env::comebin.env
+  deepec.env:
+    type: env::deepec.env
+  deeptfactor.env:
+    type: env::deeptfactor.env
+  diamond.env:
+    type: env::diamond.env
+  dram.env:
+    type: env::dram.env
+  eggnog-mapper.env:
+    type: env::eggnog-mapper.env
+  esmc.env:
+    type: env::esmc.env
+  esmfold.env:
+    type: env::esmfold.env
+  fastani.env:
+    type: env::fastani.env
+  fastp.env:
+    type: env::fastp.env
+  fastqc.env:
+    type: env::fastqc.env
+  filtlong.env:
+    type: env::filtlong.env
+  flye.env:
+    type: env::flye.env
+  foldseek.env:
+    type: env::foldseek.env
+  ganon.env:
+    type: env::ganon.env
+  genomad.env:
+    type: env::genomad.env
+  gfatools.env:
+    type: env::gfatools.env
+  gffread.env:
+    type: env::gffread.env
+  gtdbtk.env:
+    type: env::gtdbtk.env
+  hifiasm-meta.env:
+    type: env::hifiasm-meta.env
+  hifiasm.env:
+    type: env::hifiasm.env
+  interproscan.env:
+    type: env::interproscan.env
+  kofamscan.env:
+    type: env::kofamscan.env
+  kraken2.env:
+    type: env::kraken2.env
+  megahit.env:
+    type: env::megahit.env
+  metabat2.env:
+    type: env::metabat2.env
+  metabolomics-python.env:
+    type: env::metabolomics-python.env
+  metabuli.env:
+    type: env::metabuli.env
+  metaphlan.env:
+    type: env::metaphlan.env
+  miniasm.env:
+    type: env::miniasm.env
+  minimap2.env:
+    type: env::minimap2.env
+  nanoplot.env:
+    type: env::nanoplot.env
+  ncbi-datasets.env:
+    type: env::ncbi-datasets.env
+  orad.env:
+    type: env::orad.env
+  pathologic.env:
+    type: env::pathologic.env
+  phyloflash.env:
+    type: env::phyloflash.env
+  polars.env:
+    type: env::polars.env
+  ppanggolin.env:
+    type: env::ppanggolin.env
+  pprodigal.env:
+    type: env::pprodigal.env
+  predictf.env:
+    type: env::predictf.env
+  promotech.env:
+    type: env::promotech.env
+  proteinbert.env:
+    type: env::proteinbert.env
+  prott5.env:
+    type: env::prott5.env
+  pydeseq2.env:
+    type: env::pydeseq2.env
+  python_for_data_science.env:
+    type: env::python_for_data_science.env
+  qiime2.env:
+    type: env::qiime2.env
+  salmon.env:
+    type: env::salmon.env
+  samtools.env:
+    type: env::samtools.env
+  saprot.env:
+    type: env::saprot.env
+  semibin.env:
+    type: env::semibin.env
+  seqkit.env:
+    type: env::seqkit.env
+  skani.env:
+    type: env::skani.env
+  sra-tools.env:
+    type: env::sra-tools.env
+  star.env:
+    type: env::star.env
+  stringtie.env:
+    type: env::stringtie.env
+  sylph.env:
+    type: env::sylph.env
+  virsorter2.env:
+    type: env::virsorter2.env
+  vsearch.env:
+    type: env::vsearch.env
+schema: v1

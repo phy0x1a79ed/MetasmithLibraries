@@ -3,8 +3,8 @@
 ## Project structure
 
 ```
-data_types/          # YAML type definitions (sequences, containers, etc.)
-resources/           # Data instance libraries (container URIs, reference DBs)
+data_types/          # YAML type definitions (sequences, env, etc.)
+resources/           # Data instance libraries (env declarations, reference DBs)
 transforms/          # Transform implementations grouped by domain
   logistics/         # Data retrieval & format conversion
   assembly/          # Genome/metagenome assembly
@@ -22,14 +22,25 @@ tests/               # Pytest-based workflow & E2E tests
 - **Rebuild metadata:** `./dev.sh -b` (requires `msm` CLI from the `msm_env` conda environment)
 - Alternatively: `conda run -n msm_env msm build --types data_types --uniques resources/* --transforms transforms/*`
 - The build regenerates all `_metadata/` directories from source YAML + transform Python files
-- Every container resource file in `resources/containers/` **must** have a matching type definition in `data_types/containers.yml`, otherwise the build fails
+- Every env resource file in `resources/env/` **must** have a matching type definition in `data_types/env.yml`, otherwise the build fails
 - Every type referenced via `lib.GetType("namespace::type")` in transforms must exist in the corresponding `data_types/*.yml`
 
-## Adding a new container
+## Environments (containers + conda)
 
-1. Add the type to `data_types/containers.yml` with `extends: container` and a `provides` list
-2. Create `resources/containers/<name>.oci` containing the container URI (e.g. `docker://quay.io/org/image:tag`)
-3. Run `./dev.sh -b` to rebuild metadata
+A tool's environment is declared generically. `resources/env/<tool>.env` is a
+YAML file with an optional `container:` (a `docker://…` OCI URI, used by the
+DOCKER/APPTAINER runtimes) and/or an optional `conda:` (a conda env name, used by
+the MAMBA runtime). The engine selects which by the single global runtime (see
+`ResolveEnvImage` / `GetContainerModel` in the metasmith engine). One `.env`
+serves both a containerized run and a mamba run.
+
+### Adding a new env
+
+1. Add the type to `data_types/env.yml` with `extends: env` and a `provides` list
+2. Create `resources/env/<name>.env` with `container: docker://…` and/or `conda: <name>`
+3. If it has a `conda:` env, add a recipe `envs/tools/<name>.yml` (or re-run
+   `python envs/gen_tool_envs.py`, which derives biocontainers specs automatically)
+4. Run `./dev.sh -b` to rebuild metadata; `./dev.sh --create-envs` creates the conda test envs
 
 ## Writing transforms
 
@@ -38,7 +49,7 @@ tests/               # Pytest-based workflow & E2E tests
 - Use `model.AddRequirement()` for inputs, `model.AddProduct()` for outputs
 - For paired-end reads, use a grouping parent (e.g. `read_pair`) and set `parents={pair}` on both R1/R2 requirements
 - `group_by=` in `TransformInstance()` controls how inputs are matched/grouped
-- `context.ExecWithContainer(image=, cmd=)` runs commands inside the container
+- `context.ExecWithContainer(image=, cmd=)` runs commands in the resolved env (container or `mamba run`)
 - Container paths: `context.Input(x).container` (path inside container), `.local` (path on host), `.external` (path from outside container)
 
 ## Writing tests

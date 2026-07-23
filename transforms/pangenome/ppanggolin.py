@@ -6,7 +6,7 @@ lib     = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model   = Transform()
 pan     = model.AddRequirement(lib.GetType("pangenome::pangenome"))
 gbk     = model.AddRequirement(lib.GetType("sequences::gbk"), parents={pan})
-image   = model.AddRequirement(lib.GetType("containers::ppanggolin.oci"))
+image   = model.AddRequirement(lib.GetType("env::ppanggolin.env"))
 matrix  = model.AddProduct(lib.GetType("pangenome::ppanggolin_matrix"))
 pg      = model.AddProduct(lib.GetType("pangenome::ppanggolin_raw"))
 

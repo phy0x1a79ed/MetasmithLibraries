@@ -5,7 +5,7 @@ from pathlib import Path
 lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
-image     = model.AddRequirement(lib.GetType("containers::esmfold.oci"))
+image     = model.AddRequirement(lib.GetType("env::esmfold.env"))
 weights   = model.AddRequirement(lib.GetType("ref::esmfold_weights"))
 orfs      = model.AddRequirement(lib.GetType("sequences::orfs_shard"))
 out_struct = model.AddProduct(lib.GetType("sequences::predicted_structures"))

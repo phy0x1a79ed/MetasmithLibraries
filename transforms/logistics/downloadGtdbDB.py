@@ -27,7 +27,7 @@ from metasmith.python_api import *
 
 lib   = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
-image = model.AddRequirement(lib.GetType("containers::gtdbtk.oci"))
+image = model.AddRequirement(lib.GetType("env::gtdbtk.env"))
 out   = model.AddProduct(lib.GetType("ref::gtdb"))
 
 # Mirror at data.ace.uq.edu.au is the primary; data.gtdb.ecogenomic.org is the
