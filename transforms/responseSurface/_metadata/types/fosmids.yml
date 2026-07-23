@@ -1,0 +1,167 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  cluster_membership:
+    properties:
+      Format: CSV
+      _:
+      - cluster membership of the clustered contigs (one row per input contig)
+      ext: csv
+      fields:
+      - assembler
+      - centroid
+      - cluster
+      - length
+      - member
+      - source_pool
+  clustered_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - representative (deduped) contig set from all-vs-all clustering of the per-pool
+        assemblies
+      content: clustered representative contigs
+      ext: fna
+  end_sequences_forward:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid forward end-sequences (fasta records keyed by insert_id)
+      direction: forward
+      ext: fna
+  end_sequences_reverse:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid reverse end-sequences (fasta records keyed by insert_id)
+      direction: reverse
+      ext: fna
+  end_sequences_table:
+    properties:
+      Format: JSON
+      _:
+      - fosmid ends manifest (insert_ids + ends_facing flag)
+      ext: json
+      fields:
+      - ends_facing
+      - insert_ids
+  insert_coverage:
+    properties:
+      Format: CSV
+      _:
+      - read-mapping coverage summary of the pooled reads against the reference inserts;
+        one row per (insert_id, pool) plus an "all"-pool aggregate, with depth/breadth
+        stats
+      ext: csv
+      fields:
+      - breadth_1x
+      - breadth_5x
+      - insert_id
+      - length
+      - mapped_bp
+      - mean_depth
+      - median_depth
+      - pool
+  pool_coverage_profiles:
+    properties:
+      Data: per-bp depth arrays keyed by contig then pool
+      Format: pickle (gzip)
+      _:
+      - per-contig x per-pool per-bp read-depth arrays over the clustered contigs;
+        keyed on the original clustered contig ids and never mutated downstream (split/trim
+        slice it by header interval)
+      ext: pkl.gz
+  pool_size_estimate:
+    properties:
+      Format: JSON
+      _:
+      - fosmid pool size estimate
+      ext: json
+      fields:
+      - size
+      - size_with_singletons
+  putative_insert_report:
+    properties:
+      Format: CSV
+      _:
+      - per-insert provenance + length-band report for the recovered putative fosmids
+      ext: csv
+      fields:
+      - action
+      - band
+      - end
+      - insert_id
+      - length
+      - pool_basis
+      - source
+      - start
+  putative_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - final putative fosmid inserts after coverage trimming; same header-baked provenance
+        convention (intervals updated by any trim), length-banded to the lambda window
+      content: putative fosmid inserts
+      ext: fna
+      origin: assembler
+  recovery_experiment:
+    properties:
+      logistics: to group the pooled assemblies + reads of one fosmid-recovery run
+        (single grouping node; all inputs and intermediates descend from it)
+  reference_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - the canonical fosmid reference set -- putative inserts filtered to length
+        >= min_insert_length (default 29 kb, the phage-packaging/lambda-window cutoff);
+        the FASTA every downstream analysis (read-mapping, annotation, ECSPr) runs
+        on
+      content: reference fosmid inserts (length-filtered)
+      ext: fna
+      origin: assembler
+  scaffold_report:
+    properties:
+      Format: CSV
+      _:
+      - fosmid scaffold mapping report
+      ext: csv
+      fields:
+      - assemblers
+      - contig_id
+      - id
+      - mapping_quality
+      - original_id
+      - paired
+      - resolved_length
+  scaffolds:
+    properties:
+      Data: fosmid scaffold
+      Format: FASTA
+      _:
+      - end-aware scaffolded fosmid inserts
+      ext: fna
+  split_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - contigs after chimera splitting; interval provenance baked into each FASTA
+        header (source=<clustered_id> start= end= action=)
+      content: chimera-split contigs with header-baked provenance
+      ext: fna
+  vector_backbone:
+    properties:
+      Data: vector backbone reference
+      Format: FASTA
+      _:
+      - fosmid vector backbone reference fasta
+      ext: fna

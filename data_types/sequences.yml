@@ -137,6 +137,17 @@ types:
     - clean_short_reads
     properties:
       parity: single
+  host_filtered_short_reads:
+    extends:
+    - clean_short_reads
+    properties:
+      filter: host-removed
+  background_genome:
+    properties:
+      _: host/background reference for read filtering
+      Format: FASTA
+      Data: host genome reference
+      ext: fna
 # -----------------------------------------
 # long reads
   long_reads:
