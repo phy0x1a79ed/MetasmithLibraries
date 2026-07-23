@@ -414,6 +414,13 @@ types:
       parity: single
       qc: none
       read_length: short
+  spades_assembly:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      ext: fna
+      method: spades
+      origin: assembler
   structure_3di_tokens:
     properties:
       Format: Parquet

@@ -25,4 +25,6 @@ manifest:
     type: transforms::transform
   seqkit_reads.py:
     type: transforms::transform
+  spades.py:
+    type: transforms::transform
 schema: v1

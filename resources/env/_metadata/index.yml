@@ -127,6 +127,8 @@ manifest:
     type: env::seqkit.env
   skani.env:
     type: env::skani.env
+  spades.env:
+    type: env::spades.env
   sra-tools.env:
     type: env::sra-tools.env
   star.env:
