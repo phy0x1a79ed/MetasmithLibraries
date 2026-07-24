@@ -148,6 +148,41 @@ types:
       _: DeepEC EC number predictions
       ext: tsv
 
+  # CLEAN (contrastive-learning EC prediction)
+  clean_predictions:
+    properties:
+      _: CLEAN contrastive EC predictions (Query ID, Predicted EC number, clean_score)
+      Format: TSV
+      ext: tsv
+
+  # EZpred (ESM-C 600M DL-only EC head)
+  ezpred_predictions:
+    properties:
+      _: EZpred DL-only EC-head predictions (sequence_id, ec_number, score, head_kind)
+      Format: CSV
+      ext: csv
+
+  # GPR table (gene-attributed reaction evidence, long format)
+  # One row per (ORF, lane channel, reaction); 8-col schema:
+  #   source, orf, channel, mnxr, intermediate_id, intermediate_name, raw_score, projection_via
+  gpr_table:
+    properties:
+      _: Gene-attributed GPR evidence table (long-format, one row per ORF x channel x MNXR)
+      Format: Parquet
+      ext: parquet
+  gpr_table_4lane:
+    extends:
+    - gpr_table
+    properties:
+      _: GPR table from the chosen 4 lanes (kofam, CLEAN, uniref50, ProteinBERT)
+      lane_set: chosen_4
+  gpr_table_7lane:
+    extends:
+    - gpr_table
+    properties:
+      _: GPR table from the full 7 lanes (kofam, CLEAN, DeepEC, EZpred, uniref50, ProteinBERT, ESM-C)
+      lane_set: full_7
+
   # DIAMOND UniRef50
   diamond_uniref50_results:
     properties:

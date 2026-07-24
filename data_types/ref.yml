@@ -137,3 +137,38 @@ types:
     - reference_data
     properties:
       _: ColabFold MSA databases for Boltz-2 (~2 TB; unused stub)
+
+  # -------------------------------------------------
+  # GPR-mapper bridges (KO / EC / UniProt -> MetaNetX reaction).
+  # Staged reference tables; their build transforms are deferred out of scope.
+  ko_to_mnxr:
+    extends:
+    - reference_data
+    properties:
+      _: KO -> MNXR fan-out bridge table (tab-separated; columns ko, mnxr)
+      ext: tsv
+  ec_to_mnxr:
+    extends:
+    - reference_data
+    properties:
+      _: EC -> MNXR fan-out bridge table (tab-separated; columns ec, mnxr)
+      ext: tsv
+  uniprot_to_mnxr:
+    extends:
+    - reference_data
+    properties:
+      _: UniProt -> MNXR bridge via Rhea DR (parquet; uniprot_accession, dr_source, mnxr)
+      ext: parquet
+  reference_label_pool:
+    extends:
+    - reference_data
+    properties:
+      _: Reference embeddings + their MNXR labels for kNN label transfer (orf_index.parquet + emb_*.npy)
+
+  # EZpred DL-only EC-head model bundle: vendored EZpred tree + the enzyme /
+  # non-enzyme MLP ensembles. No ESM-C weights -- embeddings come from esm_c.
+  ezpred_model:
+    extends:
+    - protein_model_weights
+    properties:
+      _: EZpred DL-only EC-head model bundle (kad-ecoli/EZpred predict.py + MLP heads)

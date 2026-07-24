@@ -29,6 +29,11 @@ types:
   centrifuger_db:
     properties:
     - Centrifuger FM-index prefix (.1.cfr .. .4.cfr files share a common prefix)
+  ec_to_mnxr:
+    properties:
+      _:
+      - EC -> MNXR fan-out bridge table (tab-separated; columns ec, mnxr)
+      ext: tsv
   esm_c_300m_weights:
     properties:
       _:
@@ -44,6 +49,9 @@ types:
       _:
       - ESMFold v1 weights (facebook/esmfold_v1)
       ext: tgz
+  ezpred_model:
+    properties:
+    - EZpred DL-only EC-head model bundle (kad-ecoli/EZpred predict.py + MLP heads)
   ganon2_db:
     properties:
     - ganon2 database prefix (.hibf + .tax files share a common prefix)
@@ -58,6 +66,11 @@ types:
       _:
       - InterProScan data directory
       ext: tgz
+  ko_to_mnxr:
+    properties:
+      _:
+      - KO -> MNXR fan-out bridge table (tab-separated; columns ko, mnxr)
+      ext: tsv
   kofamscan_ko_list:
     properties:
       _:
@@ -91,6 +104,10 @@ types:
   reference_data:
     properties:
     - reference database
+  reference_label_pool:
+    properties:
+    - Reference embeddings + their MNXR labels for kNN label transfer (orf_index.parquet
+      + emb_*.npy)
   saprot_650m_weights:
     properties:
       _:
@@ -101,6 +118,12 @@ types:
       _:
       - sylph sketch database (single .syldb file)
       ext: syldb
+  uniprot_to_mnxr:
+    properties:
+      _:
+      - UniProt -> MNXR bridge via Rhea DR (parquet; uniprot_accession, dr_source,
+        mnxr)
+      ext: parquet
   uniref50_diamond_db:
     properties:
       _:

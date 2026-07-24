@@ -1,6 +1,10 @@
 manifest:
   extract_noncoding_chunks.py:
     type: lib::extract_noncoding_chunks.py
+  fabfos_embed_transfer.py:
+    type: lib::fabfos_embed_transfer.py
+  fabfos_evidence.py:
+    type: lib::fabfos_evidence.py
   hierarchical_clustering.py:
     type: lib::hierarchical_clustering.py
   local:

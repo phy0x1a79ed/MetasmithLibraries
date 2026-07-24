@@ -6,16 +6,19 @@ lib = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model = Transform()
 
 image    = model.AddRequirement(lib.GetType("env::esmc.env"))
-weights  = model.AddRequirement(lib.GetType("ref::esm_c_300m_weights"))
-orfs     = model.AddRequirement(lib.GetType("sequences::orfs_shard"))
+weights  = model.AddRequirement(lib.GetType("ref::esm_c_600m_weights"))
+orfs     = model.AddRequirement(lib.GetType("sequences::orfs"))
 out_emb  = model.AddProduct(lib.GetType("annotation::esm_c_embeddings"))
 out_idx  = model.AddProduct(lib.GetType("annotation::esm_c_index"))
 
 
 # Module-level constants per metasmith/dev guidance (msg #153): the
 # user_params runtime override channel was reverted, so all tuning lives
-# here. ESM-C 300M trained at 2048 context; sliding-window aggregation
-# handles longer ORFs (~380/1.44M for metag) via length-weighted mean.
+# here. ESM-C trained at 2048 context; sliding-window aggregation handles
+# longer ORFs (~380/1.44M for metag) via length-weighted mean.
+# 600M (1152-dim) is the canonical backbone -- it is also what the EZpred DL
+# EC heads consume, so ezpred reuses these embeddings instead of re-embedding.
+MODEL_NAME   = "esmc_600m"
 BATCH_SIZE   = 32
 MAX_LEN      = 2048
 CHUNK_OVERLAP = 128
@@ -170,6 +173,7 @@ def protocol(context: ExecutionContext):
         cmd=f"""
             python /work/{script.name} \
                 --weights /weights \
+                --model-name {MODEL_NAME} \
                 --fasta {iorfs.container} \
                 --out-parquet {iemb.container} \
                 --out-index {iidx.container} \

@@ -11,6 +11,8 @@ manifest:
     type: transforms::transform
   busco_full_table.py:
     type: transforms::transform
+  clean.py:
+    type: transforms::transform
   deepec.py:
     type: transforms::transform
   deeptfactor.py:
@@ -33,7 +35,13 @@ manifest:
     type: transforms::transform
   esmfold.py:
     type: transforms::transform
+  ezpred.py:
+    type: transforms::transform
   foldseek_3di.py:
+    type: transforms::transform
+  gpr_4lane.py:
+    type: transforms::transform
+  gpr_7lane.py:
     type: transforms::transform
   interproscan.py:
     type: transforms::transform

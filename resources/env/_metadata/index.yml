@@ -23,6 +23,8 @@ manifest:
     type: env::centrifuger.env
   checkm.env:
     type: env::checkm.env
+  clean.env:
+    type: env::clean.env
   comebin.env:
     type: env::comebin.env
   deepec.env:
@@ -39,6 +41,8 @@ manifest:
     type: env::esmc.env
   esmfold.env:
     type: env::esmfold.env
+  ezpred.env:
+    type: env::ezpred.env
   fastani.env:
     type: env::fastani.env
   fastp.env:
