@@ -37,9 +37,7 @@ clean     = model.AddRequirement(lib.GetType("annotation::clean_predictions"))
 uniref    = model.AddRequirement(lib.GetType("annotation::diamond_uniref50_results"))
 pbert_emb = model.AddRequirement(lib.GetType("annotation::proteinbert_embeddings"))
 pbert_idx = model.AddRequirement(lib.GetType("annotation::proteinbert_index"))
-ko_br     = model.AddRequirement(lib.GetType("ref::ko_to_mnxr"))
-ec_br     = model.AddRequirement(lib.GetType("ref::ec_to_mnxr"))
-up_br     = model.AddRequirement(lib.GetType("ref::uniprot_to_mnxr"))
+bridge    = model.AddRequirement(lib.GetType("ref::mnxr_lookup"))
 pool      = model.AddRequirement(lib.GetType("ref::reference_label_pool"))
 ev_lib    = model.AddRequirement(lib.GetType("lib::fabfos_evidence.py"))
 knn_lib   = model.AddRequirement(lib.GetType("lib::fabfos_embed_transfer.py"))
@@ -165,11 +163,20 @@ def lane_embed(parquet, index_csv, pool_dir, emb_name, channel, floor):
                              ref_orf[nn[best]], "", float(votes[j]), "embedding_knn"))
     return pd.DataFrame(rows, columns=SCHEMA)
 
+def load_bridge(path):
+    """One table, three id spaces. Sliced by id_source into the per-lane frames the
+    lane functions expect. The spaces share no ids, so the slice is exact."""
+    b = pd.read_parquet("{bridge}", columns=["id", "id_source", "mnxr"])
+    def slice_as(src, name):
+        s = b[b["id_source"] == src][["id", "mnxr"]].drop_duplicates()
+        return s.rename(columns={{"id": name}})
+    return (slice_as("ko", "ko"),
+            slice_as("ec", "ec"),
+            slice_as("uniprot", "uniprot_accession").assign(dr_source="rhea"))
+
 def main():
     ids = set(orf_ids("{orfs}"))
-    ko_to_mnxr = fe.load_ko_to_mnxr("{ko_br}")
-    ec_to_mnxr = pd.read_csv("{ec_br}", sep="\t")[["ec", "mnxr"]].drop_duplicates()
-    up_to_mnxr = fe.load_uniprot_to_mnxr("{up_br}")
+    ko_to_mnxr, ec_to_mnxr, up_to_mnxr = load_bridge("{bridge}")
     frames = [
         lane_kofam("{kofam}", ko_to_mnxr),
         lane_clean("{clean}", ec_to_mnxr),
@@ -192,9 +199,7 @@ def protocol(context: ExecutionContext):
     iuni  = context.Input(uniref)
     ipe   = context.Input(pbert_emb)
     ipi   = context.Input(pbert_idx)
-    ikb   = context.Input(ko_br)
-    ieb   = context.Input(ec_br)
-    iub   = context.Input(up_br)
+    ibr   = context.Input(bridge)
     ipool = context.Input(pool)
     iev   = context.Input(ev_lib)
     iknn  = context.Input(knn_lib)
@@ -204,7 +209,7 @@ def protocol(context: ExecutionContext):
         ev_lib=iev.container, knn_lib=iknn.container,
         orfs=iorfs.container, kofam=ikof.container, clean=icln.container,
         uniref=iuni.container, pbert_emb=ipe.container, pbert_idx=ipi.container,
-        ko_br=ikb.container, ec_br=ieb.container, up_br=iub.container,
+        bridge=ibr.container,
         pool=ipool.container, out=iout.container,
     )
     context.LocalShell("cat > _gpr_4lane.py << 'PYEOF'\n" + driver + "\nPYEOF\n")

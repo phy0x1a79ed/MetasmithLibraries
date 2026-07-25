@@ -18,6 +18,13 @@ types:
   antismash:
     properties:
     - for antiSMASH
+  atom_pairs:
+    properties:
+      _:
+      - Compiled atom-atom mapping, one row per single atom correspondence (element,
+        rxn, tail_node, head_node packed as met_code<<rank_bits|atom_rank, pair_w);
+        orientation stored as written
+      ext: parquet
   boltz2_weights:
     properties:
       _:
@@ -29,11 +36,12 @@ types:
   centrifuger_db:
     properties:
     - Centrifuger FM-index prefix (.1.cfr .. .4.cfr files share a common prefix)
-  ec_to_mnxr:
+  direction_ratios:
     properties:
       _:
-      - EC -> MNXR fan-out bridge table (tab-separated; columns ec, mnxr)
-      ext: tsv
+      - Per-reaction directionality (rxn, ratio = g_rev/g_fwd = exp(dG'/RT), dir_tier);
+        ratio > 1 FLIPS the edge, it does not amplify it
+      ext: parquet
   esm_c_300m_weights:
     properties:
       _:
@@ -58,18 +66,36 @@ types:
   genomad:
     properties:
     - for geNomad
+  gpr_table_denovo:
+    properties:
+      _:
+      - Host GPR table inferred from that host's own annotation lanes (long-format,
+        one row per ORF x channel x MNXR)
+      ext: parquet
+  gpr_table_gem:
+    properties:
+      _:
+      - Host GPR table asserted by a curated genome-scale model (long-format, one
+        row per gene x MNXR; uniform raw_score)
+      ext: parquet
   gtdb:
     properties:
     - genome taxonomy database
+  host_gem_identity_report:
+    properties:
+      _:
+      - Re-measured delta between a host and the host whose curated model it borrows
+      ext: md
   interproscan_data:
     properties:
       _:
       - InterProScan data directory
       ext: tgz
-  ko_to_mnxr:
+  ko_to_kegg_r:
     properties:
       _:
-      - KO -> MNXR fan-out bridge table (tab-separated; columns ko, mnxr)
+      - KO -> KEGG reaction links from each KO's flat-file REACTION block (tab-separated;
+        columns ko, kegg_r)
       ext: tsv
   kofamscan_ko_list:
     properties:
@@ -84,12 +110,24 @@ types:
   kraken2_db:
     properties:
     - Kraken2 database directory (hash.k2d + Bracken kmer_distrib)
+  metabolism_vocab:
+    properties:
+      _:
+      - Int-code vocabulary for the compiled metabolism tables (kind, code, symbol;
+        met and rxn densely coded within kind)
+      ext: parquet
   metabuli_ref:
     properties:
     - metabuli reference database
   metaphlan_db:
     properties:
     - MetaPhlAn 4 database directory (bowtie2 + .pkl + .nwk)
+  mnxr_lookup:
+    properties:
+      _:
+      - Intermediate id -> MNXR bridge, all id spaces in one table (id, id_source,
+        mnxr, evidence_quality)
+      ext: parquet
   phyloflash_db:
     properties:
     - phyloFlash SILVA SSU DB dir (bbmap + UDB + tax tree)
@@ -118,12 +156,6 @@ types:
       _:
       - sylph sketch database (single .syldb file)
       ext: syldb
-  uniprot_to_mnxr:
-    properties:
-      _:
-      - UniProt -> MNXR bridge via Rhea DR (parquet; uniprot_accession, dr_source,
-        mnxr)
-      ext: parquet
   uniref50_diamond_db:
     properties:
       _:

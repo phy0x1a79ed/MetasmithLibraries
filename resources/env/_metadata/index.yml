@@ -25,6 +25,8 @@ manifest:
     type: env::checkm.env
   clean.env:
     type: env::clean.env
+  cobra.env:
+    type: env::cobra.env
   comebin.env:
     type: env::comebin.env
   deepec.env:
@@ -37,6 +39,8 @@ manifest:
     type: env::dram.env
   eggnog-mapper.env:
     type: env::eggnog-mapper.env
+  equilibrator.env:
+    type: env::equilibrator.env
   esmc.env:
     type: env::esmc.env
   esmfold.env:
@@ -119,6 +123,8 @@ manifest:
     type: env::python_for_data_science.env
   qiime2.env:
     type: env::qiime2.env
+  rdkit.env:
+    type: env::rdkit.env
   salmon.env:
     type: env::salmon.env
   samtools.env:

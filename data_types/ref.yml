@@ -139,25 +139,26 @@ types:
       _: ColabFold MSA databases for Boltz-2 (~2 TB; unused stub)
 
   # -------------------------------------------------
-  # GPR-mapper bridges (KO / EC / UniProt -> MetaNetX reaction).
-  # Staged reference tables; their build transforms are deferred out of scope.
-  ko_to_mnxr:
+  # The GPR-mapper bridge: intermediate id -> MetaNetX reaction.
+  #
+  # ONE table, replacing the former ko_to_mnxr / ec_to_mnxr / uniprot_to_mnxr trio.
+  # Measured 2026-07-25 before consolidating: the three id spaces share NO ids, so a
+  # single `id` column is unambiguous and `id_source` is a label rather than a
+  # disambiguator; deduping to distinct (id, mnxr) took 35,762,706 rows to 30,467,712
+  # and is behaviour-preserving, because the consumer already ran that dedup after the
+  # join and the duplicate rows differed only in columns nothing downstream reads.
+  # 82.5 MB against 251.5 MB across the three files, with per-lane filtered reads the
+  # same or faster.
+  #
+  # `id_source` is NOT `projection_via`. The old uniprot table's `dr_source` was
+  # constant "rhea" and is written per row into the output's `projection_via`;
+  # id_source='uniprot' is not a substitute for it. Each lane declares its own
+  # projection_via.
+  mnxr_lookup:
     extends:
     - reference_data
     properties:
-      _: KO -> MNXR fan-out bridge table (tab-separated; columns ko, mnxr)
-      ext: tsv
-  ec_to_mnxr:
-    extends:
-    - reference_data
-    properties:
-      _: EC -> MNXR fan-out bridge table (tab-separated; columns ec, mnxr)
-      ext: tsv
-  uniprot_to_mnxr:
-    extends:
-    - reference_data
-    properties:
-      _: UniProt -> MNXR bridge via Rhea DR (parquet; uniprot_accession, dr_source, mnxr)
+      _: Intermediate id -> MNXR bridge, all id spaces in one table (id, id_source, mnxr, evidence_quality)
       ext: parquet
   reference_label_pool:
     extends:

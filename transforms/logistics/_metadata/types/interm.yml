@@ -1,0 +1,28 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  aam_pairs:
+    properties:
+      _:
+      - 'Fused atom-atom correspondences with provenance -- mnxr, element, substrate,
+        product, sub_idx, prod_idx, pair_w, method, source, confidence. Three ensemble
+        members: RXNMapper + LocalMapper (neural, correlated, mutually discounted)
+        and MetaCyc curated (independent, full weight). method is one of consensus
+        / <member>_only / disagree_diluted -- a provenance record, never a usability
+        gate.'
+      ext: parquet
+  build_intermediate:
+    properties:
+    - transient; produced and consumed within one build, never pinned
+  direction_annotation:
+    properties:
+      _:
+      - 'Per-reaction dG'' with provenance, before the ratio transform. Three members:
+        eQuilibrator + dGbyG (both TECRDB-fitted, correlated, floored by TAU_SHARED)
+        and MetaCyc REACTION-DIRECTION (independent). No evidence shrinks to dG''=0,
+        so a silent reaction is a provable no-op rather than an if-branch.'
+      ext: parquet
