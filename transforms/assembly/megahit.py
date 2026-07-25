@@ -33,7 +33,7 @@ def protocol(context: ExecutionContext):
             megahit {threads} {mem} \
                 {parg} {ireads.container} \
                 -o megahit_ws
-            [[ $(head megahit_ws/final.contigs.fa | wc --chars) -ne 0 ]] && mv megahit_ws/final.contigs.fa {iout.container} || echo "assembly was empty"
+            [[ $(head megahit_ws/final.contigs.fa | wc -c) -ne 0 ]] && mv megahit_ws/final.contigs.fa {iout.container} || echo "assembly was empty"
         """,
     )
     

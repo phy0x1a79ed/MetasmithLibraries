@@ -38,7 +38,7 @@ def protocol(context: ExecutionContext):
             spades.py {mode} {threads_arg} {mem_arg} \
                 {reads_arg} \
                 -o spades_ws
-            [[ $(head spades_ws/contigs.fasta | wc --chars) -ne 0 ]] && mv spades_ws/contigs.fasta {iout.container} || echo "assembly was empty"
+            [[ $(head spades_ws/contigs.fasta | wc -c) -ne 0 ]] && mv spades_ws/contigs.fasta {iout.container} || echo "assembly was empty"
         """,
     )
 

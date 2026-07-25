@@ -26,7 +26,6 @@ def protocol(context: ExecutionContext):
     threads_mm2 = "" if threads is None else f"-t {threads}"
     threads_sam = "" if threads is None else f"-@ {threads}"
 
-    bam = "temp.bam"
     context.ExecWithContainer(
         image=img_mm2,
         cmd=f"""\
@@ -34,13 +33,32 @@ def protocol(context: ExecutionContext):
                 {ihost.container} {ireads.container} > temp.sam
         """,
     )
+    # Host depletion must be PAIR-AWARE. Selecting unmapped reads per-read
+    # (`-f 4`) drops a mapped mate while keeping its unmapped partner, leaving an
+    # orphan -> the interleaved output ends up with an ODD read count, which both
+    # metaSPAdes and megahit reject ("number of reads ... should be EVEN") and the
+    # whole read set is silently dropped. Instead keep a pair unless BOTH mates map
+    # to the host: `flag.unmap || flag.munmap` retains both mates whenever either
+    # is unmapped, so pairing (and even parity) is preserved; only fully-host pairs
+    # are removed. `collate` regroups mates adjacently so the surviving reads stay
+    # properly interleaved. Single-end reads have no mate, so fall back to `-f 4`.
+    if parity == "paired":
+        filter_cmd = (
+            f"samtools view -u -e 'flag.unmap || flag.munmap' {threads_sam} temp.sam"
+            f" | samtools collate -u -O {threads_sam} -"
+            f" | samtools fastq -N {threads_sam} -"
+        )
+    else:
+        filter_cmd = (
+            f"samtools view -u -f 4 {threads_sam} temp.sam"
+            f" | samtools fastq -N {threads_sam} -"
+        )
     context.ExecWithContainer(
         image=img_sam,
         cmd=f"""\
-            samtools view -ub -f 4 {threads_sam} temp.sam \
-            | samtools fastq {threads_sam} -N - \
+            {filter_cmd} \
             | gzip > {iout.container}
-            rm -f temp.sam {bam}
+            rm -f temp.sam
         """,
     )
 
