@@ -9,7 +9,7 @@ types:
     properties:
       Format: CSV
       _:
-      - cluster membership of the clustered contigs (one row per input contig)
+      - cluster membership of the deduped insert set (one row per input split contig)
       ext: csv
       fields:
       - assembler
@@ -18,15 +18,6 @@ types:
       - length
       - member
       - source_pool
-  clustered_contigs:
-    properties:
-      Data: nucleic acid sequence
-      Format: FASTA
-      _:
-      - representative (deduped) contig set from all-vs-all clustering of the per-pool
-        assemblies
-      content: clustered representative contigs
-      ext: fna
   end_sequences_forward:
     properties:
       Data: fosmid end sequence
@@ -69,15 +60,28 @@ types:
       - mean_depth
       - median_depth
       - pool
-  pool_coverage_profiles:
+  junction_map:
     properties:
-      Data: per-bp depth arrays keyed by contig then pool
-      Format: pickle (gzip)
+      Format: CSV
       _:
-      - per-contig x per-pool per-bp read-depth arrays over the clustered contigs;
-        keyed on the original clustered contig ids and never mutated downstream (split/trim
-        slice it by header interval)
-      ext: pkl.gz
+      - pCC1 backbone alignments against one pool's assembler contigs, one row per
+        hit, carrying the junction positions the split acts on. Co-produced with `split_contigs`
+        by `junction_split` -- the evidence record for a cut that happens in the same
+        job, not a staging boundary. `junction_kind` separates a terminal hit (vector
+        at a contig end -- a real insert boundary) from an internal one (vector mid-contig
+        -- two clones the assembler joined through their shared backbone).
+      ext: csv
+      fields:
+      - aln_length
+      - assembler
+      - contig_id
+      - hit_end
+      - hit_start
+      - junction_kind
+      - junction_pos
+      - pident
+      - source_pool
+      - strand
   pool_size_estimate:
     properties:
       Format: JSON
@@ -99,16 +103,17 @@ types:
       - end
       - insert_id
       - length
-      - pool_basis
       - source
+      - source_pool
       - start
   putative_inserts:
     properties:
       Data: nucleic acid sequence
       Format: FASTA
       _:
-      - final putative fosmid inserts after coverage trimming; same header-baked provenance
-        convention (intervals updated by any trim), length-banded to the lambda window
+      - final putative fosmid inserts -- the cross-assembler dedup of the junction-split
+        contigs; same header-baked provenance convention, length-banded to the lambda
+        window
       content: putative fosmid inserts
       ext: fna
       origin: assembler
@@ -154,9 +159,9 @@ types:
       Data: nucleic acid sequence
       Format: FASTA
       _:
-      - contigs after chimera splitting; interval provenance baked into each FASTA
-        header (source=<clustered_id> start= end= action=)
-      content: chimera-split contigs with header-baked provenance
+      - one pool's contigs after splitting at the vector-backbone junctions; interval
+        provenance baked into each FASTA header (source=<contig_id> start= end= action=)
+      content: junction-split contigs with header-baked provenance
       ext: fna
   vector_backbone:
     properties:

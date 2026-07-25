@@ -57,20 +57,36 @@ types:
       - size_with_singletons
       ext: json
 # -----------------------------------------
-# putative-insert recovery (cluster -> coverage -> chimera-split -> trim)
+# putative-insert recovery (junction split -> cross-assembler dedup)
   recovery_experiment:
     properties:
       logistics: to group the pooled assemblies + reads of one fosmid-recovery run (single grouping node; all inputs and intermediates descend from it)
-  clustered_contigs:
+  junction_map:
     properties:
-      _: representative (deduped) contig set from all-vs-all clustering of the per-pool assemblies
+      _: pCC1 backbone alignments against one pool's assembler contigs, one row per hit, carrying the junction positions the split acts on. Co-produced with `split_contigs` by `junction_split` -- the evidence record for a cut that happens in the same job, not a staging boundary. `junction_kind` separates a terminal hit (vector at a contig end -- a real insert boundary) from an internal one (vector mid-contig -- two clones the assembler joined through their shared backbone).
+      Format: CSV
+      fields:
+      - contig_id
+      - assembler
+      - source_pool
+      - hit_start
+      - hit_end
+      - strand
+      - pident
+      - aln_length
+      - junction_pos
+      - junction_kind
+      ext: csv
+  split_contigs:
+    properties:
+      _: one pool's contigs after splitting at the vector-backbone junctions; interval provenance baked into each FASTA header (source=<contig_id> start= end= action=)
       Format: FASTA
       Data: nucleic acid sequence
-      content: clustered representative contigs
+      content: junction-split contigs with header-baked provenance
       ext: fna
   cluster_membership:
     properties:
-      _: cluster membership of the clustered contigs (one row per input contig)
+      _: cluster membership of the deduped insert set (one row per input split contig)
       Format: CSV
       fields:
       - cluster
@@ -80,22 +96,9 @@ types:
       - source_pool
       - length
       ext: csv
-  pool_coverage_profiles:
-    properties:
-      _: per-contig x per-pool per-bp read-depth arrays over the clustered contigs; keyed on the original clustered contig ids and never mutated downstream (split/trim slice it by header interval)
-      Format: pickle (gzip)
-      Data: per-bp depth arrays keyed by contig then pool
-      ext: pkl.gz
-  split_contigs:
-    properties:
-      _: contigs after chimera splitting; interval provenance baked into each FASTA header (source=<clustered_id> start= end= action=)
-      Format: FASTA
-      Data: nucleic acid sequence
-      content: chimera-split contigs with header-baked provenance
-      ext: fna
   putative_inserts:
     properties:
-      _: final putative fosmid inserts after coverage trimming; same header-baked provenance convention (intervals updated by any trim), length-banded to the lambda window
+      _: final putative fosmid inserts -- the cross-assembler dedup of the junction-split contigs; same header-baked provenance convention, length-banded to the lambda window
       Format: FASTA
       Data: nucleic acid sequence
       content: putative fosmid inserts
@@ -138,6 +141,8 @@ types:
       - start
       - end
       - length
-      - pool_basis
+      # was `pool_basis`, which came from the retired per-experiment coverage
+      # matrix; the pool is now carried through cluster_membership instead.
+      - source_pool
       - band
       ext: csv

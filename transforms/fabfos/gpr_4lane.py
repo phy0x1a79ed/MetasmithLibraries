@@ -1,5 +1,11 @@
 """GPR mapper (chosen 4 lanes) -- fold kofam + CLEAN + uniref50 + ProteinBERT into
-one gene-attributed GPR table -> annotation::gpr_table_4lane.
+one gene-attributed GPR table -> annotation::gpr_table.
+
+This lane set is CANONICAL: it produces `annotation::gpr_table` itself rather
+than a subtype, so the fosmid pipeline has exactly one producer of the GPR table
+and a plan needs no tiebreak between mappers. `gpr_7lane` remains available and
+keeps its own `gpr_table_7lane` subtype for when the extra three lanes are
+wanted explicitly.
 
 The "native run tool -> mapper into GPR table format" half of the pipeline: it
 takes the four lane outputs and translates each lane's identifiers to MetaNetX
@@ -32,18 +38,25 @@ model = Transform()
 
 image     = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
 orfs      = model.AddRequirement(lib.GetType("sequences::orfs"))
-kofam     = model.AddRequirement(lib.GetType("annotation::kofamscan_results"))
-clean     = model.AddRequirement(lib.GetType("annotation::clean_predictions"))
-uniref    = model.AddRequirement(lib.GetType("annotation::diamond_uniref50_results"))
-pbert_emb = model.AddRequirement(lib.GetType("annotation::proteinbert_embeddings"))
-pbert_idx = model.AddRequirement(lib.GetType("annotation::proteinbert_index"))
+# EVERY lane is pinned to `orfs`. The mapper joins all four lanes on gene id, so
+# they must be annotations OF THIS ORF SET -- without the pin the planner is free
+# to satisfy each lane from whatever `sequences::orfs` is cheapest to reach,
+# which in a full pipeline means extra `prodigal` runs on the raw assemblies. The
+# resulting table folds annotations of one ORF set onto a different one and every
+# gene-id join comes back empty. The pin also collapses the duplicate prodigals:
+# one ORF ancestor satisfies the mapper and all four lanes at once.
+kofam     = model.AddRequirement(lib.GetType("annotation::kofamscan_results"), parents={orfs})
+clean     = model.AddRequirement(lib.GetType("annotation::clean_predictions"), parents={orfs})
+uniref    = model.AddRequirement(lib.GetType("annotation::diamond_uniref50_results"), parents={orfs})
+pbert_emb = model.AddRequirement(lib.GetType("annotation::proteinbert_embeddings"), parents={orfs})
+pbert_idx = model.AddRequirement(lib.GetType("annotation::proteinbert_index"), parents={orfs})
 ko_br     = model.AddRequirement(lib.GetType("ref::ko_to_mnxr"))
 ec_br     = model.AddRequirement(lib.GetType("ref::ec_to_mnxr"))
 up_br     = model.AddRequirement(lib.GetType("ref::uniprot_to_mnxr"))
 pool      = model.AddRequirement(lib.GetType("ref::reference_label_pool"))
 ev_lib    = model.AddRequirement(lib.GetType("lib::fabfos_evidence.py"))
 knn_lib   = model.AddRequirement(lib.GetType("lib::fabfos_embed_transfer.py"))
-out_gpr   = model.AddProduct(lib.GetType("annotation::gpr_table_4lane"))
+out_gpr   = model.AddProduct(lib.GetType("annotation::gpr_table"))
 
 
 # The inline driver reads the dev2-format lane outputs, projects identifiers to

@@ -35,6 +35,8 @@ manifest:
     type: env::diamond.env
   dram.env:
     type: env::dram.env
+  ecspr.env:
+    type: env::ecspr.env
   eggnog-mapper.env:
     type: env::eggnog-mapper.env
   esmc.env:

@@ -39,10 +39,6 @@ manifest:
     type: transforms::transform
   foldseek_3di.py:
     type: transforms::transform
-  gpr_4lane.py:
-    type: transforms::transform
-  gpr_7lane.py:
-    type: transforms::transform
   interproscan.py:
     type: transforms::transform
   kofamscan.py:

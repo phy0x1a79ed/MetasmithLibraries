@@ -1,4 +1,10 @@
 manifest:
+  ecspr_build.py:
+    type: lib::ecspr_build.py
+  ecspr_directed.py:
+    type: lib::ecspr_directed.py
+  ecspr_graph.py:
+    type: lib::ecspr_graph.py
   extract_noncoding_chunks.py:
     type: lib::extract_noncoding_chunks.py
   fabfos_embed_transfer.py:

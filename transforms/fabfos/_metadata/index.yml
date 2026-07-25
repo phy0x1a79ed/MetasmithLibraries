@@ -1,10 +1,10 @@
 manifest:
-  chimera_split.py:
-    type: transforms::transform
   cluster_contigs.py:
     type: transforms::transform
-  coverage_trim.py:
+  gpr_4lane.py:
     type: transforms::transform
-  pool_coverage.py:
+  gpr_7lane.py:
+    type: transforms::transform
+  junction_split.py:
     type: transforms::transform
 schema: v1

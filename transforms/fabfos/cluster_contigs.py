@@ -1,6 +1,6 @@
-"""Dedup the per-pool assembler contigs into a representative ("clustered") set.
+"""Dedup the junction-split contigs into the final putative insert set.
 
-Ports scadc `resolve_inserts/cluster.ipynb`: pool every assembly's long contigs
+Ports scadc `resolve_inserts/cluster.ipynb`: pool every input's long contigs
 (>= min_contig_len), run an all-vs-all blastn, build a contiguous-pident
 (nident/qlen) similarity matrix, and agglomeratively cluster (complete linkage,
 distance_threshold = 1 - identity_threshold).  Clustering is done **across all
@@ -8,35 +8,49 @@ assemblers together** so near-identical spades/megahit twins of the same clone
 collapse into one representative (cross-assembler dedup); `cluster_membership.csv`
 records which input contig (and its assembler/pool) fell into each cluster.
 
+This step now runs **last**, not first. Junction calling and splitting moved
+ahead of it (see `junction_map.py` / `split_at_junctions.py`), because those work
+per pool in that pool's own assembly coordinates. So the input here is the split
+pieces rather than raw assemblies, and the representative set that comes out of
+the dedup *is* the final insert set -- there is no separate trim afterwards, and
+no intermediate `clustered_contigs` type any more.
+
+The cost of splitting first is that the same chimera assembled by both megahit
+and spades gets cut twice; that is exactly what this dedup collapses.
+
 Aggregation: a single `fosmids::recovery_experiment` node groups the whole run;
-every assembly is parented to it, so `group_by=exp` makes ONE clustering job see
-all pools' assemblies via `InputGroup`.
+each pool's `read_metadata` -- and so its split contigs -- descends from it, so
+`group_by=exp` makes ONE dedup job see every pool's pieces via `InputGroup`.
+
+CONTRACT REWIRED, protocol not yet migrated: the body below still reads two
+assembly inputs and writes `clustered_contigs`. It needs to read the split
+contigs and write the inserts + report instead.
 """
 from metasmith.python_api import *
 
 lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
 exp       = model.AddRequirement(lib.GetType("fosmids::recovery_experiment"))
-# Host-filter coercion via lineage: the clustered set must derive from
-# HOST-FILTERED assemblies. Pinning the consumed assembly's lineage to
-# `host_filtered_short_reads` forces `reads -> background_filter -> {megahit,
-# spades}` upstream, without editing the assemblers -- they accept host-filtered
-# reads because `host_filtered_short_reads` extends `clean_short_reads`. `hf` is
-# a lineage constraint only; the protocol never reads it.
-hf        = model.AddRequirement(lib.GetType("sequences::host_filtered_short_reads"), parents={exp})
-# Cross-assembler dedup is the whole point of this step, so require BOTH
-# assemblers' output explicitly: a generic `sequences::assembly` requirement
-# lets the planner satisfy the DAG with a single assembler, but the intended
-# pipeline runs megahit AND spades per pool and collapses their near-identical
-# twins here. Each is pinned to the host-filtered lineage (see above).
-asm_mh    = model.AddRequirement(lib.GetType("sequences::megahit_assembly"), parents={exp, hf})
-asm_sp    = model.AddRequirement(lib.GetType("sequences::spades_assembly"), parents={exp, hf})
+# The host-filter coercion that used to live here has moved to `junction_map`,
+# which is now the first consumer of the assemblies. Everything reaching this
+# step is already downstream of it.
+split     = model.AddRequirement(lib.GetType("fosmids::split_contigs"), parents={exp})
 img_blast = model.AddRequirement(lib.GetType("env::blast.env"))
 img_pyds  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
-out_fa    = model.AddProduct(lib.GetType("fosmids::clustered_contigs"))
+out_ins   = model.AddProduct(lib.GetType("fosmids::putative_inserts"))
+out_rep   = model.AddProduct(lib.GetType("fosmids::putative_insert_report"))
 out_mem   = model.AddProduct(lib.GetType("fosmids::cluster_membership"))
 
 def protocol(context: ExecutionContext):
+    # STALE -- kept verbatim for the migration pass. The contract above now takes
+    # `split` and produces inserts + report + membership; the body below still
+    # reads two assemblies and writes `clustered_contigs`. Guarded so it cannot
+    # run half-migrated and quietly produce the wrong thing.
+    raise NotImplementedError(
+        "cluster_contigs: contract rewired to consume fosmids::split_contigs and "
+        "produce putative_inserts + report; body not yet migrated"
+    )
+
     # union of both assemblers' per-pool contigs (cross-assembler dedup input)
     asm_paths = context.InputGroup(asm_mh) + context.InputGroup(asm_sp)
     ofa       = context.Output(out_fa)

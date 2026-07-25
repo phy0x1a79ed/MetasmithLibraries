@@ -166,13 +166,7 @@ types:
       Format: Parquet
       _:
       - Gene-attributed GPR evidence table (long-format, one row per ORF x channel
-        x MNXR)
-      ext: parquet
-  gpr_table_4lane:
-    properties:
-      Format: Parquet
-      _:
-      - GPR table from the chosen 4 lanes (kofam, CLEAN, uniref50, ProteinBERT)
+        x MNXR); the canonical chosen-4 lane set
       ext: parquet
       lane_set: chosen_4
   gpr_table_7lane:
