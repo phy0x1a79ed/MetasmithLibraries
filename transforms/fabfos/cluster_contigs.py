@@ -18,7 +18,7 @@ no intermediate `clustered_contigs` type any more.
 The cost of splitting first is that the same chimera assembled by both megahit
 and spades gets cut twice; that is exactly what this dedup collapses.
 
-Aggregation: a single `fosmids::recovery_experiment` node groups the whole run;
+Aggregation: a single `fabfos::experiment` node groups the whole run;
 each pool's `read_metadata` -- and so its split contigs -- descends from it, so
 `group_by=exp` makes ONE dedup job see every pool's pieces via `InputGroup`.
 
@@ -30,16 +30,16 @@ from metasmith.python_api import *
 
 lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
-exp       = model.AddRequirement(lib.GetType("fosmids::recovery_experiment"))
+exp       = model.AddRequirement(lib.GetType("fabfos::experiment"))
 # The host-filter coercion that used to live here has moved to `junction_map`,
 # which is now the first consumer of the assemblies. Everything reaching this
 # step is already downstream of it.
-split     = model.AddRequirement(lib.GetType("fosmids::split_contigs"), parents={exp})
+split     = model.AddRequirement(lib.GetType("fabfos::split_contigs"), parents={exp})
 img_blast = model.AddRequirement(lib.GetType("env::blast.env"))
 img_pyds  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
-out_ins   = model.AddProduct(lib.GetType("fosmids::putative_inserts"))
-out_rep   = model.AddProduct(lib.GetType("fosmids::putative_insert_report"))
-out_mem   = model.AddProduct(lib.GetType("fosmids::cluster_membership"))
+out_ins   = model.AddProduct(lib.GetType("fabfos::putative_inserts"))
+out_rep   = model.AddProduct(lib.GetType("fabfos::putative_insert_report"))
+out_mem   = model.AddProduct(lib.GetType("fabfos::cluster_membership"))
 
 def protocol(context: ExecutionContext):
     # STALE -- kept verbatim for the migration pass. The contract above now takes
@@ -47,7 +47,7 @@ def protocol(context: ExecutionContext):
     # reads two assemblies and writes `clustered_contigs`. Guarded so it cannot
     # run half-migrated and quietly produce the wrong thing.
     raise NotImplementedError(
-        "cluster_contigs: contract rewired to consume fosmids::split_contigs and "
+        "cluster_contigs: contract rewired to consume fabfos::split_contigs and "
         "produce putative_inserts + report; body not yet migrated"
     )
 

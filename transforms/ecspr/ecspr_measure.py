@@ -47,7 +47,7 @@ from metasmith.python_api import *
 lib        = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model      = Transform()
 
-exp        = model.AddRequirement(lib.GetType("fosmids::recovery_experiment"))
+exp        = model.AddRequirement(lib.GetType("fabfos::experiment"))
 # THE seam. Pinned to the experiment -- see LINEAGE above.
 gpr        = model.AddRequirement(lib.GetType("annotation::gpr_table"), parents={exp})
 # The experiment's own claim about what it is testing.

@@ -51,7 +51,7 @@ lib       = TransformInstanceLibrary.ResolveParentLibrary(__file__)
 model     = Transform()
 # The experiment node is the root of the run. Both per-run references below hang
 # off it, so a plan cannot silently reach for some other run's backbone or host.
-exp       = model.AddRequirement(lib.GetType("fosmids::recovery_experiment"))
+exp       = model.AddRequirement(lib.GetType("fabfos::experiment"))
 meta      = model.AddRequirement(lib.GetType("sequences::read_metadata"), parents={exp})
 # Lineage constraint only -- the protocol never reads it. See the note above:
 # pinning the assemblies to a host-filtered ancestor is what pulls
@@ -63,11 +63,11 @@ hf        = model.AddRequirement(lib.GetType("sequences::host_filtered_short_rea
 # megahit AND spades per pool and carries both through to the dedup.
 asm_mh    = model.AddRequirement(lib.GetType("sequences::megahit_assembly"), parents={meta, hf})
 asm_sp    = model.AddRequirement(lib.GetType("sequences::spades_assembly"), parents={meta, hf})
-backbone  = model.AddRequirement(lib.GetType("fosmids::vector_backbone"), parents={exp})
+backbone  = model.AddRequirement(lib.GetType("fabfos::vector_backbone"), parents={exp})
 img_blast = model.AddRequirement(lib.GetType("env::blast.env"))
 img_pyds  = model.AddRequirement(lib.GetType("env::python_for_data_science.env"))
-out_jm    = model.AddProduct(lib.GetType("fosmids::junction_map"))
-out_split = model.AddProduct(lib.GetType("fosmids::split_contigs"))
+out_jm    = model.AddProduct(lib.GetType("fabfos::junction_map"))
+out_split = model.AddProduct(lib.GetType("fabfos::split_contigs"))
 
 
 def protocol(context: ExecutionContext):

@@ -43,6 +43,10 @@ types:
       fields:
       - ends_facing
       - insert_ids
+  experiment:
+    properties:
+      logistics: to group the pooled assemblies + reads of one fosmid-recovery run
+        (single grouping node; all inputs and intermediates descend from it)
   insert_coverage:
     properties:
       Format: CSV
@@ -117,10 +121,6 @@ types:
       content: putative fosmid inserts
       ext: fna
       origin: assembler
-  recovery_experiment:
-    properties:
-      logistics: to group the pooled assemblies + reads of one fosmid-recovery run
-        (single grouping node; all inputs and intermediates descend from it)
   reference_inserts:
     properties:
       Data: nucleic acid sequence

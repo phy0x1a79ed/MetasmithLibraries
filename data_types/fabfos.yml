@@ -58,7 +58,7 @@ types:
       ext: json
 # -----------------------------------------
 # putative-insert recovery (junction split -> cross-assembler dedup)
-  recovery_experiment:
+  experiment:
     properties:
       logistics: to group the pooled assemblies + reads of one fosmid-recovery run (single grouping node; all inputs and intermediates descend from it)
   junction_map:
