@@ -31,3 +31,19 @@ types:
     properties:
       src: fabfos_embed_transfer
       usage: command line
+  # ECSPr network engine. Vendored as a unit: ecspr_build imports ecspr_graph at
+  # module top, which imports ecspr_directed at module top. Splitting them or
+  # reaching into another worktree with sys.path.insert is what made the tier-3
+  # build unreproducible.
+  ecspr_build.py:
+    properties:
+      src: ecspr_build
+      usage: command line
+  ecspr_graph.py:
+    properties:
+      src: ecspr_graph
+      usage: library
+  ecspr_directed.py:
+    properties:
+      src: ecspr_directed
+      usage: library

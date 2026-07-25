@@ -165,6 +165,66 @@ types:
     properties:
       _: Reference embeddings + their MNXR labels for kNN label transfer (orf_index.parquet + emb_*.npy)
 
+  # -------------------------------------------------
+  # Compiled metabolism tables (build_references/bake_metabolism.py).
+  # The three are ONE artifact in three files: each carries identical bake-identity
+  # metadata (vocab sha256, bit widths, element order, source hashes) in its parquet
+  # file-level key-value block, and refs.assert_same_bake() refuses a mismatched set.
+  # Loading atom_pairs against a different bake's vocab would decode node codes to the
+  # wrong metabolites silently.
+  metabolism_vocab:
+    extends:
+    - reference_data
+    properties:
+      _: Int-code vocabulary for the compiled metabolism tables (kind, code, symbol; met and rxn densely coded within kind)
+      ext: parquet
+  atom_pairs:
+    extends:
+    - reference_data
+    properties:
+      _: Compiled atom-atom mapping, one row per single atom correspondence (element, rxn, tail_node, head_node packed as met_code<<rank_bits|atom_rank, pair_w); orientation stored as written
+      ext: parquet
+  direction_ratios:
+    extends:
+    - reference_data
+    properties:
+      _: Per-reaction directionality (rxn, ratio = g_rev/g_fwd = exp(dG'/RT), dir_tier); ratio > 1 FLIPS the edge, it does not amplify it
+      ext: parquet
+
+  # -------------------------------------------------
+  # Per-host gene -> reaction tables. Two independent lines of evidence, deliberately
+  # separate files so they can be compared rather than conflated.
+  gpr_table_gem:
+    extends:
+    - reference_data
+    properties:
+      _: Host GPR table asserted by a curated genome-scale model (long-format, one row per gene x MNXR; uniform raw_score)
+      ext: parquet
+  gpr_table_denovo:
+    extends:
+    - reference_data
+    properties:
+      _: Host GPR table inferred from that host's own annotation lanes (long-format, one row per ORF x channel x MNXR)
+      ext: parquet
+
+  # KO -> KEGG reaction, lifted out of the KEGG flat-files once so the sibling project's
+  # request cache is a recorded provenance source rather than a runtime dependency.
+  ko_to_kegg_r:
+    extends:
+    - reference_data
+    properties:
+      _: KO -> KEGG reaction links from each KO's flat-file REACTION block (tab-separated; columns ko, kegg_r)
+      ext: tsv
+
+  # The measurement behind EPI300 sharing DH10B's curated model. Declared because the
+  # claim it carries is what makes two hosts' GEM tables legitimately identical.
+  host_gem_identity_report:
+    extends:
+    - reference_data
+    properties:
+      _: Re-measured delta between a host and the host whose curated model it borrows
+      ext: md
+
   # EZpred DL-only EC-head model bundle: vendored EZpred tree + the enzyme /
   # non-enzyme MLP ensembles. No ESM-C weights -- embeddings come from esm_c.
   ezpred_model:
