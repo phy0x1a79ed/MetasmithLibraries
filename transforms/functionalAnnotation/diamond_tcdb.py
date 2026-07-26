@@ -23,9 +23,9 @@ def protocol(context: ExecutionContext):
         block_size = max(1.0, min(12.0, (mem_gb - 4) / 6))
 
     # Run DIAMOND blastp against TCDB
-    context.ExecWithContainer(
+    context.ExecWithEnv().ifContainerDo(
         binds=[(idb.external.parent, "/db")],
-        image=image,
+        env=image,
         cmd=f"""
             diamond blastp \
                 --query {iorfs.container} \

@@ -1,0 +1,4 @@
+manifest:
+  ecspr_measure.py:
+    type: transforms::transform
+schema: v1

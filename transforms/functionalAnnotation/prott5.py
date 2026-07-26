@@ -136,8 +136,8 @@ def protocol(context: ExecutionContext):
     with open(script, "w") as f:
         f.write(INFERENCE)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (context.external_cwd/"weights", "/weights"),
             (context.external_cwd/script.name, f"/work/{script.name}"),

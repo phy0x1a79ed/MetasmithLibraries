@@ -1,0 +1,172 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  cluster_membership:
+    properties:
+      Format: CSV
+      _:
+      - cluster membership of the deduped insert set (one row per input split contig)
+      ext: csv
+      fields:
+      - assembler
+      - centroid
+      - cluster
+      - length
+      - member
+      - source_pool
+  end_sequences_forward:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid forward end-sequences (fasta records keyed by insert_id)
+      direction: forward
+      ext: fna
+  end_sequences_reverse:
+    properties:
+      Data: fosmid end sequence
+      Format: FASTA
+      _:
+      - fosmid reverse end-sequences (fasta records keyed by insert_id)
+      direction: reverse
+      ext: fna
+  end_sequences_table:
+    properties:
+      Format: JSON
+      _:
+      - fosmid ends manifest (insert_ids + ends_facing flag)
+      ext: json
+      fields:
+      - ends_facing
+      - insert_ids
+  experiment:
+    properties:
+      logistics: to group the pooled assemblies + reads of one fosmid-recovery run
+        (single grouping node; all inputs and intermediates descend from it)
+  insert_coverage:
+    properties:
+      Format: CSV
+      _:
+      - read-mapping coverage summary of the pooled reads against the reference inserts;
+        one row per (insert_id, pool) plus an "all"-pool aggregate, with depth/breadth
+        stats
+      ext: csv
+      fields:
+      - breadth_1x
+      - breadth_5x
+      - insert_id
+      - length
+      - mapped_bp
+      - mean_depth
+      - median_depth
+      - pool
+  junction_map:
+    properties:
+      Format: CSV
+      _:
+      - pCC1 backbone alignments against one pool's assembler contigs, one row per
+        hit, carrying the junction positions the split acts on. Co-produced with `split_contigs`
+        by `junction_split` -- the evidence record for a cut that happens in the same
+        job, not a staging boundary. `junction_kind` separates a terminal hit (vector
+        at a contig end -- a real insert boundary) from an internal one (vector mid-contig
+        -- two clones the assembler joined through their shared backbone).
+      ext: csv
+      fields:
+      - aln_length
+      - assembler
+      - contig_id
+      - hit_end
+      - hit_start
+      - junction_kind
+      - junction_pos
+      - pident
+      - source_pool
+      - strand
+  pool_size_estimate:
+    properties:
+      Format: JSON
+      _:
+      - fosmid pool size estimate
+      ext: json
+      fields:
+      - size
+      - size_with_singletons
+  putative_insert_report:
+    properties:
+      Format: CSV
+      _:
+      - per-insert provenance + length-band report for the recovered putative fosmids
+      ext: csv
+      fields:
+      - action
+      - band
+      - end
+      - insert_id
+      - length
+      - source
+      - source_pool
+      - start
+  putative_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - final putative fosmid inserts -- the cross-assembler dedup of the junction-split
+        contigs; same header-baked provenance convention, length-banded to the lambda
+        window
+      content: putative fosmid inserts
+      ext: fna
+      origin: assembler
+  reference_inserts:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - the canonical fosmid reference set -- putative inserts filtered to length
+        >= min_insert_length (default 29 kb, the phage-packaging/lambda-window cutoff);
+        the FASTA every downstream analysis (read-mapping, annotation, ECSPr) runs
+        on
+      content: reference fosmid inserts (length-filtered)
+      ext: fna
+      origin: assembler
+  scaffold_report:
+    properties:
+      Format: CSV
+      _:
+      - fosmid scaffold mapping report
+      ext: csv
+      fields:
+      - assemblers
+      - contig_id
+      - id
+      - mapping_quality
+      - original_id
+      - paired
+      - resolved_length
+  scaffolds:
+    properties:
+      Data: fosmid scaffold
+      Format: FASTA
+      _:
+      - end-aware scaffolded fosmid inserts
+      ext: fna
+  split_contigs:
+    properties:
+      Data: nucleic acid sequence
+      Format: FASTA
+      _:
+      - one pool's contigs after splitting at the vector-backbone junctions; interval
+        provenance baked into each FASTA header (source=<contig_id> start= end= action=)
+      content: junction-split contigs with header-baked provenance
+      ext: fna
+  vector_backbone:
+    properties:
+      Data: vector backbone reference
+      Format: FASTA
+      _:
+      - fosmid vector backbone reference fasta
+      ext: fna

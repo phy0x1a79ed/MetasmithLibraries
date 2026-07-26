@@ -23,8 +23,8 @@ def protocol(context: ExecutionContext):
     iclassifier = context.Input(classifier)
     itax        = context.Output(tax)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""\
 set -e
 

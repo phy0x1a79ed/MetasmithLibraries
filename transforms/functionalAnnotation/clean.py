@@ -119,8 +119,8 @@ def protocol(context: ExecutionContext):
     with open(script, "w") as f:
         f.write(WRAPPER)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (context.external_cwd / "clean_ws", "/clean_ws"),
             (context.external_cwd / script.name, f"/work/{script.name}"),

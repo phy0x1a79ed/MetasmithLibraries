@@ -1,0 +1,10 @@
+manifest:
+  cluster_contigs.py:
+    type: transforms::transform
+  gpr_4lane.py:
+    type: transforms::transform
+  gpr_7lane.py:
+    type: transforms::transform
+  junction_split.py:
+    type: transforms::transform
+schema: v1

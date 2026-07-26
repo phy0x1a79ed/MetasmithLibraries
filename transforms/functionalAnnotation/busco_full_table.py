@@ -17,8 +17,8 @@ def protocol(context: ExecutionContext):
 
     lineage_name = Path(ilineage.external).name
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(ilineage.external, f"/busco_lineage/lineages/{lineage_name}")],
         cmd=f"""\
             busco \

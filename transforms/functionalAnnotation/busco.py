@@ -14,8 +14,8 @@ def protocol(context: ExecutionContext):
     cpus     = context.params.get("cpus")
     cpus     = 8 if cpus is None else cpus
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(ilineage.external, "/busco_lineage/lineages/eukaryota_odb10")],
         cmd=f"""\
             busco \

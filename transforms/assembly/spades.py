@@ -32,15 +32,16 @@ def protocol(context: ExecutionContext):
     mem_gb = context.params.get('memory')
     mem_arg = f"-m {max(1, int(mem_gb * 0.85))}" if mem_gb else ""
 
-    context.ExecWithContainer(
-        image=image,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             spades.py {mode} {threads_arg} {mem_arg} \
                 {reads_arg} \
                 -o spades_ws
-            [[ $(head spades_ws/contigs.fasta | wc --chars) -ne 0 ]] && mv spades_ws/contigs.fasta {iout.container} || echo "assembly was empty"
-        """,
-    )
+            [[ $(head spades_ws/contigs.fasta | wc -c) -ne 0 ]] && mv spades_ws/contigs.fasta {iout.container} || echo "assembly was empty"
+        """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
 
     return ExecutionResult(
         manifest=[

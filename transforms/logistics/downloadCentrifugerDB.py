@@ -27,8 +27,8 @@ def protocol(context: ExecutionContext):
         f'wget -q "{url}" -O {iout.container}{suffix}'
         for suffix, url in CENTRIFUGER_DB_URLS
     )
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             mkdir -p $(dirname {iout.container})
             {wget_lines}

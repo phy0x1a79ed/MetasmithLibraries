@@ -78,7 +78,7 @@ df.to_parquet("{iout.container}", index=False)
 """
 
     context.LocalShell("cat > _gather.py << 'PYEOF'\n" + script + "\nPYEOF\n")
-    context.ExecWithContainer(image=image, cmd="python3 _gather.py")
+    context.ExecWithEnv().ifContainerDo(env=image, cmd="python3 _gather.py")
 
     return ExecutionResult(
         manifest=[

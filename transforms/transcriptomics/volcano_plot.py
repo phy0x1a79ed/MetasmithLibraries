@@ -152,8 +152,8 @@ fig.write_image(png_file, width=900, height=800, scale=2)
 print(f"Wrote {png_file}")
 """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"python volcano_plot.py {ide.container} {iout.container} {ioutpng.container}",
     )
     return ExecutionResult(

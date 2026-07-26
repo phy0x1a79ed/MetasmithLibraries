@@ -165,17 +165,16 @@ types:
   # GPR table (gene-attributed reaction evidence, long format)
   # One row per (ORF, lane channel, reaction); 8-col schema:
   #   source, orf, channel, mnxr, intermediate_id, intermediate_name, raw_score, projection_via
+  # CANONICAL. The chosen-4 lane set (kofam, CLEAN, uniref50, ProteinBERT) IS the
+  # GPR table: `gpr_4lane` produces this type directly rather than a subtype, so
+  # the fosmid pipeline has exactly one producer of it and needs no tiebreak.
+  # `gpr_7lane` stays as a transform and keeps its own subtype below.
   gpr_table:
     properties:
-      _: Gene-attributed GPR evidence table (long-format, one row per ORF x channel x MNXR)
+      _: Gene-attributed GPR evidence table (long-format, one row per ORF x channel x MNXR); the canonical chosen-4 lane set
       Format: Parquet
-      ext: parquet
-  gpr_table_4lane:
-    extends:
-    - gpr_table
-    properties:
-      _: GPR table from the chosen 4 lanes (kofam, CLEAN, uniref50, ProteinBERT)
       lane_set: chosen_4
+      ext: parquet
   gpr_table_7lane:
     extends:
     - gpr_table

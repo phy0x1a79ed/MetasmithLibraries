@@ -22,15 +22,16 @@ def protocol(context: ExecutionContext):
     contig_count = int(Path("contig_count.txt").read_text().strip())
     batch_size = max(32, min(contig_count, 1024))
 
-    context.ExecWithContainer(
-        image = image,
-        cmd = f"""
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""
             mkdir -p {bam_dir}
             cp -L {ibam.container} {bam_dir}/
             mkdir -p {workdir}
             run_comebin.sh -a {iasm.container} -o {workdir} -p {bam_dir} -t {threads} -b {batch_size}
         """
-    )
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
 
     # Find all bin files and output each one separately
     outputs = []

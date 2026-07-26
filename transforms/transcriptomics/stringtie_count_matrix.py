@@ -78,8 +78,8 @@ with open(output, "w", newline="") as out:
         writer.writerow(row)
 """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"python gene_count_matrix.py {manifest} {iout.container}",
     )
     return ExecutionResult(

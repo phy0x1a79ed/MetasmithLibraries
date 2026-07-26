@@ -16,8 +16,8 @@ def protocol(context: ExecutionContext):
     # Strip stop codons before running prediction.
     # Subshell cd to /opt/deeptfactor so tf_running.py finds ./trained_model/
     # without changing CWD (metasmith's exit-code trap needs /ws writable)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             sed '/^[^>]/s/\\*//g' {iorfs.container} > /ws/clean.faa
             (cd /opt/deeptfactor && python tf_running.py -i /ws/clean.faa -o /ws/result -g cpu)

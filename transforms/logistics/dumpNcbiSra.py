@@ -88,8 +88,8 @@ def protocol(context: ExecutionContext):
     # echo "{acc_value}" >{ireads.container}
 
     # @$si/$ri spot_index/read_index to minimize headers
-    context.ExecWithContainer(
-        image = image,
+    context.ExecWithEnv().ifContainerDo(
+        env = image,
         cmd = f"""
         du -shL {acc}
         echo "dumping"

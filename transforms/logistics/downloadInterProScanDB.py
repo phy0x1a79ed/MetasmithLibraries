@@ -12,8 +12,8 @@ IPRSCAN_DATA_URL = "https://ftp.ebi.ac.uk/pub/databases/interpro/iprscan/5/5.67-
 def protocol(context: ExecutionContext):
     idata = context.Output(data)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             wget -q {IPRSCAN_DATA_URL} -O interproscan-data.tar.gz
             mkdir -p {idata.container}
@@ -22,8 +22,8 @@ def protocol(context: ExecutionContext):
     )
 
     # compile hmmer indexes
-    context.ExecWithContainer(
-        image=img_ipr,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_ipr,
         binds=[(context.external_cwd/"ipr_data/data", "/opt/interproscan/data")],
         cmd=f"""\
             python3 setup.py -f interproscan.properties --force

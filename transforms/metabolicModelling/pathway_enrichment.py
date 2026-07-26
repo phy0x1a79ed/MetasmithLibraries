@@ -199,8 +199,8 @@ else:
 print(f"Pathway enrichment complete. Outputs in {out_dir}")
 ''')
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idiff.external, "/diff_data")],
         cmd=f"python {script} /diff_data {iout.container}",
     )

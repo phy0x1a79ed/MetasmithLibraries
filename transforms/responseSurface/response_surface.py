@@ -38,8 +38,8 @@ def protocol(context: ExecutionContext):
         mkdir -p ./fake_home/.pki
     """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             ("$(pwd -P)/fake_home/.cache",  "$HOME/.cache"),
             ("$(pwd -P)/fake_home/.local",  "$HOME/.local"),

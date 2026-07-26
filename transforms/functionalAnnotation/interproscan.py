@@ -60,8 +60,8 @@ def protocol(context: ExecutionContext):
     # Run InterProScan with extracted data directory. I5OPTS bumps the
     # JVM heap so the Java side can address most of the container RAM
     # (default Xmx is too small and OOMs on full-sample protein FASTAs).
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(context.external_cwd/"data", "/opt/interproscan/data")],
         cmd=f"""
             mkdir -p output

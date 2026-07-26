@@ -16,8 +16,8 @@ def protocol(context: ExecutionContext):
     threads = context.params.get("cpus", 8)
 
     # Run DeepEC
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             deepec \
                 -p {threads} \

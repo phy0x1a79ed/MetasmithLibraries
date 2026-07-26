@@ -18,8 +18,8 @@ def protocol(context: ExecutionContext):
     Log.Info(f"recieved SRA accession was [{acc_value}]")
 
     # echo "{acc_value}" >{acc_value}
-    context.ExecWithContainer(
-        image = image,
+    context.ExecWithEnv().ifContainerDo(
+        env = image,
         cmd = f"""
         echo "downloading"
         prefetch {acc_value} --max-size 1T

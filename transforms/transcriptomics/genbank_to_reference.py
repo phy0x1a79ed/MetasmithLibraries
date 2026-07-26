@@ -121,8 +121,8 @@ with open(gff_file, "w") as gout:
 print(f"Wrote GFF3: {gff_file}", flush=True)
 """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"python gbk_to_ref.py {igbk.container} {ifasta.container} {igff.container}",
     )
     return ExecutionResult(

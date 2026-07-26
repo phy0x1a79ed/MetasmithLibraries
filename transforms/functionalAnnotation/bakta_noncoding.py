@@ -25,8 +25,8 @@ def protocol(context: ExecutionContext):
     shutil.copy(HELPER, Path.cwd() / "_piler_cr_to_gff3.py")
 
     # Step 1: bakta non-coding annotation (always succeeds)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idb.external, "/db")],
         cmd=f"""
             bakta \
@@ -40,8 +40,8 @@ def protocol(context: ExecutionContext):
     )
 
     # Step 2: PILER-CR CRISPR detection (isolated, best-effort)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             pilercr -in {iasm.container} -out crispr_raw.txt -noinfo -quiet || true
 

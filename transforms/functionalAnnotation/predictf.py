@@ -20,8 +20,8 @@ def protocol(context: ExecutionContext):
     # The deepARG.py --folder flag points to BacTFDB (database + model files).
     # Must use conda run -n predictf for Python 2.7 environment.
     # Subshell to avoid changing CWD (metasmith needs /ws writable for exit code).
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idb.external, "/predictf_db")],
         cmd=f"""
             export THEANO_FLAGS="base_compiledir=/tmp/theano_compile"

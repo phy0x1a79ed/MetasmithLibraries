@@ -166,8 +166,8 @@ if all_results:
 print(f"Differential analysis complete. Outputs in {out_dir}")
 ''')
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"python {script} {ift.container} {iout.container}",
     )
 

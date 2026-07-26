@@ -20,8 +20,8 @@ def protocol(context: ExecutionContext):
     # Note: on Apptainer (HPC), /app/oradata needs a bind mount from outside.
     # The runner script or Nextflow config should add:
     #   containerOptions = '--bind /path/to/oradata:/app/oradata'
-    context.ExecWithContainer(
-        image=orad,
+    context.ExecWithEnv().ifContainerDo(
+        env=orad,
         cmd=f'''
         orad -q -c "{ir1.container}" > r1.fastq.gz
         orad -q -c "{ir2.container}" > r2.fastq.gz
@@ -29,8 +29,8 @@ def protocol(context: ExecutionContext):
     )
 
     # Interleave R1+R2 with reformat.sh and compress with pigz
-    context.ExecWithContainer(
-        image=bbtools,
+    context.ExecWithEnv().ifContainerDo(
+        env=bbtools,
         cmd=f'''
         reformat.sh \
             in1=r1.fastq.gz \

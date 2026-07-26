@@ -57,8 +57,8 @@ with open("/ws/0.pf", "w") as f:
     context.LocalShell("cat > _build_pf.py << 'PYEOF'\n" + build_pf + "\nPYEOF\n")
 
     # Single container invocation: build .pf, run pathologic, dump CSVs, tar both.
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(context.external_cwd / "ws", "/ws")],
         cmd=(
             "cp _build_pf.py /ws/_build_pf.py && "
