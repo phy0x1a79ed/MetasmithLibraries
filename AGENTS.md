@@ -49,8 +49,25 @@ serves both a containerized run and a mamba run.
 - Use `model.AddRequirement()` for inputs, `model.AddProduct()` for outputs
 - For paired-end reads, use a grouping parent (e.g. `read_pair`) and set `parents={pair}` on both R1/R2 requirements
 - `group_by=` in `TransformInstance()` controls how inputs are matched/grouped
-- `context.ExecWithContainer(image=, cmd=)` runs commands in the resolved env (container or `mamba run`)
-- Container paths: `context.Input(x).container` (path inside container), `.local` (path on host), `.external` (path from outside container)
+- A transform declares how it runs in each world and metasmith picks:
+
+  ```python
+  context.ExecWithEnv() \
+      .ifContainerDo(env=image, cmd=..., binds=[...], args=[...]) \
+      .ifVirtualEnvDo(env=image, cmd=..., exports={...})
+  ```
+
+  Either arm may be omitted; omitting `ifVirtualEnvDo` is how a container-only
+  tool declares itself, and `RunWorkflow` refuses a mamba agent before the run
+  rather than failing mid-step. Arms are declarations evaluated in place — the
+  matching one runs the moment it is called — so do not write side effects
+  between them.
+- `binds=` and `args=` are container-only: a conda env has no mount namespace,
+  so `ifVirtualEnvDo` takes `exports={NAME: value}` instead (emitted as `export`
+  lines ahead of the command). `PATH`/`HOME`/`LD_LIBRARY_PATH`/`TMPDIR`/`PWD`
+  are reserved.
+- Container paths: `context.Input(x).container` (path inside container), `.local` (path on host), `.external` (path from outside container). Under a runtime with no container all three are the same host path.
+- `msm transform validate <lib> <transform>` checks the declaration statically.
 
 ## Writing tests
 

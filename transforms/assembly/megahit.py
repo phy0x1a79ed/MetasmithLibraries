@@ -27,15 +27,16 @@ def protocol(context: ExecutionContext):
     # (85% of it, matching bbtools' headroom convention).
     mem_gb = context.params.get('memory')
     mem = f"--memory {int(mem_gb * 0.85 * 1024**3)}" if mem_gb else ""
-    context.ExecWithContainer(
-        image=image,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             megahit {threads} {mem} \
                 {parg} {ireads.container} \
                 -o megahit_ws
             [[ $(head megahit_ws/final.contigs.fa | wc -c) -ne 0 ]] && mv megahit_ws/final.contigs.fa {iout.container} || echo "assembly was empty"
-        """,
-    )
+        """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
     
     return ExecutionResult(
         manifest=[

@@ -129,8 +129,8 @@ def protocol(context: ExecutionContext):
 
     # iez.local is the model-bundle directory. Bind-mount it at /work/EZpred so
     # settings.py's root_dir resolves correctly.
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (context.external_cwd/wrapper.name, f"/work/{wrapper.name}"),
             (iez.local, "/work/EZpred"),

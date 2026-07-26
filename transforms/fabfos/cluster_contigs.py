@@ -103,15 +103,15 @@ with open("contig_meta.json", "w") as j:
     json.dump(meta, j)
 print(f"pooled_contigs={{len(seqs)}}")
 """)
-    context.ExecWithContainer(
-        image=img_pyds,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_pyds,
         cmd=f"python {prep_script} {asm_arg}",
     )
 
     # ---------------------------------------------------------------
     # Stage 2: all-vs-all blastn (scadc settings: evalue 1000, perc_identity 50)
-    context.ExecWithContainer(
-        image=img_blast,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_blast,
         cmd=f"""\
             makeblastdb -dbtype nucl -in pooled.fna -out pooled_db >makeblastdb.log 2>&1
             blastn -evalue 1000 -perc_identity 50 {threads_arg} \
@@ -211,8 +211,8 @@ pd.DataFrame(rows, columns=["cluster", "centroid", "member", "assembler",
 print(f"representatives={{len(representatives)}} from {{len(meta)}} contigs "
       f"(cross-assembler clustering)")
 """)
-    context.ExecWithContainer(
-        image=img_pyds,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_pyds,
         cmd=f"python {cluster_script} {ofa.container} {omem.container}",
     )
 

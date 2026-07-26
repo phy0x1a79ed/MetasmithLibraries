@@ -55,8 +55,8 @@ def protocol(context: ExecutionContext):
     # foldseek structureto3didescriptor takes PDB/mmCIF files as positional
     # args (not a list file) and writes a TSV. Shell-glob expansion handles
     # arbitrary file counts; the absent-extension globs are silenced if empty.
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (context.external_cwd/"structures", "/in"),
             (context.external_cwd, "/work"),
@@ -69,8 +69,8 @@ def protocol(context: ExecutionContext):
     )
 
     # Collect descriptor TSV into the output parquet using a generic python env
-    context.ExecWithContainer(
-        image=image_py,
+    context.ExecWithEnv().ifContainerDo(
+        env=image_py,
         cmd=f"""
             pip install --quiet --no-cache-dir pandas pyarrow
             python {collect.name} descriptor.tsv {iout.container}

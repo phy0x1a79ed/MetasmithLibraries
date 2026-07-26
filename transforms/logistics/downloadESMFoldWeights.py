@@ -10,8 +10,8 @@ HF_REPO  = "facebook/esmfold_v1"
 def protocol(context: ExecutionContext):
     iweights = context.Output(weights)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             pip install --quiet --no-cache-dir huggingface_hub
             huggingface-cli download {HF_REPO} \

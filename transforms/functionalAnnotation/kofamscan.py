@@ -43,8 +43,8 @@ def protocol(context: ExecutionContext):
     context.LocalShell(f"pigz -dc {iprofiles.local} | tar xf -")
 
     # Run KofamScan with extracted database references
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (context.external_cwd/"profiles", "/profiles"),
             (iko_list.external.parent, "/ko"),

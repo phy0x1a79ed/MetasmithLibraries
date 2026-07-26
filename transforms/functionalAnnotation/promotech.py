@@ -30,8 +30,8 @@ def protocol(context: ExecutionContext):
     results_dir = "/ws/pt_results"
 
     # Step 1: Extract non-coding intervals into <=1Mbp chunk FASTAs
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             python /ws/_extract_noncoding_chunks.py \
                 --fasta {iasm.container} \
@@ -44,8 +44,8 @@ def protocol(context: ExecutionContext):
 
     # Step 2: Run PromoTech parse + predict on each chunk in parallel.
     cpus = context.params.get("cpus", 4)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             cd /opt/promotech &&
             mkdir -p {results_dir} &&
@@ -66,8 +66,8 @@ def protocol(context: ExecutionContext):
     )
 
     # Step 3: Merge results and remap coordinates
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             python /ws/_merge_promotech_results.py \
                 --manifest {chunks_dir}/manifest.json \

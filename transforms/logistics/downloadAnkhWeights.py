@@ -13,8 +13,8 @@ def protocol(context: ExecutionContext):
     ibase  = context.Output(w_base)
     ilarge = context.Output(w_large)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             pip install --quiet --no-cache-dir huggingface_hub
             huggingface-cli download {HF_BASE}  --local-dir ankh_base  --local-dir-use-symlinks False

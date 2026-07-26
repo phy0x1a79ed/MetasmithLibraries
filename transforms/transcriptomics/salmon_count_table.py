@@ -46,8 +46,8 @@ for name, path in samples:
 merged.to_csv(output, sep="\\t", index=False)
 """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"python merge_counts.py {manifest} {iout.container}",
     )
     return ExecutionResult(

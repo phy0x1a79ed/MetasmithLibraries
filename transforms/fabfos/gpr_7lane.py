@@ -233,7 +233,7 @@ def protocol(context: ExecutionContext):
         pool=ipool.container, out=iout.container,
     )
     context.LocalShell("cat > _gpr_7lane.py << 'PYEOF'\n" + driver + "\nPYEOF\n")
-    context.ExecWithContainer(image=image, cmd="python3 _gpr_7lane.py")
+    context.ExecWithEnv().ifContainerDo(env=image, cmd="python3 _gpr_7lane.py")
 
     return ExecutionResult(
         manifest=[{out_gpr: iout.local}],

@@ -126,8 +126,8 @@ with open(output_file, "w", newline="") as out:
 print(f"Wrote {output_file} ({len(gene_counts)} genes x {len(sample_names_ordered)} samples)", flush=True)
 """)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"pip install -q pysam && python count_organellar.py {manifest} {gff_manifest} {iout.container}",
     )
     return ExecutionResult(

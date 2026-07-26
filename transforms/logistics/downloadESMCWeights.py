@@ -13,8 +13,8 @@ def protocol(context: ExecutionContext):
     i300 = context.Output(w_300m)
     i600 = context.Output(w_600m)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             pip install --quiet --no-cache-dir huggingface_hub
             huggingface-cli download {HF_300M} --local-dir esmc_300m --local-dir-use-symlinks False

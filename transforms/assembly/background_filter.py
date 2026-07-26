@@ -26,13 +26,14 @@ def protocol(context: ExecutionContext):
     threads_mm2 = "" if threads is None else f"-t {threads}"
     threads_sam = "" if threads is None else f"-@ {threads}"
 
-    context.ExecWithContainer(
-        image=img_mm2,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             minimap2 -a {sr_params} {threads_mm2} --secondary=no \
                 {ihost.container} {ireads.container} > temp.sam
-        """,
-    )
+        """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=img_mm2, cmd=_cmd) \
+        .ifVirtualEnvDo(env=img_mm2, cmd=_cmd)
     # Host depletion must be PAIR-AWARE. Selecting unmapped reads per-read
     # (`-f 4`) drops a mapped mate while keeping its unmapped partner, leaving an
     # orphan -> the interleaved output ends up with an ODD read count, which both
@@ -53,14 +54,15 @@ def protocol(context: ExecutionContext):
             f"samtools view -u -f 4 {threads_sam} temp.sam"
             f" | samtools fastq -N {threads_sam} -"
         )
-    context.ExecWithContainer(
-        image=img_sam,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             {filter_cmd} \
             | gzip > {iout.container}
             rm -f temp.sam
-        """,
-    )
+        """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=img_sam, cmd=_cmd) \
+        .ifVirtualEnvDo(env=img_sam, cmd=_cmd)
 
     return ExecutionResult(
         manifest=[

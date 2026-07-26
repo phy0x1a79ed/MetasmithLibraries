@@ -48,11 +48,11 @@ def protocol(context: ExecutionContext):
     # - separate the skani screen? is this needed for small runs? 
     # - batchify
     out_raw = Path("./gtdb_raw")
-    context.ExecWithContainer(
+    context.ExecWithEnv().ifContainerDo(
         binds=[
             (iref.external, "/ref"),
         ],
-        image = image,
+        env = image,
         cmd = f"""\
             mkdir -p {temp_ws}
             export GTDBTK_DATA_PATH=/ref

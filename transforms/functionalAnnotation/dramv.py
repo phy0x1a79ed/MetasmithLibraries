@@ -24,8 +24,8 @@ def protocol(context: ExecutionContext):
 
     # Use --config_loc to point at the exported DRAM config in the DB directory
     # This avoids needing to write to the read-only container filesystem
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idb.external, "/db")],
         cmd=f"""
             export HOME=/tmp

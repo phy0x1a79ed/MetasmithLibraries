@@ -26,8 +26,8 @@ def protocol(context: ExecutionContext):
     threads_arg = "" if threads is None else f"--threads {threads}"
 
     # kraken2 has no --interleaved mode: split via bbtools first.
-    context.ExecWithContainer(
-        image=img_bb,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_bb,
         cmd=f"""
             reformat.sh in={ireads.container} \
                 out1=split_r1.fq.gz out2=split_r2.fq.gz
@@ -37,8 +37,8 @@ def protocol(context: ExecutionContext):
     # kraken2 writes per-read classifications as TSV. Stage locally; the parquet
     # conversion happens at the end so bracken (which reads ikrep, not iclass)
     # is unaffected.
-    context.ExecWithContainer(
-        image=img_k2,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_k2,
         cmd=f"""
             kraken2 --paired --db {idb.container} {threads_arg} \
                 --report {ikrep.container} \
@@ -47,8 +47,8 @@ def protocol(context: ExecutionContext):
         """
     )
 
-    context.ExecWithContainer(
-        image=img_brk,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_brk,
         cmd=f"""
             bracken -d {idb.container} \
                 -i {ikrep.container} \
@@ -62,8 +62,8 @@ def protocol(context: ExecutionContext):
     # length as ~5-value categorical, narrow integer widths. ~7x smaller than TSV
     # while keeping the kmer-hit column (benchmarked SG10E12: 4.54 GiB -> 0.68 GiB).
     # See centrifuger.py for the RemoveLeadingIndent indent-matching note.
-    context.ExecWithContainer(
-        image=img_pq,
+    context.ExecWithEnv().ifContainerDo(
+        env=img_pq,
         cmd=f"""
             python <<'PY'
             import polars as pl

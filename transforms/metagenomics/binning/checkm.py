@@ -39,13 +39,14 @@ def protocol(context: ExecutionContext):
     ext = iasm.container.suffix.replace(".", "")
     out_dir = "checkm2_out"
     report = f"{out_dir}/quality_report.tsv"
-    context.ExecWithContainer(
-        image = image,
-        cmd = f"""
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""
             export PATH=/opt/conda/envs/external_checkm2_env/bin:/opt/conda/bin:$PATH
             checkm2 predict {threads} -x {ext} --input ./input --output-directory ./{out_dir}
         """
-    )
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
 
     # Split combined quality_report.tsv → one per-genome TSV.
     # Rename CheckM2's "Name" column to "Bin Id" so the aggregator's

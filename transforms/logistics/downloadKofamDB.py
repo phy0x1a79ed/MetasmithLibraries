@@ -13,8 +13,8 @@ def protocol(context: ExecutionContext):
     iprofiles = context.Output(profiles)
     iko_list = context.Output(ko_list)
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             wget -q {PROFILES_URL} -O profiles.tar.gz
             wget -q {KO_LIST_URL} -O ko_list.gz

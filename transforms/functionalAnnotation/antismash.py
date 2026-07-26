@@ -65,8 +65,8 @@ def protocol(context: ExecutionContext):
     cpus = context.params.get("cpus")
     cpus = 8 if cpus is None else cpus
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idb.external, "/antismash_db")],
         cmd=f"""
             antismash \

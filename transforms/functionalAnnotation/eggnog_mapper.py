@@ -25,8 +25,8 @@ def protocol(context: ExecutionContext):
     context.LocalShell(f"cp -r {idata.external} {local_data}")
 
     # Strip stop codon asterisks from protein sequences (same as interproscan)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(local_data, "/eggnog_data")],
         cmd=f"""
             sed '/^[^>]/s/\\*//g' {iorfs.container} > ./proteins.clean.faa

@@ -14,8 +14,8 @@ KRAKEN2_DB_URL = "https://genome-idx.s3.amazonaws.com/kraken/k2_standard_16gb_20
 
 def protocol(context: ExecutionContext):
     iout = context.Output(out)
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         cmd=f"""
             mkdir -p {iout.container}
             wget -q {KRAKEN2_DB_URL} -O k2.tar.gz

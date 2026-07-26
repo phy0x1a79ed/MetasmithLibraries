@@ -171,8 +171,8 @@ else:
 print(f"Outputs in {out_dir}")
 ''')
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[
             (idiff.external, "/diff_data"),
             (isbml.external.parent, "/model_dir"),

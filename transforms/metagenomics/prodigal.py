@@ -69,9 +69,8 @@ def protocol(context: ExecutionContext):
     if cpus is not None:
         cpus_string = f"-T {cpus}"
 
-    context.ExecWithContainer(
-        image = image,
-        cmd = f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             pprodigal \
                 {cpus_string} \
                 -C 100 \
@@ -80,8 +79,10 @@ def protocol(context: ExecutionContext):
                 -a {icds.container} \
                 -f gff \
                 -o {igff.container}
-            """,
-    )
+            """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
     
     if not (icds.local.exists() and igff.local.exists()):
         return ExecutionResult(manifest=[{cds: icds.local, gff: igff.local}], success=False)

@@ -29,14 +29,15 @@ def protocol(context: ExecutionContext):
     temp_unzipped = "temp_unzipped.fq"
     # --min_length 1000 --keep_percent 90 are default
     # todo: somehow cap at 100x coverage
-    context.ExecWithContainer(
-        image=image,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             filtlong --min_length 1000 --target_bases $(< {n_bases_file}) {ireads.container} >{temp_unzipped}
-        """,
-    )
+        """
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
 
-    # context.ExecWithContainer(
+    # context.ExecWithEnv().ifContainerDo(
     #     image=im_bb,
     #     cmd=f"""\
     #         filterbyname.sh in={ireads.container} out={idisc.container} names={temp_unzipped}

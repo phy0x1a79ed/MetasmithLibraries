@@ -19,8 +19,8 @@ def protocol(context: ExecutionContext):
     threads = context.params.get("cpus", 8)
 
     # Run ProteinBERT to generate embeddings
-    context.ExecWithContainer(
-        image=image_pbert,
+    context.ExecWithEnv().ifContainerDo(
+        env=image_pbert,
         cmd=f"""
             pbert run \
                 -i {iorfs.container} \
@@ -54,8 +54,8 @@ if npy_files:
 ''')
 
     # Combine embeddings using polars container
-    context.ExecWithContainer(
-        image=image_polars,
+    context.ExecWithEnv().ifContainerDo(
+        env=image_polars,
         cmd=f"""
             python {combiner_script} pbert_output {iemb.container}
         """,

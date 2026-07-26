@@ -49,9 +49,8 @@ def protocol(context: ExecutionContext):
     # we were actually given (85% of it — matches bbtools' own headroom budget).
     mem_gb = context.params.get('memory')
     xmx = f"-Xmx{int(mem_gb*0.85)}g" if mem_gb else ""
-    context.ExecWithContainer(
-        image=image,
-        cmd=f"""\
+    # Same command either way: this tool is a plain CLI in both worlds.
+    _cmd = f"""\
             bbduk.sh {xmx} {threads} \
             {parg} ref=/bbmap/resources/adapters.fa \
             qin={phred_scale} qout=33 {setting} \
@@ -61,7 +60,9 @@ def protocol(context: ExecutionContext):
             sleep 1
             [[ $(zcat temp.{iout.container.name} | wc -c) -ne 0 ]] && mv temp.{iout.container.name} {iout.container} || echo "filtered reads were empty"
         """
-    )
+    context.ExecWithEnv() \
+        .ifContainerDo(env=image, cmd=_cmd) \
+        .ifVirtualEnvDo(env=image, cmd=_cmd)
     
     return ExecutionResult(
         manifest=[

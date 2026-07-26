@@ -212,8 +212,8 @@ with open(meta_path, "w") as f:
 print(f"Saved {len(result)} features x {len(sample_cols)} samples -> {output_csv}")
 ''')
 
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idataset.external, "/jgi_data")],
         cmd=f"python {script} /jgi_data {iout.container}",
     )

@@ -24,8 +24,8 @@ def protocol(context: ExecutionContext):
 
     # VirSorter may exit non-zero when no viral contigs are found (EARLY-EXIT)
     # so we tolerate exit codes and check outputs instead
-    context.ExecWithContainer(
-        image=image,
+    context.ExecWithEnv().ifContainerDo(
+        env=image,
         binds=[(idb.external, "/db")],
         cmd=f"""
             export HOME=/tmp
