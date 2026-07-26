@@ -1,0 +1,123 @@
+ontology:
+  doi: https://doi.org/10.1093/bioinformatics/btt113
+  name: EDAM
+  strict: false
+  version: '1.25'
+schema: v1
+types:
+  aam_combine.py:
+    properties:
+      _:
+      - the AAM combiner -- consensus / single-member credit / disagreement dilution,
+        with the neural-neural discount
+      src: aam_combine
+      usage: library
+  aam_metacyc_member.py:
+    properties:
+      _:
+      - the curated (independent) AAM member -- MetaCyc atom-mappings-smiles.dat joined
+        to MNXR through reac_xref
+      src: aam_metacyc_member
+      usage: library
+  aam_neural_members.py:
+    properties:
+      _:
+      - the two correlated AAM members -- reaction SMILES built from reac_prop+chem_prop,
+        mapped by RXNMapper and LocalMapper, resumable
+      src: aam_neural_members
+      usage: library
+  bake_metabolism.py:
+    properties:
+      _:
+      - encode the two intermediates into the three compiled tables under one bake
+        identity, with the row-by-row round-trip selftest
+      src: bake_metabolism
+      usage: library
+  bench_cohorts.py:
+    properties:
+      _:
+      - the four benchmark arms, read out of the acquired literature products in one
+        schema
+      src: bench_cohorts
+      usage: library
+  bench_evidence_weights.py:
+    properties:
+      _:
+      - the deployed per-protein belief weight -- 1.0 per protein split across lanes,
+        then by score, then across fanout
+      src: bench_evidence_weights
+      usage: library
+  build_module:
+    properties:
+      _:
+      - python module imported by a build transform's driver; never ships in the wheel
+      usage: library
+  dir_calibrate.py:
+    properties:
+      _:
+      - category -> dG' calibration on the eQuilibrator measured arm only
+      src: dir_calibrate
+      usage: library
+  dir_canon.py:
+    properties:
+      _:
+      - the direction ensemble's frozen constants (RT, TAU_SHARED, SIGMA_0, the clamp)
+        -- the build-side mirror of src/fabfos/canon.py's DIR_*
+      src: dir_canon
+      usage: library
+  dir_combine.py:
+    properties:
+      _:
+      - the direction combiner -- correlated thermo vote, independent curated prior,
+        shrink-to-reversible
+      src: dir_combine
+      usage: library
+  dir_curated.py:
+    properties:
+      _:
+      - the curated member -- REACTION-DIRECTION re-expressed in MNXR orientation
+        by compound-set comparison
+      src: dir_curated
+      usage: library
+  dir_metacyc_flatfile.py:
+    properties:
+      _:
+      - reader for MetaCyc's reactions.dat attribute-value flat file (REACTION-DIRECTION,
+        LEFT, RIGHT)
+      src: dir_metacyc_flatfile
+      usage: library
+  dir_refdata.py:
+    properties:
+      _:
+      - MetaNetX loaders for the direction ensemble -- MNXR sides/stoichiometry, MNXM
+        properties, and the metacyc crosswalks
+      src: dir_refdata
+      usage: library
+  dir_thermo_dgbyg.py:
+    properties:
+      _:
+      - the dGbyG member -- learned-GNN dGr'0 routed by SMILES, abstaining on any
+        R-group wildcard
+      src: dir_thermo_dgbyg
+      usage: library
+  dir_thermo_eq.py:
+    properties:
+      _:
+      - the eQuilibrator member -- component-contribution dGr'0 routed by InChIKey,
+        with the uninformative-sigma ceiling
+      src: dir_thermo_eq
+      usage: library
+  ecspr_atom_pairs.py:
+    properties:
+      _:
+      - equation parsing, per-metabolite canonicalisation, and pairs_from_mapped --
+        the one identity bookkeeper every AAM member runs through
+      src: ecspr_atom_pairs
+      usage: library
+  refs_encoding.py:
+    properties:
+      _:
+      - node packing, the vocabulary, and the bake-identity block -- one module so
+        the bake and the gate cannot disagree about the encoding
+      src: refs_encoding
+      usage: library
