@@ -42,11 +42,6 @@ types:
       - Per-reaction directionality (rxn, ratio = g_rev/g_fwd = exp(dG'/RT), dir_tier);
         ratio > 1 FLIPS the edge, it does not amplify it
       ext: parquet
-  ec_to_mnxr:
-    properties:
-      _:
-      - EC -> MNXR fan-out bridge table (tab-separated; columns ec, mnxr)
-      ext: tsv
   esm_c_300m_weights:
     properties:
       _:
@@ -102,11 +97,6 @@ types:
       - KO -> KEGG reaction links from each KO's flat-file REACTION block (tab-separated;
         columns ko, kegg_r)
       ext: tsv
-  ko_to_mnxr:
-    properties:
-      _:
-      - KO -> MNXR fan-out bridge table (tab-separated; columns ko, mnxr)
-      ext: tsv
   kofamscan_ko_list:
     properties:
       _:
@@ -132,6 +122,12 @@ types:
   metaphlan_db:
     properties:
     - MetaPhlAn 4 database directory (bowtie2 + .pkl + .nwk)
+  mnxr_lookup:
+    properties:
+      _:
+      - Intermediate id -> MNXR bridge, all id spaces in one table (id, id_source,
+        mnxr, evidence_quality)
+      ext: parquet
   phyloflash_db:
     properties:
     - phyloFlash SILVA SSU DB dir (bbmap + UDB + tax tree)
@@ -160,12 +156,6 @@ types:
       _:
       - sylph sketch database (single .syldb file)
       ext: syldb
-  uniprot_to_mnxr:
-    properties:
-      _:
-      - UniProt -> MNXR bridge via Rhea DR (parquet; uniprot_accession, dr_source,
-        mnxr)
-      ext: parquet
   uniref50_diamond_db:
     properties:
       _:
